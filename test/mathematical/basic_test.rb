@@ -1,4 +1,5 @@
 require "test_helper"
+require "mathematical"
 
 class Mathematical::BasicTest < Test::Unit::TestCase
 
