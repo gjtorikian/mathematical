@@ -1,0 +1,3 @@
+[submodule "ext/blahtexml"]
+	path = ext/blahtexml
+	url = git@github.com:gvanas/blahtexml.git
