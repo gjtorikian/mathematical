@@ -1,6 +1,12 @@
 #!/usr/bin/env rake
 require "bundler/gem_tasks"
 require 'rake/testtask'
+require 'rake/extensiontask'
+
+Rake::ExtensionTask.new('blahtexml') do |ext|
+  ext.ext_dir = 'ext/blahtexml'
+  ext.lib_dir = 'lib/mathematical'
+end
 
 Rake::TestTask.new do |t|
   t.libs << "test"
