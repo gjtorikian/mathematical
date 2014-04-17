@@ -10,7 +10,7 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
 
       expected_file = before.sub(/before/, "after")
       expected = File.read(expected_file).rstrip
-      actual = Mathematical.render(source).rstrip
+      actual = Mathematical::Render.new.render(source).rstrip
 
       if source != expected
         assert(source != actual, "#{name} did not render anything")

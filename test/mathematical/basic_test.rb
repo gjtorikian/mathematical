@@ -6,4 +6,7 @@ class Mathematical::BasicTest < Test::Unit::TestCase
     assert Mathematical::VERSION
   end
 
+  def test_something_prints
+    puts Mathematical::Render.new.render("wow")
+  end
 end
