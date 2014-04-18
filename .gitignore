@@ -17,7 +17,7 @@ test/version_tmp
 tmp
 /vendor/gems/
 bin/
-mathematical/ext/blahtexml/Source/extconf.rb
-mathematical/ext/blahtexml/Source/makefile
-mathematical/ext/blahtexml/bin-blahtex
-mathematical/ext/blahtexml/blahtex
+ext/blahtexml/Source/extconf.rb
+ext/blahtexml/Source/makefile
+ext/blahtexml/bin-blahtex
+ext/blahtexml/blahtex
