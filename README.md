@@ -49,7 +49,7 @@ solution
 * MathJax. While extremely popular, I dislike the "stuttering" effect caused by
 pages loading math. JavaScript shouldn't be used in situations where server-rendering
 is a possibility, in my opinion.
-* SVG: This would be a great choice, but, unfortunately, there are some [security concerns](http://www.hgi.ruhr-uni-bochum.de/media/hgi/veroeffentlichungen/2011/10/19/svgSecurity-ccs11.pdf)
+* SVG: This would be a great choice, but, unfortunately, there are some [security concerns](http://www.hgi.ruhr-uni-bochum.de/media/hgi/veroeffentlichungen/2011/10/19/svgSecurity-ccs11.pdf) [PDF]
 that make me nervous
 * PNG: This is the format which `blahtexml` is capable of outputting. Working
 with a binary format has the downside of requiring it to be *hosted* somewhere.
@@ -57,3 +57,8 @@ with a binary format has the downside of requiring it to be *hosted* somewhere.
 After considering these choices, I thought that a base64 encoded image made
 the most sense. You get the benefit of browser compatibility without needing
 to serve an image somewhere online.
+
+## Further readings
+
+* ftp://ftp.ams.org/ams/doc/amsmath/short-math-guide.pdf - a short math guide
+* http://gva.noekeon.org/blahtexml/blahtexml-0.9-doc.pdf - the blahtex documentation
