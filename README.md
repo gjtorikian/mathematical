@@ -1,6 +1,6 @@
 # Mathematical
 
-TODO: Write a gem description
+Convert mathematical equations to base64 encoded images.
 
 ## Installation
 
@@ -18,12 +18,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+The simplest way to do this is
 
-## Contributing
+``` ruby
+Mathematical::Render.new.render(contents)
+```
 
-1. Fork it ( http://github.com/<my-github-username>/mathematical/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+`contents` should just be a block of text, containing inline or display style math.
+
+## Dependencies
+
+Two dependencies are needed:
+
+* [blahtexml](https://github.com/gvanas/blahtexml). This does all the conversion
+from math to PNG. It's available for OS X (`make blahtex-mac`) and Linux (`make blahtex-linux`).
+* [dvipng](http://sourceforge.net/projects/dvipng/). I'm on a Mac, and could not
+for the life of me figure out how to build this. I ended up download [MacTex](https://www.tug.org/mactex/),
+which is a *huge* package. `dvipng` is installed under */usr/texbin/dvipng*.
+
+## Why did you...?
+
+There are a smattering of Ruby, C, and Ruby+C libraries out there for converting
+math equations to a variety of formats. There needs to be a sane way to show math
+equations in the browser. The options are:
+
+* MathML: With browser support for MathML under attack, it's unfortunately not a sustainable
+solution
+* MathJax. While extremely popular, I dislike the "stuttering" effect caused by
+pages loading math. JavaScript shouldn't be used in situations where server-rendering
+is a possibility, in my opinion.
+* SVG: This would be a great choice, but, unfortunately, there are some [security concerns](http://www.hgi.ruhr-uni-bochum.de/media/hgi/veroeffentlichungen/2011/10/19/svgSecurity-ccs11.pdf)
+that make me nervous
+* PNG: This is the format which `blahtexml` is capable of outputting. Working
+with a binary format has the downside of requiring it to be *hosted* somewhere.
+
+After considering these choices, I thought that a base64 encoded image made
+the most sense. You get the benefit of browser compatibility without needing
+to serve an image somewhere online.
