@@ -2,6 +2,8 @@
 
 Convert mathematical equations to base64 encoded images.
 
+![](https://i.imgur.com/JC7HT32.gif)
+
 ## Installation
 
 Add this line to your application's Gemfile:
