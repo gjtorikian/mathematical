@@ -1,2 +1,8 @@
+require "mathematical/parser"
+require "mathematical/render"
 require "mathematical/version"
-require "mathematical/sorting"
+
+module Mathematical
+  # Raised when missing binaries for images rendering.
+  class CommandNotFoundError < Exception; end
+end

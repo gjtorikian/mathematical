@@ -8,9 +8,9 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
     define_method "test_#{name}" do
       source = File.read(before)
 
-      expected_file = before.sub(/before/, "after")
+      expected_file = before.sub(/before/, "after").sub(/text/, "html")
       expected = File.read(expected_file).rstrip
-      actual = Mathematical::Render.render(source).rstrip
+      actual = Mathematical::Render.new.render(source).rstrip
 
       if source != expected
         assert(source != actual, "#{name} did not render anything")

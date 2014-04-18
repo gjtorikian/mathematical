@@ -15,3 +15,9 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+/vendor/gems/
+bin/
+ext/blahtexml/Source/extconf.rb
+ext/blahtexml/Source/makefile
+ext/blahtexml/bin-blahtex
+ext/blahtexml/blahtex
