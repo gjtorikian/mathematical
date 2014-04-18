@@ -35,7 +35,7 @@ Two dependencies are needed:
 * [blahtexml](https://github.com/gvanas/blahtexml). This does all the conversion
 from math to PNG. It's available for OS X (`make blahtex-mac`) and Linux (`make blahtex-linux`).
 * [dvipng](http://sourceforge.net/projects/dvipng/). I'm on a Mac, and could not
-for the life of me figure out how to build this. I ended up download [MacTex](https://www.tug.org/mactex/),
+for the life of me figure out how to build this. I ended up downloading [MacTex](https://www.tug.org/mactex/),
 which is a *huge* package. `dvipng` is installed under */usr/texbin/dvipng*.
 
 ## Why did you...?
