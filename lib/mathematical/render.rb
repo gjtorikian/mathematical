@@ -34,12 +34,12 @@ module Mathematical
     end
 
 
-    def render(contents)
+    def render(text)
       in_tmpdir do |tmpdir|
         @args << "--temp-directory #{Shellwords.shellescape tmpdir.first}"
         @args << "--png-directory #{Shellwords.shellescape tmpdir.first}"
 
-        contents.gsub(Mathematical::Parser::REGEX) do |maths|
+        text.gsub(Mathematical::Parser::REGEX) do |maths|
           if maths =~ /^\$(?!\$)/
             maths = maths[1..-2]
             type = :inline
