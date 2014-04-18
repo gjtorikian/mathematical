@@ -23,10 +23,13 @@ Or install it yourself as:
 The simplest way to do this is
 
 ``` ruby
-Mathematical::Render.new.render(contents)
+Mathematical::Render.new.render(text)
 ```
 
-`contents` should just be a block of text, containing inline or display style math.
+`text` should just be a string, containing inline or display style math. The
+output will be all the math equations converted into base64 encoded images.
+Inline math will have `class="inline-math"` set, and display math will have
+`class="display-math"`.
 
 ## Dependencies
 
@@ -40,8 +43,8 @@ which is a *huge* package. `dvipng` is installed under */usr/texbin/dvipng*.
 
 ## Why did you...?
 
-There are a smattering of Ruby, C, and Ruby+C libraries out there for converting
-math equations to a variety of formats. There needs to be a sane way to show math
+There are a smattering of libraries written in various languages to convert math
+into a variety of formats. But there needs to be a sane way to show math
 equations in the browser. The options are:
 
 * MathML: With browser support for MathML under attack, it's unfortunately not a sustainable
@@ -52,7 +55,7 @@ is a possibility, in my opinion.
 * SVG: This would be a great choice, but, unfortunately, there are some [security concerns](http://www.hgi.ruhr-uni-bochum.de/media/hgi/veroeffentlichungen/2011/10/19/svgSecurity-ccs11.pdf) [PDF]
 that make me nervous
 * PNG: This is the format which `blahtexml` is capable of outputting. Working
-with a binary format has the downside of requiring it to be *hosted* somewhere.
+with a binary image has the downside of requiring it to be *hosted* somewhere.
 
 After considering these choices, I thought that a base64 encoded image made
 the most sense. You get the benefit of browser compatibility without needing
