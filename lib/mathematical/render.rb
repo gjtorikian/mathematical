@@ -43,13 +43,25 @@ module Mathematical
           if maths =~ /^\$(?!\$)/
             maths = maths[1..-2]
             type = :inline
-          else
+          elsif maths =~ /^\\\((?!\\\[)/
+            maths = maths[2..-4]
+            type = :inline
+          elsif maths =~ /^\\\[(?!\\\[)/
+            maths = maths[2..-4]
+            type = :display
+          elsif maths =~ /^\\begin(?!\\begin)/
+            maths = maths[16..-15]
             type = :display
           end
 
           data = run_blahtex(maths, type)
-          if filename = data.match("<md5>(.+?)</md5>")[1]
-            "<img class=\"#{type.to_s}-math\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
+
+          if error = data.match("<error>(.+?)</error>")
+            raise ParseError, error
+          elsif filename = data.match("<md5>(.+?)</md5>")
+            filename = filename[1]
+            depth = data.match("<depth>(.+?)</depth>")[1]
+            "<img class=\"#{type.to_s}-math\" style=\"vertical-align: #{depth}px\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
           end
         end
       end
