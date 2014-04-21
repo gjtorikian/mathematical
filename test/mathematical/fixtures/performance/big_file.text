@@ -9,23 +9,23 @@ In this paper we study in detail the geometric theta lift for Hilbert modular su
 \subsubsection*{The geometric theta correspondence}
 
 We first explain the term ``geometric theta correspondence''. The Weil (or oscillator) representation gives us a method to construct closed differential forms on locally
-symmetric spaces associated to groups which belong to dual pairs. Let $V$ be a rational quadratic space of signature $(p,q)$ with for simplicity even dimension. Then the Weil representation induces an action of $\SL_2(\R) \times \Orth(V_\R)$ on $\mathcal{S}(V_\R)$, the Schwartz functions on $V_\R$. Let $G = \SO_0(V_\R)$ and let $K$ be a maximal compact subgroup. We let $\mathfrak{g}$ and $\mathfrak{k}$ be their respective Lie algebras and let $\mathfrak{g} = \mathfrak{p} \oplus \mathfrak{k}$ be the associated Cartan decomposition. Suppose
+symmetric spaces associated to groups which belong to dual pairs. Let $V$ be a rational quadratic space of signature $(p,q)$ with for simplicity even dimension. Then the Weil representation induces an action of $SL_2(R) \times Orth(V_R)$ on $\mathcal{S}(V_R)$, the Schwartz functions on $V_R$. Let $G = \SO_0(V_R)$ and let $K$ be a maximal compact subgroup. We let $\mathfrak{g}$ and $\mathfrak{k}$ be their respective Lie algebras and let $\mathfrak{g} = \mathfrak{p} \oplus \mathfrak{k}$ be the associated Cartan decomposition. Suppose
 \[
-\varphi\in (\mathcal{S}(V_\R) \otimes \wedge^r \mathfrak{p}^{\ast})^{K}
+\varphi\in (\mathcal{S}(V_R) \otimes \wedge^r \mathfrak{p}^{\ast})^{K}
 \]
 %\pagebreak
 is a cocycle in the relative
 Lie algebra complex for $G$ with values in $\mathcal{S}(V)$. Then $\varphi$ corresponds to a closed differential $r$-form $\tilde{\varphi}$ on the symmetric space $D= G/K$ of dimension $pq$ with values in $\mathcal{S}(V)$.
-For a coset of a lattice $\mathcal{L}$ in $V$, we define the theta distribution $\Theta=\Theta_{\mathcal{L}}$ by $\Theta = \sum_{\ell \in \mathcal{L}} \delta_{\ell}$, where $ \delta_{\ell}$ is the delta measure concentrated at $\ell$. It is obvious that $\Theta$ is invariant under $\G = \Stab(\mathcal{L}) \subset G$. There is also a congruence subgroup $\Gamma'$ of $\SL(2,\Z)$) such that $\Theta$ is also invariant under $\Gamma'$. Hence we can apply the theta distribution to $\tilde{\varphi}$ to obtain a closed $r$-form $\theta_{\varphi}$ on $X = \Gamma \backslash D$ given by
+For a coset of a lattice $\mathcal{L}$ in $V$, we define the theta distribution $\Theta=\Theta_{\mathcal{L}}$ by $\Theta = \sum_{\ell \in \mathcal{L}} \delta_{\ell}$, where $ \delta_{\ell}$ is the delta measure concentrated at $\ell$. It is obvious that $\Theta$ is invariant under $\G = \Stab(\mathcal{L}) \subset G$. There is also a congruence subgroup $\Gamma'$ of $SL(2,\Z)$) such that $\Theta$ is also invariant under $\Gamma'$. Hence we can apply the theta distribution to $\tilde{\varphi}$ to obtain a closed $r$-form $\theta_{\varphi}$ on $X = \Gamma \backslash D$ given by
 \[
 \theta_{\varphi}(\mathcal{L})= \langle \Theta_{\mathcal{L}}, \tilde{\varphi} \rangle.
 \]
-Assume now in addition that $\varphi$ has weight $k$ under the maximal compact subgroup $\SO(2) \subset \SL_2(\R)$. Then $\theta_{\varphi}$ also gives rise to a (in general) non-holomorphic function on the upper half place $\h$ which is modular of weight $k$ for $\G'$. We may then use $\theta_{\varphi}$ as the kernel of a pairing of modular forms $f$ with (closed) differential $(pq-r)$-forms $\eta$ or $r$-chains (cycles) $C$ in $X$. The resulting pairing in $f$, $\eta$ (or $C$), and $\varphi$ as these objects vary, we call the {\bf geometric theta correspondence}.
+Assume now in addition that $\varphi$ has weight $k$ under the maximal compact subgroup $\SO(2) \subset SL_2(R)$. Then $\theta_{\varphi}$ also gives rise to a (in general) non-holomorphic function on the upper half place $\h$ which is modular of weight $k$ for $\G'$. We may then use $\theta_{\varphi}$ as the kernel of a pairing of modular forms $f$ with (closed) differential $(pq-r)$-forms $\eta$ or $r$-chains (cycles) $C$ in $X$. The resulting pairing in $f$, $\eta$ (or $C$), and $\varphi$ as these objects vary, we call the {\bf geometric theta correspondence}.
 
 
 \subsubsection*{The cocycle of Kudla-Millson}
 
-The key point of the work of Kudla and Millson \cite{KM1,KM2} is that they found (in greater generality) a family of cocycles $\varphi^V_{q}$ in $(\mathcal{S}(V) \otimes \wedge^q \mathfrak{p}^{\ast})^K$ with weight $(p+q)/2$ for $\SL_2$. Moreover, these cocycles give rise to Poincar\'e dual forms for certain totally geodesic, ``special'' cycles in $X$. Recently, it has now been shown, first \cite{HoffmanHe} for $\SO(3,2)$, and then \cite{BMM} for all $\SO(p,q)$ and $p+q>6$ (with $p \geq q$) in the cocompact (standard arithmetic) case that the geometric theta correspondence specialized to $\varphi_q^V$ induces on the adelic level an {\it isomorphism} from the appropriate space of classical modular forms to $H^q(X)$. In particular, for any congruence quotient, the dual homology groups are spanned by special cycles. This gives further justification to the term geometric theta correspondence and highlights the significance of these cocycles. In \cite{FMcoeff} we generalize $\varphi^V_{q}$ to allow suitable non-trivial coefficient systems (and one has an analogous isomorphism in \cite{BMM}).
+The key point of the work of Kudla and Millson \cite{KM1,KM2} is that they found (in greater generality) a family of cocycles $\varphi^V_{q}$ in $(\mathcal{S}(V) \otimes \wedge^q \mathfrak{p}^{\ast})^K$ with weight $(p+q)/2$ for $SL_2$. Moreover, these cocycles give rise to Poincar\'e dual forms for certain totally geodesic, ``special'' cycles in $X$. Recently, it has now been shown, first \cite{HoffmanHe} for $\SO(3,2)$, and then \cite{BMM} for all $\SO(p,q)$ and $p+q>6$ (with $p \geq q$) in the cocompact (standard arithmetic) case that the geometric theta correspondence specialized to $\varphi_q^V$ induces on the adelic level an {\it isomorphism} from the appropriate space of classical modular forms to $H^q(X)$. In particular, for any congruence quotient, the dual homology groups are spanned by special cycles. This gives further justification to the term geometric theta correspondence and highlights the significance of these cocycles. In \cite{FMcoeff} we generalize $\varphi^V_{q}$ to allow suitable non-trivial coefficient systems (and one has an analogous isomorphism in \cite{BMM}).
 
 
 \subsubsection*{The main results}
@@ -64,7 +64,7 @@ is a holomorphic modular form of weight $2$ and is equal to the generating serie
 
  Note that in view of \eqref{mappingconelift} the lift of classes of $H_2({X}, \partial {X})$ or $H^2(X)$ is the sum of two in general non-holomorphic modular forms (see below).
 
-In \cite{FMres} we systematically study for $\Orth(p,q)$ the restriction of the classes $\theta_{\varphi^V_{q}}$ (also with non-trivial coefficients) to the Borel-Serre boundary. Whenever the restriction vanishes cohomologically, we can expect that a similar analysis to the one given in this paper will give analogous extensions of the geometric theta correspondence. In fact, aside from this paper we have at present managed to do this for several other cases, namely for modular curves with non-trivial coefficients \cite{FMspec} generalizing work of Shintani \cite{Shintani} and for Picard modular surfaces \cite{FM-Cogdell} generalizing work of Cogdell \cite{Cogdell}.
+In \cite{FMres} we systematically study for $Orth(p,q)$ the restriction of the classes $\theta_{\varphi^V_{q}}$ (also with non-trivial coefficients) to the Borel-Serre boundary. Whenever the restriction vanishes cohomologically, we can expect that a similar analysis to the one given in this paper will give analogous extensions of the geometric theta correspondence. In fact, aside from this paper we have at present managed to do this for several other cases, namely for modular curves with non-trivial coefficients \cite{FMspec} generalizing work of Shintani \cite{Shintani} and for Picard modular surfaces \cite{FM-Cogdell} generalizing work of Cogdell \cite{Cogdell}.
 
 
 
@@ -150,23 +150,23 @@ Let $V$ be a rational vector space of dimension $4$ with a
 non-degenerate symmetric bilinear form  $(\,,\,)$ of signature
 $(2,2)$.
 We let $\underline{G} = \SO(V)$, viewed as an algebraic group over $\Q$.
-We let $G=\underline{G}_0(\R) \simeq \SO_0(2,2)$ be the connected component of the identity of the real points of $\underline{G}$.
+We let $G=\underline{G}_0(R) \simeq \SO_0(2,2)$ be the connected component of the identity of the real points of $\underline{G}$.
 It is most convenient to identify the associated symmetric space $D= D_V$ with the
-space of negative $2$-planes in $V(\R)$ on which the bilinear form $(\,,\,)$ is
+space of negative $2$-planes in $V(R)$ on which the bilinear form $(\,,\,)$ is
 negative definite:
 \[
-D = \{z \subset V_{\R} ; \;\text{$\dim z =2$ and $(\,,\,)|_z < 0$}
+D = \{z \subset V_{R} ; \;\text{$\dim z =2$ and $(\,,\,)|_z < 0$}
 \}.
 \]
-We pick an orthogonal basis $\{e_1,e_2,e_3,e_4\}$ of $V_{\R}$ with $(e_1,e_1)=(e_2,e_2)=1$ and $(e_3,e_3)=(e_4,e_4)=-1$. We denote the coordinates of a vector $x$ with respect to this basis by $x_i$. We pick as base point of $D$ the plane $z_0=[e_3,e_4]$ spanned by $e_3$ and $e_4$, and we let $K \simeq \SO(2)\times \SO(2)$ be the maximal compact subgroup of $G$ stabilizing $z_0$. Thus $D \simeq G/K$. Of course, $D \simeq \H \times \h$, the product of two upper half planes.
+We pick an orthogonal basis $\{e_1,e_2,e_3,e_4\}$ of $V_{R}$ with $(e_1,e_1)=(e_2,e_2)=1$ and $(e_3,e_3)=(e_4,e_4)=-1$. We denote the coordinates of a vector $x$ with respect to this basis by $x_i$. We pick as base point of $D$ the plane $z_0=[e_3,e_4]$ spanned by $e_3$ and $e_4$, and we let $K \simeq \SO(2)\times \SO(2)$ be the maximal compact subgroup of $G$ stabilizing $z_0$. Thus $D \simeq G/K$. Of course, $D \simeq \H \times \h$, the product of two upper half planes.
 
 
-We let  $\underline{P}$ be a rational parabolic subgroup stabilizing a rational isotropic line $\ell$ and define $P= \underline{P}_0(\R)$ as before. We let $\underline{N}$ be its unipotent subgroup and $N = \underline{N}(\R)$.
+We let  $\underline{P}$ be a rational parabolic subgroup stabilizing a rational isotropic line $\ell$ and define $P= \underline{P}_0(R)$ as before. We let $\underline{N}$ be its unipotent subgroup and $N = \underline{N}(R)$.
 We let $u =(e_1+e_4)/\sqrt{2}$ and $u' =(e_1-e_4)/\sqrt{2}$ be two isotropic vectors so that $(u,u')=1$. We assume that $u,u'$ are defined over $\Q$ and obtain a rational Witt decomposition
 \[
 V = \ell \oplus W \oplus \ell'
 \]
-with $\ell = \Q u$, $\ell'=\Q u'$, and a subspace $W = \ell^{\perp} \cap {\ell'}^{\perp}$ such that $W_{\R} = \Span_{\R}(e_2,e_3)$. The choice of $u'$ gives a Levi splitting of $\underline{P}$, and we write
+with $\ell = \Q u$, $\ell'=\Q u'$, and a subspace $W = \ell^{\perp} \cap {\ell'}^{\perp}$ such that $W_{R} = \Span_{R}(e_2,e_3)$. The choice of $u'$ gives a Levi splitting of $\underline{P}$, and we write
 \[
 P =NAM
 \]
@@ -179,13 +179,13 @@ for the Langlands decomposition. Here, with respect to the basis $u,e_2,e_3,u'$,
  &   1_W   & -w  \\
  &         & 1  \\
 \end{smallmatrix} \right)
-; \; w \in W_{\R} \right\}, \\
+; \; w \in W_{R} \right\}, \\
 {A} &= \left\{ a(t) =
 \left( \begin{smallmatrix}
 t& &  \\
  &   1_W   &  \\
  &         & t^{-1}\\
-\end{smallmatrix} \right); \, t \in \R_+
+\end{smallmatrix} \right); \, t \in R_+
  \right\}, \\
 {M} & =
 \left\{ m(s)  =
@@ -195,14 +195,14 @@ t& &  \\
  \end{smallmatrix}    & \\\
  &         & 1  \\
 \end{smallmatrix} \right)
-; \; s \in \R \right\}.
+; \; s \in R \right\}.
 \end{align*}
-Note $N \simeq W_{\R}$. We obtain coordinates for $D$ by $z=z(t,s,w)$ where $z$ is the negative two-plane in $V_{\R}$ with $z=[n(w)a(t)m(s)e_3,n(w)a(t)m(s)e_4]$.
+Note $N \simeq W_{R}$. We obtain coordinates for $D$ by $z=z(t,s,w)$ where $z$ is the negative two-plane in $V_{R}$ with $z=[n(w)a(t)m(s)e_3,n(w)a(t)m(s)e_4]$.
 
 
 \begin{comment}
 
-We can also realize $M$ in terms of an isotropic basis $u_2,u_2'$ of  $W_{\R}$ as
+We can also realize $M$ in terms of an isotropic basis $u_2,u_2'$ of  $W_{R}$ as
 \[
 {M} =
 \left\{ m'(s)=
@@ -211,10 +211,10 @@ We can also realize $M$ in terms of an isotropic basis $u_2,u_2'$ of  $W_{\R}$ a
  &    \begin{smallmatrix} s &  \\  & s^{-1}
  \end{smallmatrix}     &  \\
  &         & 1\\
-\end{pmatrix}; \, s \in \R_+
+\end{pmatrix}; \, s \in R_+
  \right\},
 \]
-so that $m(s) =  m'(e^s)$. Note $M \simeq \SO_0(W_{\R})$. We write $\frak{n},\frak{a},\frak{m}$ for their Lie algebras.
+so that $m(s) =  m'(e^s)$. Note $M \simeq \SO_0(W_{R})$. We write $\frak{n},\frak{a},\frak{m}$ for their Lie algebras.
 
 
 
@@ -224,13 +224,13 @@ The $P$-invariant extensions of the pullback of the $\omega_{\alpha\mu}$'s under
  \sigma^{\ast} \omega_{13}  = \frac12\left( - \frac{dw}{s't} + \frac{dw'}{t/s'}\right), \quad \sigma^{\ast} \omega_{14}  = \frac{dt}{t}, \quad
   \sigma^{\ast} \omega_{24} = \frac12\left(  \frac{dw}{s't} + \frac{dw'}{t/s'}\right),  \quad \sigma^{\ast} \omega_{23}= \frac{ds'}{s'}.
 \end{align*}
-Here we picked coordinates for $W_{\R}$ by setting $w= wu_2+w'u_2'$.
+Here we picked coordinates for $W_{R}$ by setting $w= wu_2+w'u_2'$.
 
 
 
 
-Of course, it is very well known that $D \simeq \h \times \h$, the product of two upper half planes. To see this in our setting, we choose an isomorphism $V_{\R} \simeq M_2(\R)$ such that $u = \kzxz{1}{0}{0}{0}$ and $u' = \kzxz{0}{0}{0}{1}$ and such that the quadratic form $q(x) = (x,x)/2$ for $ x \in M_2(\R)$ is given by $q(x) = \det(x)$. Note that in this model, we can pick in addition $e_2= \tfrac1{\sqrt{2}}\kzxz{0}{1}{-1}{0}$ and $e_3= \tfrac1{\sqrt{2}}\kzxz{0}{1}{1}{0}$.
-Then $SL_2(\R) \times SL_2(\R)$ acts on $M_2(\R)$ by $(g_1,g_2)x = g_1x\, {^{t}g_2}$ as isometries, and this realizes the isomorphism $\Spin(2,2) \simeq SL_2{\R} \times SL_2(\R)$. Under this isomorphism, we have
+Of course, it is very well known that $D \simeq \h \times \h$, the product of two upper half planes. To see this in our setting, we choose an isomorphism $V_{R} \simeq M_2(R)$ such that $u = \kzxz{1}{0}{0}{0}$ and $u' = \kzxz{0}{0}{0}{1}$ and such that the quadratic form $q(x) = (x,x)/2$ for $ x \in M_2(R)$ is given by $q(x) = \det(x)$. Note that in this model, we can pick in addition $e_2= \tfrac1{\sqrt{2}}\kzxz{0}{1}{-1}{0}$ and $e_3= \tfrac1{\sqrt{2}}\kzxz{0}{1}{1}{0}$.
+Then $SL_2(R) \times SL_2(R)$ acts on $M_2(R)$ by $(g_1,g_2)x = g_1x\, {^{t}g_2}$ as isometries, and this realizes the isomorphism $\Spin(2,2) \simeq SL_2{R} \times SL_2(R)$. Under this isomorphism, we have
 \begin{align*}
 a(t) \leftrightarrow \left(   \kzxz{\sqrt{t}}{}{}{\sqrt{t}^{-1}}, \kzxz{\sqrt{t}}{}{}{\sqrt{t}^{-1}} \right)&, \qquad \qquad
 m'(s) \leftrightarrow  \left(   \kzxz{\sqrt{s}}{}{}{\sqrt{s}^{-1}}, \kzxz{\sqrt{s}^{-1}}{}{}{\sqrt{s}} \right) \\
@@ -261,7 +261,7 @@ L = \left\{ x = \left( \begin{smallmatrix} a\sqrt{d}&\lambda\\-\lambda'&b\sqrt{d
   \end{smallmatrix}  \right) \; : \; a,b \in \Z, \; \lambda  \in
   \mathcal{O}_K \right\}.
 \end{equation*}
- Then $L$ is a lattice of level $d$. We embed $\SL_2(K)$ into $\SL_2{\R} \times \SL_2(\R)$ by $g \mapsto (g,g')$ so that $\SL_2(\mathcal{O}_K)$ acts on $L$ by $\g.x = \g x{^t\g'}$ as isometries. Hirzebruch and Zagier actually considered this case for $d \equiv 1 \pmod{4}$ a prime.
+ Then $L$ is a lattice of level $d$. We embed $SL_2(K)$ into $SL_2{R} \times SL_2(R)$ by $g \mapsto (g,g')$ so that $SL_2(\mathcal{O}_K)$ acts on $L$ by $\g.x = \g x{^t\g'}$ as isometries. Hirzebruch and Zagier actually considered this case for $d \equiv 1 \pmod{4}$ a prime.
 \end{example}
 
 The quotient space $X$ is in general an oriented uniformizable orbifold with isolated singularities.  We will treat $X$ as a manifold - we will use Stokes' Theorem and Poincar\'e duality over $\Q$ on $X$. This is justified because in each instance we can pass to a finite normal cover $Y$ of $X$ with $Y$ a manifold. Hence, the formulas we want hold on $Y$.
@@ -294,7 +294,7 @@ We let $\overline{D}$ be the (rational) Borel-Serre enlargement of $D$, see \cit
 \begin{equation*}
 e({P}) = MN \simeq D_W \times W.
 \end{equation*}
-Here $D_W \simeq M \simeq \R$ is the symmetric space associated to the orthogonal group of $W$. Then $\overline{D}$ is given by
+Here $D_W \simeq M \simeq R$ is the symmetric space associated to the orthogonal group of $W$. Then $\overline{D}$ is given by
 \begin{equation*}
 \overline{D} = D \cup \coprod_{\underline{P}} e({P}),
 \end{equation*}
@@ -349,7 +349,7 @@ Let $\Omega_P$ be the unique $P$-invariant $2$-form on $e'(P)$ such that
 \begin{equation}\label{areaform}
 \int_{b_P} \Omega_P = 1.
 \end{equation}
-Since $b_P$ is the image of the fundamental class of $T^2$ inside $H_2(e'(P),\Z)$, we see that that the restriction of $\Omega_P$ to $T^2$ lifts to the area form on $W_{\R} \simeq N$ normalized such that $T^2=\G_N \back N$ has area $1$.
+Since $b_P$ is the image of the fundamental class of $T^2$ inside $H_2(e'(P),\Z)$, we see that that the restriction of $\Omega_P$ to $T^2$ lifts to the area form on $W_{R} \simeq N$ normalized such that $T^2=\G_N \back N$ has area $1$.
 
 
 
@@ -451,7 +451,7 @@ If $(x,u) \neq 0$ then there exists a neighborhood $U_{\infty}$ of $e(P)$ such t
 $$
 D_x \cap U_{\infty} = \emptyset.
 $$
-If $(x,u) = 0$, then $\overline{D}_x \cap e(P)$ is contained in the fiber of $p$ over $s(x)$, where $s(x)$ is the unique element of $\R$ satifying
+If $(x,u) = 0$, then $\overline{D}_x \cap e(P)$ is contained in the fiber of $p$ over $s(x)$, where $s(x)$ is the unique element of $R$ satifying
 \[
 (x, m(s(x)) e_3) = 0.
 \]
@@ -583,11 +583,11 @@ In what follows we will pass from pictures in the plane involving directed line 
 
 
 
-In this subsection we will work with a general $3$-manifold $M$ with Sol geometry. Of course this includes all the manifolds $e'(P)$ that occur in this paper. Let $f \in \SL(2,\Z)$ be a hyperbolic element. We will then consider the $3$-manifold $M$ obtained from $ \R \times T^2$ (with the $2$-torus $T^2 = W/ \Z^2$) given by the relation
+In this subsection we will work with a general $3$-manifold $M$ with Sol geometry. Of course this includes all the manifolds $e'(P)$ that occur in this paper. Let $f \in SL(2,\Z)$ be a hyperbolic element. We will then consider the $3$-manifold $M$ obtained from $ R \times T^2$ (with the $2$-torus $T^2 = W/ \Z^2$) given by the relation
 \begin{equation}\label{glueing}
 (s,w) \sim (s+1,f(w)).
 \end{equation}
-We let $\pi: \R\times T^2 \to M$ be the resulting infinite cyclic covering.
+We let $\pi: R\times T^2 \to M$ be the resulting infinite cyclic covering.
 
 
 
@@ -602,7 +602,7 @@ We first take care of the fact that $\alpha$ does not necessarily pass through t
 \end{equation}
 Since $\widetilde{P}$ has rational vertices we find $\int_{P} \Omega = \int_{\widetilde{P}} \Omega \in \Q$.
 
-Now we take care of the harder part of finding $A$ as above. The key is the construction  of ``monodromy $2$-chains''.  For any closed geodesic $\gamma_0 \subset T^2$ starting at $0$ we define the monodromy $2$-chain  $\mathcal{M}(\gamma_0)$ to be the image of the cylinder $\gamma_0 \times [0,1] \subset T^2 \times \R$ in $M$.
+Now we take care of the harder part of finding $A$ as above. The key is the construction  of ``monodromy $2$-chains''.  For any closed geodesic $\gamma_0 \subset T^2$ starting at $0$ we define the monodromy $2$-chain  $\mathcal{M}(\gamma_0)$ to be the image of the cylinder $\gamma_0 \times [0,1] \subset T^2 \times R$ in $M$.
 The reader will verify using \eqref{glueing} that in $Z_1(T^2,\Q)$ we have
 \begin{equation} \label{boundaryofmon}
  \partial \mathcal{M}(\gamma_0) = f^{-1}(\gamma_0) -\gamma_0.
@@ -656,7 +656,7 @@ Finally, the integral of $\Omega$ over $A$ is rational. Indeed, the integral ove
 
 In the introduction we defined the linking number of two two disjoint homologically trivial $1$-cycles $a$ and $b$ in a closed $3$-manifold $M$ as $\Lk(a,b) = \langle A,b \rangle$, where $A$ is any rational $2$-chain in $M$ with boundary $a$. Since $b$ defines a trivial homology class in $M$, the link is well-defined, ie, does not depend on the choice of $A$.
 
-We let $M$ be the Sol manifold as before realized as in Section~\ref{rat-cap11} via \eqref{glueing} and consider the case when $a$ and $b$ are two contained in two torus fibers. Then by the previous section they are homologically trivial. If $a$ and $b$ are contained in the same fiber we move $b$ to the right (i.e. in the direction of positive $s$)  to a nearby fiber. We take $a,b \in H_1(T^2,\Z)$, and in this section we are allowed to confuse $a$ and $b$ with their representatives in the lattice $\Z^2$ and the unique closed geodesic in $T^2$ passing through the origin that represents them. We will write for the image of $a$ and $b$ in $\R \times T^2$ and $M$ $a=a(0)=0 \times a$ and $b=b(\eps)= \eps \times b$. Our goal is to compute the linking number $Lk(a, b(\epsilon))$. By the explicit construction of the cap $A$ in Section~\ref{rat-cap11} we obtain
+We let $M$ be the Sol manifold as before realized as in Section~\ref{rat-cap11} via \eqref{glueing} and consider the case when $a$ and $b$ are two contained in two torus fibers. Then by the previous section they are homologically trivial. If $a$ and $b$ are contained in the same fiber we move $b$ to the right (i.e. in the direction of positive $s$)  to a nearby fiber. We take $a,b \in H_1(T^2,\Z)$, and in this section we are allowed to confuse $a$ and $b$ with their representatives in the lattice $\Z^2$ and the unique closed geodesic in $T^2$ passing through the origin that represents them. We will write for the image of $a$ and $b$ in $R \times T^2$ and $M$ $a=a(0)=0 \times a$ and $b=b(\eps)= \eps \times b$. Our goal is to compute the linking number $Lk(a, b(\epsilon))$. By the explicit construction of the cap $A$ in Section~\ref{rat-cap11} we obtain
 
 \begin{lemma}
  \[
@@ -673,7 +673,7 @@ $ Lk(a, b(\epsilon)) = \langle (f^{-1} - I)^{-1} (a), b \rangle.$
 \end{theorem}
 
 It is a remarkable fact that there is a simple formula involving only the action of the
-glueing homeomorphism $f \in  \SL(2,\Z)$ on $H_1(T^2, \Z)$ for linking numbers for $1$-cycles contained in fiber tori $T^2$ of in Sol (unlike the case of linking numbers in $\R^3$).
+glueing homeomorphism $f \in  SL(2,\Z)$ on $H_1(T^2, \Z)$ for linking numbers for $1$-cycles contained in fiber tori $T^2$ of in Sol (unlike the case of linking numbers in $R^3$).
 
 This immediately leads to an explicit formula for the numbers $Lk(\partial C_n, \partial C_m)$. Using Lemma~\ref{LemmaB} we obtain
 
@@ -688,8 +688,8 @@ Here $Jx$ is properly oriented primitive vector in $\Lambda_W$ such that $(Jx,x)
  \end{theorem}
 
  \begin{example}\label{LinkCnCmex}
-We consider the integral skew Hermitian matrices in Example~\ref{HZex}. Let $u= \kzxz{\sqrt{p}}{0}{0}{0}$, so that $W = \{ \kzxz{0}{\la}{-\la'}{0};\; \la \in K \} \simeq K$. The symplectic form on $K$ is given by $\langle \la, \mu \rangle = \frac{1}{\sqrt{p}} (\la \mu' - \la'\mu)$. The action of the unipotent radical $N= \left\{ n(\la)= \kzxz{1}{\la}{0}{1} \right\}$ on a vector $\mu \in K$ is now slightly different, namely, $n(\la) \mu = \mu + \langle \la, \mu \rangle u$. Hence in these coordinates, $\partial C_{\mu}$ is given by the image of the line $\R \mu = \{\la \in K_\R; \; \langle \la, \mu \rangle =0 \}$, and $(\min'_{\lambda \in \mathcal{O}_K}
- |\langle \la, \mu \rangle|)\mu$ is a primitive generator in $\mathcal{O}_K$ for that line. We let $\eps$ be a generator of $U_+$, the totally positive units in $\mathcal{O}_K$, and we assume that the glueing map $f$ is realized by multiplication with $\eps'$. For $d \equiv 1 \pmod{4}$ a prime and $m=1$, $C_1$ has only component arising from $x =1 \in K$ and $C_1 \simeq \SL_2(\Z) \back \h$. Then Theorem~\ref{LinkCnCm} becomes (the $\min'$-term is now wrt $\langle\,,\, \rangle$)
+We consider the integral skew Hermitian matrices in Example~\ref{HZex}. Let $u= \kzxz{\sqrt{p}}{0}{0}{0}$, so that $W = \{ \kzxz{0}{\la}{-\la'}{0};\; \la \in K \} \simeq K$. The symplectic form on $K$ is given by $\langle \la, \mu \rangle = \frac{1}{\sqrt{p}} (\la \mu' - \la'\mu)$. The action of the unipotent radical $N= \left\{ n(\la)= \kzxz{1}{\la}{0}{1} \right\}$ on a vector $\mu \in K$ is now slightly different, namely, $n(\la) \mu = \mu + \langle \la, \mu \rangle u$. Hence in these coordinates, $\partial C_{\mu}$ is given by the image of the line $R \mu = \{\la \in K_R; \; \langle \la, \mu \rangle =0 \}$, and $(\min'_{\lambda \in \mathcal{O}_K}
+ |\langle \la, \mu \rangle|)\mu$ is a primitive generator in $\mathcal{O}_K$ for that line. We let $\eps$ be a generator of $U_+$, the totally positive units in $\mathcal{O}_K$, and we assume that the glueing map $f$ is realized by multiplication with $\eps'$. For $d \equiv 1 \pmod{4}$ a prime and $m=1$, $C_1$ has only component arising from $x =1 \in K$ and $C_1 \simeq SL_2(\Z) \back \h$. Then Theorem~\ref{LinkCnCm} becomes (the $\min'$-term is now wrt $\langle\,,\, \rangle$)
 \[
  Lk( (\partial C_n)_P, (\partial C_1)_P) =
  2 \sum_{ \substack{\mu \in U_+ \back \mathcal{O}_K\\ \mu\mu'=n, \mu \gg 0}} \left\langle \tfrac{\mu}{\eps-1}, 1 \right\rangle = 2\sum_{ \substack{\mu \in U_+ \back \mathcal{O}_K\\ \mu\mu'=n, \mu \gg0}}  = \frac{2}{\sqrt{p}}\frac{\mu+\mu'\eps}{\eps-1}.
@@ -713,12 +713,12 @@ This is (twice) the ``boundary contribution'' in \cite{HZ}, Section~1.4, see als
 
 \section{Schwartz functions and forms}
 
-Let $U$ be a non-degenerate rational quadratic space of  signature $(p,q)$ and even dimension $m$. We will later apply the following to $U=V$ and $U=W$. Changing notation from before, we let $G = \SO_0(U_{\R})$ with maximal compact subgroup $K$ and write $D=G/K$ for the associated symmetric space. We let $\calS(U_{\R})$ be the space of Schwartz functions on $U_{\R}$ on which $\SL_2(\R)$ acts via the Weil representation $\omega$.
+Let $U$ be a non-degenerate rational quadratic space of  signature $(p,q)$ and even dimension $m$. We will later apply the following to $U=V$ and $U=W$. Changing notation from before, we let $G = \SO_0(U_{R})$ with maximal compact subgroup $K$ and write $D=G/K$ for the associated symmetric space. We let $\calS(U_{R})$ be the space of Schwartz functions on $U_{R}$ on which $SL_2(R)$ acts via the Weil representation $\omega$.
 
 \subsection{Extending certain Schwartz functions to functions of $\tau \in \h$ and $z\in D$}\label{conventions}
 
-Let $\varphi \in \calS(U_{\R})$ be an eigenfunction under the maximal compact $\SO(2)$ of $\SL_2(\R)$ of
-weight $r$. Define $g'_{\tau} \in \SL_2(\R)$
+Let $\varphi \in \calS(U_{R})$ be an eigenfunction under the maximal compact $\SO(2)$ of $SL_2(R)$ of
+weight $r$. Define $g'_{\tau} \in SL_2(R)$
 by $g'_{\tau} = \left(
 \begin{smallmatrix}1&u\\0&1\end{smallmatrix} \right) \left(
 \begin{smallmatrix}v^{1/2}&0\\0&v^{-1/2}\end{smallmatrix} \right)$.
@@ -728,7 +728,7 @@ Accordingly we define
 \varphi(x,\tau)  = v^{-r/2} \omega(g'_{\tau}) \varphi
 (x)  = v^{-r/2+m/4} \varphi^0(\sqrt{v}x) e^{\pi i (x,x)\tau}.
 \end{equation}
-Here we have also defined $\varphi^0(x) = \varphi(x) e^{\pi (x,x)}$. Let $E$ be a $G$-module and let $g_z \in G$ be any element that carries the basepoint $z_0$ in $D$ to $z \in D$. Then define for $\varphi \in [\calS(U_{\R}) \otimes E]^K$, the $E$-valued $K$-invariant Schwartz functions on $U_{\R}$, the functions $\varphi(x,z)$ and $\varphi(x,\tau,z)$ for $x \in U, z \in D, \tau \in \mathbb{H}$ by
+Here we have also defined $\varphi^0(x) = \varphi(x) e^{\pi (x,x)}$. Let $E$ be a $G$-module and let $g_z \in G$ be any element that carries the basepoint $z_0$ in $D$ to $z \in D$. Then define for $\varphi \in [\calS(U_{R}) \otimes E]^K$, the $E$-valued $K$-invariant Schwartz functions on $U_{R}$, the functions $\varphi(x,z)$ and $\varphi(x,\tau,z)$ for $x \in U, z \in D, \tau \in \mathbb{H}$ by
 \[
 \varphi(x,z) =g_z \varphi(g_z^{-1}x) \qquad  \text{and} \qquad  \varphi(x,\tau,z) = g_z\varphi(g_z^{-1}x,\tau).
 \]
@@ -738,23 +738,23 @@ We will continue to use these notational conventions for other (not necessarily 
 \subsection{Schwartz forms for $V$}\label{V-forms}
 
 Let $\mathfrak{g} $ be the Lie algebra of $G$ and $\mathfrak{g}= \mathfrak{k} \oplus \mathfrak{p}$ be the Cartan decomposition of $\mathfrak{g}$ associated to $K$.  We identify
- $\mathfrak{g} \simeq \wwedge{2} V_{\R}$ as usual via $
+ $\mathfrak{g} \simeq \wwedge{2} V_{R}$ as usual via $
 (v_1 \wedge v_2)(v) = (v_1,v)v_2 - (v_2,v)v_1$. We write $X_{ij} = e_i \wedge e_j \in \mathfrak{g}$ and note that $\mathfrak{p}$ is spanned by $X_{ij}$ with $1 \leq i \leq 2$ and $3 \leq j \leq 4$. We write $\omega_{ij}$ for their dual. We orient $D$ such that $\omega_{13} \wedge \omega_{14} \wedge \omega_{23} \wedge \omega_{24}$ gives rise to the $G$-invariant volume element on $D$.
 
 \subsubsection{Special forms for $V$}
 
 The Kudla-Millson form $\varphi_2$ is an element in
 \[
- [\calS(V_{\R}) \otimes \calA^2(D)]^G\simeq
-[\calS(V_{\R}) \otimes \wwedge{2} \mathfrak{p}^{\ast}]^K,
+ [\calS(V_{R}) \otimes \calA^2(D)]^G\simeq
+[\calS(V_{R}) \otimes \wwedge{2} \mathfrak{p}^{\ast}]^K,
 \]
 where the isomorphism is given by evaluation at the base point. Here $\calA^2(D)$ denotes the differential $2$-forms on $D$. Note that $G$ acts diagonally in the natural fashion. At the base point $\varphi_2$ is given by
 \[
 \varphi_2= \frac12 \prod_{\mu=3}^4 \sum_{\alpha=1}^{2}  \left( x_{\alpha} - \frac1{2\pi}\frac{\partial}{\partial x_{\alpha}} \right) \varphi_0 \otimes \omega_{\alpha\mu}.
 \]
 Here $\varphi_0(x) := e^{-\pi(x,x)_{0}}$, where $(x,x)_0= \sum_{i=1}^4 x_i^2$ is the minimal majorant associated to the base point in $D$. Note that $\varphi_2$ has weight $2$, see \cite{KM1}. There is another Schwartz form $\psi_1$ of weight $0$ which lies in $
-[\calS(V_{\R}) \otimes \calA^1(D)]^G\simeq
-[\calS(V_{\R}) \otimes \mathfrak{p}^{\ast}]^K$ and is given by
+[\calS(V_{R}) \otimes \calA^1(D)]^G\simeq
+[\calS(V_{R}) \otimes \mathfrak{p}^{\ast}]^K$ and is given by
 \begin{equation}\label{psi20}
 \psi_1 =  -x_1x_3\varphi_0(x) \otimes \omega_{14}+x_1x_4  \varphi_0(x) \otimes \omega_{13} - x_2x_3 \varphi_0(x) \otimes \omega_{24}+x_2x_4\varphi_0(x) \otimes \omega_{23}.
 \end{equation}
@@ -767,9 +767,9 @@ The key relationship is (see \cite{KM90}, \S 8)
 \omega(L) \varphi_2 = d \psi_1.
 \]
 Here $\omega(L)$ is the Weil representation action
-of the $\SL_2$-lowering operator $L = \tfrac12 \left(
-\begin{smallmatrix}1 & -i \\ -i & -1\end{smallmatrix} \right)  \in \mathfrak{sl}_2(\R)$ on
-$\calS(V_{\R})$, while $d$ denotes the exterior differentiation on $D$.
+of the $SL_2$-lowering operator $L = \tfrac12 \left(
+\begin{smallmatrix}1 & -i \\ -i & -1\end{smallmatrix} \right)  \in \mathfrak{sl}_2(R)$ on
+$\calS(V_{R})$, while $d$ denotes the exterior differentiation on $D$.
 \end{theorem}
 
 On the upper half plane $\h$, the action of $L$ corresponds to the action of the classical Maass lowering operator which we also denote by $L$. For a function $f$ on $\h$, we have
@@ -823,7 +823,7 @@ as claimed. The formula $L\tilde{\psi}_1(x,\tau) = \psi_1(x,\tau)$ follows easil
 
 
 \begin{remark}
-The construction of the singular form $\tilde{\psi}$ works in much greater generality for $\Orth(p,q)$ whenever we have two Schwartz forms $\psi$ and $\varphi$ (of weight $r-2$ and $r$ resp.) such that
+The construction of the singular form $\tilde{\psi}$ works in much greater generality for $Orth(p,q)$ whenever we have two Schwartz forms $\psi$ and $\varphi$ (of weight $r-2$ and $r$ resp.) such that
 \[
 d \psi = L \varphi.
 \]
@@ -838,25 +838,25 @@ Then the analogous construction of $\tilde{\psi}$ then immediately yields $d \ti
 
 
 
-Let $W\subset V$ be the rational quadratic space of signature $(1,1)$ obtained from the Witt decomposition of $V$. We will refer to the nullcone of $W$ as the light-cone. We write $\mathfrak{m} \simeq \R$ for the Lie algebra of $M = \SO_0(W_{\R})$.
+Let $W\subset V$ be the rational quadratic space of signature $(1,1)$ obtained from the Witt decomposition of $V$. We will refer to the nullcone of $W$ as the light-cone. We write $\mathfrak{m} \simeq R$ for the Lie algebra of $M = \SO_0(W_{R})$.
 Then $X_{23} = e_2 \wedge e_3$ is its natural generator with dual $\omega_{23}$.
 We identify the associated symmetric space $D_W$ to $M$ with the
-space of lines in $W_{\R}$ on which the bilinear form $(\,,\,)$ is
+space of lines in $W_{R}$ on which the bilinear form $(\,,\,)$ is
 negative definite:
 \[
-D_W = \{{\bf s} \subset W_{\R} ; \;\text{$\dim {\bf s} =1$ and $(\,,\,)|_{\bf s} < 0$}
+D_W = \{{\bf s} \subset W_{R} ; \;\text{$\dim {\bf s} =1$ and $(\,,\,)|_{\bf s} < 0$}
 \}.
 \]
 We pick as base point of $D_W$ the line ${\bf s}_0$ spanned by $e_3$. We set $
-x(s) := m(s) e_3 = \sinh(s) e_2 + \cosh(s) e_3$. This realizes the isomorphism $D_W \simeq \R$. Namely, ${\bf s} = \Span x(s)$. Accordingly, we frequently write $s$ for ${\bf s}$ and vice versa. A vector $x \in W$ of positive length defines a point $D_{W,x}$ in
+x(s) := m(s) e_3 = \sinh(s) e_2 + \cosh(s) e_3$. This realizes the isomorphism $D_W \simeq R$. Namely, ${\bf s} = \Span x(s)$. Accordingly, we frequently write $s$ for ${\bf s}$ and vice versa. A vector $x \in W$ of positive length defines a point $D_{W,x}$ in
 $D$ via $D_{W,x} = \{ {\bf s} \in D; \; {\bf s} \perp x \}$. So ${\bf s} = D_{W,x}$ if and only if $(x,x({\bf s})) =0$. We also write ${\bf s}(x)=D_{W,x}$.
 
 \subsubsection{Special forms for $W$}\label{W-forms}
 
-We carry over the conventions from section~\ref{conventions}. We first consider the Schwartz form $\varphi_{1,1}$ on $W_{\R}$ constructed in \cite{FMcoeff} (in much greater generality) with values in $\calA^1(D_W) \otimes W_{\C}$. More precisely,
+We carry over the conventions from section~\ref{conventions}. We first consider the Schwartz form $\varphi_{1,1}$ on $W_{R}$ constructed in \cite{FMcoeff} (in much greater generality) with values in $\calA^1(D_W) \otimes W_{\C}$. More precisely,
 \[
-\varphi_{1,1} \in [\calS(W_{\R}) \otimes \calA^1(D_W) \otimes W_{\C}]^M \simeq
-[\calS(W_{\R}) \otimes \mathfrak{m}^{\ast} \otimes W_{\C}],
+\varphi_{1,1} \in [\calS(W_{R}) \otimes \calA^1(D_W) \otimes W_{\C}]^M \simeq
+[\calS(W_{R}) \otimes \mathfrak{m}^{\ast} \otimes W_{\C}],
 \]
 Here $M$ acts diagonally on all three factors. Explicitly at the base point, we have
 \begin{equation*}
@@ -865,7 +865,7 @@ Here $M$ acts diagonally on all three factors. Explicitly at the base point, we 
 Note that $\varphi_{1,1}$ has weight $2$, see \cite{FMcoeff}, Theorem~6.2. We define $\varphi_{1,1}(x,s)$ and $\varphi_{1,1}^0$ as before. There is another Schwartz function $\psi_{0,1}$ of weight $0$ given by
 \begin{multline*}
 \psi_{0,1}(x) =   -\frac1{\sqrt{2}} x_2x_3 e^{-\pi(x_2^2+x_3^2)}  \otimes 1 \otimes e_2 + \frac{1}{4\sqrt{2}\pi} e^{-\pi(x_2^2+x_3^2)} \otimes 1\otimes e_3 \\ \in
-[\calS(W_{\R}) \otimes \wwedge{0} \mathfrak{m}^{\ast} \otimes W_{\C}],
+[\calS(W_{R}) \otimes \wwedge{0} \mathfrak{m}^{\ast} \otimes W_{\C}],
 \end{multline*}
 and also $\psi_{0,1}(x,s)$ and $\psi_{0,1}^0$. Note that the notation differs from \cite{FMcoeff}, section~6.5. The function $\psi_{0,1}$ defined here is the term $-\psi_{1,1} - \tfrac12 \Lambda_{1,1}$ given in Theorem~6.11 in \cite{FMcoeff}.
 The key relation between $\varphi_{1,1}$ and $\psi_{0,1}$ (correcting a sign mistake in \cite{FMcoeff}) is given by
@@ -1016,7 +1016,7 @@ where $D_{W,x} \otimes x$ is the $0$-cycle $D_{W,x}$ `with coefficient $x \in W$
 
 We now combine $\tilde{\psi}_{0,1}$ and $\tilde{\psi}_{0,1}'$ to obtain an integrable and also square-integrable $W$-valued function
 \[
-\phi_{0,1}  \in [L^2(W_{\R}) \otimes \wwedge{0} \mathfrak{m}^{\ast} \otimes W_{\C}]
+\phi_{0,1}  \in [L^2(W_{R}) \otimes \wwedge{0} \mathfrak{m}^{\ast} \otimes W_{\C}]
 \]
 by
 \begin{equation*}
@@ -1102,17 +1102,17 @@ Thus $H[B+B'] = [H(B+B')]= 2i[B+B']$ as claimed.
 
 We define a map
 \[
-\iota_P: \calS(W_{\R}) \otimes \wwedge{i} \mathfrak{m}^{\ast} \otimes W_{\C} \to \calS(W_{\R}) \otimes \wwedge{i+1} \left( \mathfrak{m}^{\ast} \oplus  \mathfrak{n}^{\ast} \right)
+\iota_P: \calS(W_{R}) \otimes \wwedge{i} \mathfrak{m}^{\ast} \otimes W_{\C} \to \calS(W_{R}) \otimes \wwedge{i+1} \left( \mathfrak{m}^{\ast} \oplus  \mathfrak{n}^{\ast} \right)
 \]
 by
 \[
 \iota_P(\varphi \otimes \omega \otimes w) = \varphi \otimes \left(\omega \wedge (w \wedge u')\right).
 \]
-Here we used the isomorphism $\mathfrak{n} \simeq W \wedge \R u \in \bigwedge^{2} V_\R \simeq \mathfrak{g}$ and identify $W$ with its dual via the bilinear form $(\,,\,)$ so that $\mathfrak{n}^{\ast} \simeq W \wedge \R u'$. In \cite{FMres}, Section ~6.2 we explain that $\iota_P$ is a map of Lie algebra complexes. Hence we obtain a map of complexes
+Here we used the isomorphism $\mathfrak{n} \simeq W \wedge R u \in \bigwedge^{2} V_R \simeq \mathfrak{g}$ and identify $W$ with its dual via the bilinear form $(\,,\,)$ so that $\mathfrak{n}^{\ast} \simeq W \wedge R u'$. In \cite{FMres}, Section ~6.2 we explain that $\iota_P$ is a map of Lie algebra complexes. Hence we obtain a map of complexes
 \[
-[\calS(W_{\R}) \otimes \calA^i(D_W) \otimes W_{\C}]^M \to [\calS(W_{\R}) \otimes \calA^{i+1}(e(P))]^{NM},
+[\calS(W_{R}) \otimes \calA^i(D_W) \otimes W_{\C}]^M \to [\calS(W_{R}) \otimes \calA^{i+1}(e(P))]^{NM},
 \]
-which we also denote by $\iota_P$. Here $N$ acts trivially on $\calS(W_{\R})$. Explicitly, the vectors $e_2$ and $e_3$ in $W$ map under $\iota_P$ to the left-invariant $1$-forms
+which we also denote by $\iota_P$. Here $N$ acts trivially on $\calS(W_{R})$. Explicitly, the vectors $e_2$ and $e_3$ in $W$ map under $\iota_P$ to the left-invariant $1$-forms
 \[
 e_2 \mapsto \cosh(s)dw_2 - \sinh(s)dw_3 \qquad e_3 \mapsto \sinh(s)dw_2 - \cosh(s)dw_3
 \]
@@ -1129,7 +1129,7 @@ We let $\calL_W$ be a $\G_P$-invariant (coset of a) lattice in $W$, where $\G_N$
 \theta_{\varphi_{1,1}}(\tau,{\calL_W})= \sum_{x \in \calL_W} \varphi_{1,1}(x,\tau)
 \]
 and similarly for $\psi_{0,1}$, and $\phi_{0,1}$. Then the usual theta machinery gives that
-$\theta_{\varphi_{1,1}}(\tau,{\calL_W})$ and $\theta_{\phi_{0,1}}(\calL_W)$ both transform like (non)-holomorphic modular forms of weight $2$ for some congruence subgroup of $\Sl_2(\Z)$.
+$\theta_{\varphi_{1,1}}(\tau,{\calL_W})$ and $\theta_{\phi_{0,1}}(\calL_W)$ both transform like (non)-holomorphic modular forms of weight $2$ for some congruence subgroup of $SL_2(\Z)$.
 
 \begin{remark}
 The claim is not obvious for $\theta_{\phi_{0,1}}$, since $\phi_{0,1}$ is not a Schwartz function. In that case, we use Proposition~\ref{phi-prop}. The component $B+B'$ of $\phi_{0,1}$ is $C^2$ outside the light cone. Since $W$ is anisotropic we can then apply Possion summation, and this component transforms like a modular form. Then apply the differential operator $X_{23}$ to obtain the same for the other component $A+A'$ of $\phi_{0,1}$.
@@ -1181,7 +1181,7 @@ where $\beta(s) = \tfrac1{16\pi} \int_1^{\infty} e^{-st}t^{-3/2} dt$. This is (u
 
 \subsection{Linking numbers, de Rham cohomology and linking duals} \label{generallinking}
 We begin with a general discussion of integral formulas for linking numbers.
-Such formulas go back to the classical Gauss-Amp\`ere formula for $\R^3$, see \cite{F}, p.79-81, and \cite{DG} for its generalization to $S^3$ and $H^3$.
+Such formulas go back to the classical Gauss-Amp\`ere formula for $R^3$, see \cite{F}, p.79-81, and \cite{DG} for its generalization to $S^3$ and $H^3$.
 Suppose now that $c$ is a $1$-cycle in an oriented compact $3$-manifold M that is a rational boundary and $U$ is a tubular neighborhood of $c$.
 \begin{definition}
 We will say any closed form $\beta$ in $M-U$ is a {\it linking dual} (relative to $U$) of the bounding $1$-cycle $c$ if for any $1$-cycle $a$ in $M-U$
@@ -1299,7 +1299,7 @@ $\left(  \int_{T^2/ c_{e_2}} dw_2 \right)\left( \int_{c_{e_2}} \omega \right)e^{
 \[
 |\mu| \int_{T^2/ \partial c_{e_2}} dw_2  = |\mu|  \min_{\la \in \Lambda_W}  {\hspace{-2pt}'} |(\la,e_2)| = \min_{\la \in \Lambda_W}  {\hspace{-2pt}'} |(\la,x)|,
 \]
-which follows from the fact that the map $W \to \R$ given by $w \mapsto (w,e_2)$ induces an isomorphism $T^2/ \partial C_{e_2} \simeq \R / (\min_{\la \in \Lambda_W}'|(\la,e_2)|)\Z$.
+which follows from the fact that the map $W \to R$ given by $w \mapsto (w,e_2)$ induces an isomorphism $T^2/ \partial C_{e_2} \simeq R / (\min_{\la \in \Lambda_W}'|(\la,e_2)|)\Z$.
 
 \end{proof}
 
@@ -1356,7 +1356,7 @@ Thus we now assume that $c=c_y$ which is contained in a fiber $F_x$ containing a
 \]
 \end{lemma}
 \begin{proof}
-We can take $x = \mu e_2$ and hence $c$ is contained in the fiber over the image of $e_3 \in W$. Hence, by Proposition \ref{boundaryofC}, $c $ is the circle in the torus fiber at $s(x )=0$ {\it in the $e_3$-direction}, i.e., parallel to the image of $(0,\R e_3)$ in $e'(P)$. We note that by \eqref{psi'formula} even though $\widetilde{\psi}'_{0,1}(x)$ is not defined on the whole fiber over $s=0$ its restriction to $c$ is smooth. Hence the left hand side is well-defined since all the other terms in the sum are defined on the whole fiber and in fact in a neighborhood of that fiber. Hence the locally constant form $\sum_{\gamma \in \Gamma_M} \gamma^* \widetilde{\psi}'_{0,1}(x)$ is closed on the cylinder $[0, \epsilon] \times c $, and its integrals over the circles $s \times c $ all coincide. But $ \eps \times c = c(\epsilon)$. The lemma follows.
+We can take $x = \mu e_2$ and hence $c$ is contained in the fiber over the image of $e_3 \in W$. Hence, by Proposition \ref{boundaryofC}, $c $ is the circle in the torus fiber at $s(x )=0$ {\it in the $e_3$-direction}, i.e., parallel to the image of $(0,R e_3)$ in $e'(P)$. We note that by \eqref{psi'formula} even though $\widetilde{\psi}'_{0,1}(x)$ is not defined on the whole fiber over $s=0$ its restriction to $c$ is smooth. Hence the left hand side is well-defined since all the other terms in the sum are defined on the whole fiber and in fact in a neighborhood of that fiber. Hence the locally constant form $\sum_{\gamma \in \Gamma_M} \gamma^* \widetilde{\psi}'_{0,1}(x)$ is closed on the cylinder $[0, \epsilon] \times c $, and its integrals over the circles $s \times c $ all coincide. But $ \eps \times c = c(\epsilon)$. The lemma follows.
 \end{proof}
 Summing over $x$ and using case (i) we obtain
 \[
@@ -1417,7 +1417,7 @@ We obtain a map
 \begin{equation}
 \Lambda: H_c^{2}(X,\C) \to M_{2}(\G(N))
 \end{equation}
-from the cohomology with compact supports to the space of holomorphic modular forms of weight $2$ for the principal congruence subgroup $\G(N) \subset \SL_2(\Z)$. Alternatively, for $C$ an absolute $2$-cycle in $X$ defining a class in $H_2(X,\Z)$, the lift $\Lambda(C,\tau)$ is given by \eqref{KM-id} with $C_0$ the class given by $-\frac{1}{2\pi}\delta_{h0} [\omega]$.
+from the cohomology with compact supports to the space of holomorphic modular forms of weight $2$ for the principal congruence subgroup $\G(N) \subset SL_2(\Z)$. Alternatively, for $C$ an absolute $2$-cycle in $X$ defining a class in $H_2(X,\Z)$, the lift $\Lambda(C,\tau)$ is given by \eqref{KM-id} with $C_0$ the class given by $-\frac{1}{2\pi}\delta_{h0} [\omega]$.
 \end{theorem}
 
 
@@ -1558,7 +1558,7 @@ In particular, the map takes values in the holomorphic modular forms and factors
 \begin{equation}
 \Lambda^c: H^{2}(X) \to M_{2}(\G(N))
 \end{equation}
-from the cohomology with compact supports to the space of holomorphic modular forms of weight $2$ for the principal congruence subgroup $\G(N) \subseteq \SL_2(\Z)$.
+from the cohomology with compact supports to the space of holomorphic modular forms of weight $2$ for the principal congruence subgroup $\G(N) \subseteq SL_2(\Z)$.
 Alternatively, for $C$ any relative $2$-cycle in $X$ defining a class in $H_2(\overline{X},\partial \overline{X},\Z)$, we have
 \[
 \Lambda^c(C,\tau) = -\frac{1}{2\pi}\delta_{h0} \vol(C) + \sum_{n>0} ( C^c_n \cdot C ) q^n \in M_2(\G(N)).
@@ -1624,7 +1624,7 @@ We have
 \end{theorem}
 
 \begin{proof}
-This is essentially \cite{FCompo}, section~5, where more generally $\Orth(p,2)$ is considered.
+This is essentially \cite{FCompo}, section~5, where more generally $Orth(p,2)$ is considered.
 There the interpretation of the holomorphic Fourier coefficients as interior intersection number is given. (For more details of an analogous calculation see \cite{FMspec}, section~8). A little calculation using the formulas in \cite{FCompo} gives the non-holomorphic contribution. A more conceptual proof would use the relationship between $\varphi_2$ and $\tilde{\psi}_1$ (see Proposition~\ref{schluesselV} and Section~\ref{currents}) and the restriction formula for $\tilde{\psi}_1(n)$ (Theorem~\ref{psitilderes}).
 \end{proof}
 
@@ -1698,7 +1698,7 @@ This is the content of the proofs of Theorem~7.1 and Theorem~7.2 in \cite{BFDuke
 \end{proof}
 
 \begin{remark}\label{Kudla-xi}
-The form $\tilde{\psi}_1$ is closely related to Kudla's Green function $\xi$ \cite{KAnn97,KBforms} (more generally for $\Orth(p,2)$) which is given by
+The form $\tilde{\psi}_1$ is closely related to Kudla's Green function $\xi$ \cite{KAnn97,KBforms} (more generally for $Orth(p,2)$) which is given by
 \[
 \xi(x) =   \left( \int_1^{\infty} \varphi_0^0(\sqrt{r}x)  \frac{dr}{r} \right) e^{- \pi (x,x) }.
 \]
