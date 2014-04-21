@@ -41,23 +41,27 @@ module Mathematical
 
         text.gsub(Mathematical::Parser::REGEX) do |maths|
           if maths =~ /^\$(?!\$)/
-            maths = maths[1..-2]
+            just_maths = maths[1..-2]
             type = :inline
           elsif maths =~ /^\\\((?!\\\[)/
-            maths = maths[2..-4]
+            just_maths = maths[2..-4]
             type = :inline
           elsif maths =~ /^\\\[(?!\\\[)/
-            maths = maths[2..-4]
+            just_maths = maths[2..-4]
             type = :display
           elsif maths =~ /^\\begin(?!\\begin)/
-            maths = maths[16..-15]
+            just_maths = maths[16..-15]
             type = :display
           end
 
-          data = run_blahtex(maths, type)
+          data = run_blahtex(just_maths, type)
 
           if error = data.match("<error>(.+?)</error>")
-            raise ParseError, error
+            if data.match("<message>Unrecogni[sz]?ed command")
+              return maths
+            else
+              raise ParseError, error
+            end
           elsif filename = data.match("<md5>(.+?)</md5>")
             filename = filename[1]
             depth = data.match("<depth>(.+?)</depth>")[1]
