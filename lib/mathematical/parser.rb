@@ -14,7 +14,7 @@ module Mathematical
         # group 4, match begin equation
         (\\begin\{equation\})
     )
-    (.*(\g<1>)?.*)  # match everything in between including nested LaTeX equations
+    (.*?(\g<1>)?.*?)  # match everything in between including nested LaTeX equations
     (?<!\\)  # negative look-behind to make sure end is not escaped
         # if group 1 was start, match \1
         (?(1)(?<!\$)\1(?!\$)|

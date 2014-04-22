@@ -34,22 +34,38 @@ module Mathematical
     end
 
 
-    def render(contents)
+    def render(text)
       in_tmpdir do |tmpdir|
         @args << "--temp-directory #{Shellwords.shellescape tmpdir.first}"
         @args << "--png-directory #{Shellwords.shellescape tmpdir.first}"
 
-        contents.gsub(Mathematical::Parser::REGEX) do |maths|
+        text.gsub(Mathematical::Parser::REGEX) do |maths|
           if maths =~ /^\$(?!\$)/
-            maths = maths[1..-2]
+            just_maths = maths[1..-2]
             type = :inline
-          else
+          elsif maths =~ /^\\\((?!\\\[)/
+            just_maths = maths[2..-4]
+            type = :inline
+          elsif maths =~ /^\\\[(?!\\\[)/
+            just_maths = maths[2..-4]
+            type = :display
+          elsif maths =~ /^\\begin(?!\\begin)/
+            just_maths = maths[16..-15]
             type = :display
           end
 
-          data = run_blahtex(maths, type)
-          if filename = data.match("<md5>(.+?)</md5>")[1]
-            "<img class=\"#{type.to_s}-math\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
+          data = run_blahtex(just_maths, type)
+
+          if error = data.match("<error>(.+?)</error>")
+            if data.match("<message>Unrecogni[sz]?ed command")
+              return maths
+            else
+              raise ParseError, error
+            end
+          elsif filename = data.match("<md5>(.+?)</md5>")
+            filename = filename[1]
+            depth = data.match("<depth>(.+?)</depth>")[1]
+            "<img class=\"#{type.to_s}-math\" style=\"vertical-align: #{depth}px\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
           end
         end
       end
