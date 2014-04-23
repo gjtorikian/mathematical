@@ -1,6 +1,7 @@
 require "mathematical/parser"
 require "mathematical/render"
 require "mathematical/version"
+require 'mathematical.bundle'
 
 module Mathematical
   # Raised when missing binaries for images rendering.
