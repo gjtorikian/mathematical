@@ -1,5 +1,6 @@
  /****************************************************************************
- * Mathematical_rb Copyright(c) 2007, 32leaves, All rights reserved.
+ * Mathematical_rb Copyright(c) 2014, Garen J. Torikian, All rights reserved.
+ * Originally Mimetex_rb Copyright(c) 2007, 32leaves.
  * --------------------------------------------------------------------------
  * This file is part of Mathematical_rb, which is free software. You may redistribute
  * and/or modify it under the terms of the GNU General Public License,
@@ -16,7 +17,6 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA,
  * or point your browser to  http://www.gnu.org/licenses/gpl.html
  ****************************************************************************/
-
 
 #include "ruby.h"
 #include "mimetex.h"
@@ -41,8 +41,9 @@ static VALUE MATHEMATICAL_init(VALUE self, int fontSize) {
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_sLatexCode) {
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_sLatexCode, VALUE rb_sFilename) {
   Check_Type (rb_sLatexCode, T_STRING);
+  Check_Type (rb_sFilename, T_STRING);
 
   VALUE rb_sLatexCodeCopy;
 
@@ -56,25 +57,26 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_sLatexCode) {
   if(fontSize > 4 || fontSize < 1) fontSize = 2;
 
   subraster *sp = rasterize(StringValuePtr(rb_sLatexCodeCopy), fontSize);
+  if(sp == NULL) rb_raise(rb_eRuntimeError, "Failed to rasterize");
   bitmap_raster = sp->image;
-
+  char *gif_buffer = StringValuePtr(rb_sFilename);
   int gifSize = 0;
-  int status = GIF_Create(NULL, bitmap_raster->width, bitmap_raster->height, 2, 8);
+  int status = GIF_Create(gif_buffer, bitmap_raster->width, bitmap_raster->height, 2, 8);
   GIF_SetColor(1,0,0,0); /* foreground black if all 0 */
 
-  if(status != 0) rb_raise(INT2NUM(status), "Could not create GIF image");
+  if(status != 0) rb_raise(rb_eRuntimeError, "Could not create GIF image");
   GIF_SetTransparent(0);
   GIF_CompressImage(0, 0, -1, -1, MATHEMATICAL_GetPixel); /* emit gif */
   gifSize = GIF_Close();
 
   if(sp != NULL) delete_subraster(sp);  /* and free expression */
 
-  return rb_str_new("wow", 3);
+  return rb_str_new(gif_buffer, gifSize);
 }
 
 void Init_mathematical() {
   rb_mMathematical = rb_define_module("Mathematical");
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
   rb_define_method(rb_cMathematicalProcess, "initialize", MATHEMATICAL_init, 1);
-  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 1);
+  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 2);
 }
