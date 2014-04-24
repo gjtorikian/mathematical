@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+export CC=gcc
+
+bundle exec rake compile
+ruby -I"lib:test" test/mathematical/$1
