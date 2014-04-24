@@ -1,0 +1,21 @@
+#!/usr/bin/ruby
+
+require './lib/mathematical.rb'
+require 'benchmark'
+
+include Benchmark
+# number of iterations
+num = ARGV[0] ? ARGV[0].to_i : 10
+
+# we can also repeat the code itself
+repeats = ARGV[1] ? ARGV[1].to_i : 1
+
+file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * repeats
+
+puts "Benchmarking....\n"
+puts "Size: " + file.bytesize.to_s + " bytes\n"
+puts "Iterations: " + num.to_s + "\n"
+
+Benchmark.bm(40) do |x|
+  x.report("Rendering...                             ")  { for i in 1..num; Mathematical::Render.new.render(file); end }
+end
