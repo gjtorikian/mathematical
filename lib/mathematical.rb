@@ -1,9 +1,6 @@
-require "mathematical/htmlcss"
-require "mathematical/parser"
-require "mathematical/render"
-require "mathematical/tex"
-require "mathematical/version"
-require "mathematical/mml/mml"
+require "./lib/mathematical/parser"
+require "./lib/mathematical/render"
+require "./lib/mathematical/version"
 
 module Mathematical
   # Raised when missing binaries for images rendering.

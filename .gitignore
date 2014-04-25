@@ -20,3 +20,4 @@ bin/
 *.gif
 lib/mathematical.bundle
 text.html
+script/single_text
