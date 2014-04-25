@@ -1,24 +1,3 @@
 #!/usr/bin/ruby
 
-require './lib/mathematical.rb'
-
-`bundle exec rake compile`
-
-text = """
-<html>
-
-<body>
-
-#{Mathematical::Render.new.render('\begin{equation}x = {-b \pm \sqrt{b^2-4ac} \over 2a}\end{equation}')}
-
-</body>
-
-
-</html>
-"""
-
-File.open("text.html", 'w') { |file| file.write(text) }
-
-unless ARGV[0] == "-s"
-  `open text.html`
-end
+bundle exec rake single_text $1
