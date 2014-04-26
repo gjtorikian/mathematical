@@ -1,9 +1,9 @@
 module Mathematical
   class Math < HTML
     def self.to_html(node)
-      alttext = node.get_attribute("alttext")
-var alttext = this.Get("alttext");
-        if (alttext && alttext !== "") {node.setAttribute("aria-label",alttext)}
+      # alttext = node.get_attribute("alttext")
+# var alttext = this.Get("alttext");
+        # if (alttext && alttext !== "") {node.setAttribute("aria-label",alttext)}
   # var nobr = HTMLCSS.addElement(span,"nobr",{isMathJax: true});
   # span = this.HTMLcreateSpan(nobr);
   # var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
