@@ -4,18 +4,33 @@ require 'itextomml'
 module Mathematical
   class Render
     DEFAULT_OPTS = {
-      :matchFontHeight => true,
-      :scale => 100,
-      :minScaleAdjust => 50,
+      :font => "Auto",
       :linebreaks => {
+        #  This controls the automatic breaking of expressions:
+        #  when false, only process linebreak="newline",
+        #  when true, line breaks are inserted automatically in long expressions.
+
         :automatic => false,
+
+        # This controls how wide the lines of mathematics can be
+        #
+        # Use an explicit width like "30em" for a fixed width.
+        # Use "container" to compute the size from the containing element.
+        # Use "nn% container" for a portion of the container.
+        # Use "nn%" for a portion of the window size.
+        #
+        # The container-based widths may be slower, and may not produce the
+        # expected results if the layout width changes due to the removal
+        # of previews or inclusion of mathematics during typesetting.
+
         :width => "container"
-      },
+        }
     }
 
     def initialize(opts = {})
       @options = DEFAULT_OPTS.merge(opts)
       @itex = Itex2MML::Parser.new
+      @svg = SVG.new(@options)
     end
 
 
@@ -35,10 +50,13 @@ module Mathematical
           type = :display
         end
 
-        tex = @itex.inline_filter("$a$")
+        tex = @itex.inline_filter('a')
         @tex_doc = Nokogiri::XML(tex)
 
-        puts Mathematical::HTML.fetch(@tex_doc.root.name).to_html(@tex_doc.root)
+        @svg.pre_translate
+        @svg.translate(@tex_doc)
+
+        # puts Mathematical::SVG.fetch(@tex_doc.root.name).to_html(@tex_doc.root)
         # .each do |node|
         #   puts node
         #   if node.name == 'entry'

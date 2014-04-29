@@ -34,8 +34,9 @@ task :single_text do
   puts text
   File.open("text.html", 'w') { |file| file.write(text) }
 
+  `open text.html`
   # unless ARGV[0] == "-s"
-  #   `open text.html`
+  #
   # else
   #   puts File.open("text.html")
   # end
