@@ -170,14 +170,14 @@ module Mathematical
     def translate(document)
       linebreak_width = @line_width * 1000
       @mml = MML.new
-      MathElem.to_svg(document.child)
+      MML.fetch_element(document.child).to_svg(document.child)
     end
 
     def post_translate
 
     end
 
-    def self.length2em(length,mu,size)
+    def self.length2em(length,mu,size = nil)
       length = String(length) if !length.is_a? String
       return "" if length.empty?
       return 1000 if length == MML.SIZE.NORMAL
@@ -207,6 +207,10 @@ module Mathematical
 
     def self.resulting_doc
       @resulting_doc ||= Nokogiri::XML::Document.new
+    end
+
+    def get_scale
+      1
     end
   end
 end

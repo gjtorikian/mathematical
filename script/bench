@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require './lib/mathematical.rb'
+# require './lib/mathematical.rb'
 require 'benchmark'
 
 include Benchmark
@@ -10,7 +10,9 @@ num = ARGV[0] ? ARGV[0].to_i : 10
 # we can also repeat the code itself
 repeats = ARGV[1] ? ARGV[1].to_i : 1
 
-file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * repeats
+file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * 10
+
+puts (file * repeats)
 
 puts "Benchmarking....\n"
 puts "Size: " + file.bytesize.to_s + " bytes\n"

@@ -26,5 +26,16 @@ module Mathematical
     def add(svg, dx, dy, forcew, infront = nil)
 
     end
+
+    def check(data)
+      MML.fetch_element(data.child).to_svg(data.child)
+      svg.mml = data if data.SVGcanStretch("Vertical")
+      this.sh = svg.h if svg.h > this.sh
+      this.sd = svg.d if svg.d > this.sd
+    end
+
+    def stretch
+
+    end
   end
 end

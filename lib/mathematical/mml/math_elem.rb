@@ -5,9 +5,8 @@ module Mathematical
               :stroke => "black", :fill => "black", :"stroke-width" => 0,
               :transform => "matrix(1 0 0 -1 0 0)"
             })
-      require 'pry'
-      # binding.pry
-      box.add(node.child, 0, 0, true)
+
+      box.add(MML.fetch_element(node.child).to_svg(node.child), 0, 0, true)
     end
   end
 end
