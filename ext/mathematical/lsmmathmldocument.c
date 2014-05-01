@@ -51,7 +51,7 @@
 
 #include <lsmdomparser.h>
 
-#include <../itex2mml/itex2MML.h>
+#include "itex2MML.h"
 
 /* LsmDomNode implementation */
 

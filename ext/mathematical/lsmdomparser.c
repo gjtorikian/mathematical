@@ -30,7 +30,7 @@
 #include <libxml/parser.h>
 #include <gio/gio.h>
 #include <string.h>
-#include <../itex2mml/itex2MML.h>
+#include "itex2MML.h"
 
 typedef enum {
 	STATE

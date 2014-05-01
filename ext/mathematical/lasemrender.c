@@ -33,7 +33,7 @@
 #include <cairo-svg.h>
 #include <cairo-ps.h>
 
-#include <../itex2mml/itex2MML.h>
+#include "itex2MML.h"
 
 static char *option_debug_domains = NULL;
 static char *option_output_file_format = NULL;
