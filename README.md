@@ -23,7 +23,7 @@ Or install it yourself as:
 The simplest way to do this is
 
 ``` ruby
-Mathematical::Render.new.render(text)
+Mathematical::Render.new.render(string_with_math)
 ```
 
 `text` should just be a string, containing inline or display style math. The
@@ -31,15 +31,18 @@ output will be all the math equations converted into base64 encoded images.
 Inline math will have `class="inline-math"` set, and display math will have
 `class="display-math"`.
 
+### Matched math notations
+
+Currently, the following formats are supported:
+
+| inline formulas | displayed equations |
+| ------------- |-------------|
+| `$...$`      | `[...]`
+| `(...)`      | `\begin{equation}...\end{equation}`
+
+## Options
+
 ## Dependencies
-
-Two dependencies are needed:
-
-* [blahtexml](https://github.com/gvanas/blahtexml). This does all the conversion
-from math to PNG. It's available for OS X (`make blahtex-mac`) and Linux (`make blahtex-linux`).
-* [dvipng](http://sourceforge.net/projects/dvipng/). I'm on a Mac, and could not
-for the life of me figure out how to build this. I ended up downloading [MacTex](https://www.tug.org/mactex/),
-which is a *huge* package. `dvipng` is installed under */usr/texbin/dvipng*.
 
 ## Why did you...?
 
