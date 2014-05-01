@@ -1,51 +1,110 @@
  /****************************************************************************
  * Mathematical_rb Copyright(c) 2014, Garen J. Torikian, All rights reserved.
- * Originally Mimetex_rb Copyright(c) 2007, 32leaves.
  * --------------------------------------------------------------------------
- * This file is part of Mathematical_rb, which is free software. You may redistribute
- * and/or modify it under the terms of the GNU General Public License,
- * version 2 or later, as published by the Free Software Foundation.
- *      MATHEMATICAL_rb is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY, not even the implied warranty of MERCHANTABILITY.
- * See the GNU General Public License for specific details.
- *      By using Mathematical_rb, you warrant that you have read, understood and
- * agreed to these terms and conditions, and that you possess the legal
- * right and ability to enter into this agreement and to use Mathematical_rb
- * in accordance with it.
- *      Your Mathematical_rb distribution should contain a copy of the GNU General
- * Public License.  If not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA,
- * or point your browser to  http://www.gnu.org/licenses/gpl.html
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  ****************************************************************************/
 
 #include "ruby.h"
-#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <lsm.h>
+#include <lsmmathml.h>
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <glib/gprintf.h>
+#include <gio/gio.h>
+#include <cairo-pdf.h>
+#include <cairo-svg.h>
+#include <cairo-ps.h>
+#include "itex2MML.h"
+
+#define CSTR2SYM(str) ID2SYM(rb_intern(str))
 
 static VALUE rb_mMathematical;
 static VALUE rb_cMathematicalProcess;
 
-static VALUE MATHEMATICAL_init(VALUE self, int fontSize) {
-  rb_iv_set(self, "@fontSize", fontSize);
+static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
+  Check_Type (rb_Options, T_HASH);
+
+  rb_iv_set(self, "@ppi", NUM2DBL(rb_hash_aref(rb_Options, CSTR2SYM("ppi"))));
+  rb_iv_set(self, "@zoom", NUM2DBL(rb_hash_aref(rb_Options, CSTR2SYM("zoom"))));
 
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_sLatexCode, VALUE rb_sFilename) {
-  Check_Type (rb_sLatexCode, T_STRING);
-  Check_Type (rb_sFilename, T_STRING);
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempFile) {
+  Check_Type (rb_LatexCode, T_STRING);
+  Check_Type (rb_TempFile, T_STRING);
 
-  VALUE rb_sLatexCodeCopy;
+  const char *latex_code = StringValueCStr(rb_LatexCode);
+  int latex_size = strlen(latex_code);
 
-  // Because plain duplication shares internal memory region.  You
-  // have to call rb_str_modify() before modifying a string.
+  const char *tempfile = StringValueCStr(rb_TempFile);
 
-  int fontSize = FIX2INT(rb_iv_get(self, "@fontSize"));
+  // convert the TeX math to MathML
+  char * mathml = itex2MML_parse(latex_code, latex_size);
 
-  if(fontSize > 4 || fontSize < 1) fontSize = 2;
+  if (mathml == 0) rb_raise(rb_eRuntimeError, "Failed to parse itex");
 
-  mainbar(0);
+  int mathml_size = strlen(mathml);
 
-  return rb_str_new2("cool");
+  LsmDomDocument *document;
+  document = lsm_dom_document_new_from_memory(mathml, mathml_size, NULL);
+  g_free (mathml);
+
+  if (document == NULL) rb_raise(rb_eRuntimeError, "Failed to create document");
+
+  LsmDomView *view;
+
+  double ppi = 72.0; // NUM2DBL(rb_iv_get(self, "@ppi"));
+  double zoom = 1.0; // NUM2DBL(rb_iv_get(self, "@zoom"));
+
+  view = lsm_dom_document_create_view (document);
+  lsm_dom_view_set_resolution (view, ppi);
+
+  double width_pt = 2.0, height_pt = 2.0;
+  unsigned int height, width;
+
+  lsm_dom_view_get_size (view, &width_pt, &height_pt, NULL);
+  lsm_dom_view_get_size_pixels (view, &width, &height, NULL);
+
+  width_pt *= zoom;
+  height_pt *= zoom;
+  width *= zoom;
+  height *= zoom;
+
+  cairo_t *cairo;
+  cairo_surface_t *surface;
+
+  surface = cairo_svg_surface_create (tempfile, width_pt, height_pt);
+  cairo = cairo_create (surface);
+  cairo_surface_destroy (surface);
+  cairo_scale (cairo, zoom, zoom);
+  lsm_dom_view_render (view, cairo, 0, 0);
+
+  cairo_destroy (cairo);
+
+  g_object_unref (view);
+
+  g_object_unref (document);
+
+  return 0;
 }
 
 void Init_mathematical() {

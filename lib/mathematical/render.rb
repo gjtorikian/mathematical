@@ -1,12 +1,15 @@
+require 'fileutils'
+
 module Mathematical
   class Render
     DEFAULT_OPTS = {
-
+      :ppi => 72.0,
+      :zoom => 1.0
     }
 
     def initialize(opts = {})
       @config = DEFAULT_OPTS.merge(opts)
-      @processer = Mathematical::Process.new(2)
+      @processer = Mathematical::Process.new(@config)
     end
 
 
@@ -26,8 +29,18 @@ module Mathematical
           type = :display
         end
 
+        # this is the format itex2MML expects
+        if type == :inline
+          just_maths = "$#{just_maths}$"
+        else
+          just_maths = "$$#{just_maths}$$"
+        end
+
         begin
-          puts @processer.process(just_maths, "sss")
+          FileUtils.touch('file.svg')
+          @processer.process(just_maths, 'file.svg')
+          contents = File.read('file.svg')
+          File.delete('file.svg')
         rescue RuntimeError
           return just_maths
         end
