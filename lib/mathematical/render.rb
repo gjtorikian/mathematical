@@ -58,7 +58,7 @@ module Mathematical
           return just_maths
         end
 
-        "<img class=\"#{named_type(type)}\" data=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
+        "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
       end
       tempfile.close
       tempfile.unlink
