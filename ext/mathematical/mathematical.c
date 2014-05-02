@@ -41,9 +41,16 @@ static VALUE rb_cMathematicalProcess;
 
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   Check_Type (rb_Options, T_HASH);
+  VALUE ppi, zoom;
 
-  rb_iv_set(self, "@ppi", NUM2DBL(rb_hash_aref(rb_Options, CSTR2SYM("ppi"))));
-  rb_iv_set(self, "@zoom", NUM2DBL(rb_hash_aref(rb_Options, CSTR2SYM("zoom"))));
+  ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
+  zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
+
+  Check_Type(ppi, T_FLOAT);
+  Check_Type(zoom, T_FLOAT);
+
+  rb_iv_set(self, "@ppi", ppi);
+  rb_iv_set(self, "@zoom", zoom);
 
   return self;
 }
@@ -72,8 +79,8 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   LsmDomView *view;
 
-  double ppi = 72.0; // NUM2DBL(rb_iv_get(self, "@ppi"));
-  double zoom = 1.0; // NUM2DBL(rb_iv_get(self, "@zoom"));
+  double ppi = NUM2DBL(rb_iv_get(self, "@ppi"));
+  double zoom = NUM2DBL(rb_iv_get(self, "@zoom"));
 
   view = lsm_dom_document_create_view (document);
   lsm_dom_view_set_resolution (view, ppi);

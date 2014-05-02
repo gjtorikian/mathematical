@@ -8,12 +8,21 @@ module Mathematical
     }
 
     def initialize(opts = {})
+      raise(TypeError, "opts must be a hash!") unless opts.is_a? Hash
+
       @config = DEFAULT_OPTS.merge(opts)
-      @processer = Mathematical::Process.new(@config)
+      begin
+        @processer = Mathematical::Process.new(@config)
+      rescue TypeError => e # some error in the C code
+        raise
+      end
+
     end
 
 
     def render(text)
+      raise(TypeError, "text must be a string!") unless text.is_a? String
+
       text.gsub(Mathematical::Parser::REGEX) do |maths|
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
@@ -41,7 +50,8 @@ module Mathematical
           @processer.process(just_maths, 'file.svg')
           contents = File.read('file.svg')
           File.delete('file.svg')
-        rescue RuntimeError
+        rescue RuntimeError => e # some error in the C code
+          $stderr.puts e.message
           return just_maths
         end
 
