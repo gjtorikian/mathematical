@@ -14,7 +14,7 @@ find_header("libxml/xpath.h", "/usr/include/libxml2", "/usr/local/include/libxml
 find_header("libxml/xpathInternals.h", "/usr/include/libxml2", "/usr/local/include/libxml2")
 
 have_library("cairo")
-find_header("cairo.h", "/opt/X11/include/cairo")
+find_header("cairo.h", "/opt/X11/include/cairo", "/usr/include/cairo", "#{INCLUDEDIR}/cairo")
 
 begin
   brew_output = %x[brew list pango]
