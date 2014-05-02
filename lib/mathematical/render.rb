@@ -26,7 +26,7 @@ module Mathematical
 
       # TODO: figure out how to write svgs without the tempfile
       tempfile = Tempfile.new('foo')
-      text.gsub(Mathematical::Parser::REGEX) do |maths|
+      text = text.gsub(Mathematical::Parser::REGEX) do |maths|
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
           type = :inline
@@ -50,7 +50,7 @@ module Mathematical
 
         begin
           status = @processer.process(just_maths, tempfile.path)
-          raise RuntimeError unless status == 0
+          raise RuntimeError unless status
           svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
           svg_content = svg_content.lines.to_a[1..-1].join
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
@@ -62,6 +62,7 @@ module Mathematical
       end
       tempfile.close
       tempfile.unlink
+      text
     end
 
     def svg_to_base64(contents)
