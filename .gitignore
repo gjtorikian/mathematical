@@ -17,7 +17,8 @@ test/version_tmp
 tmp
 /vendor/gems/
 bin/
-ext/blahtexml/Source/extconf.rb
-ext/blahtexml/Source/makefile
-ext/blahtexml/bin-blahtex
-ext/blahtexml/blahtex
+*.gif
+lib/mathematical.bundle
+text.html
+script/single_text
+file.svg

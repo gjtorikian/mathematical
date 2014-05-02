@@ -1,117 +1,75 @@
-require 'rbconfig'
 require 'fileutils'
-require 'tmpdir'
-require 'shellwords'
 require 'base64'
+require 'tempfile'
 
 module Mathematical
   class Render
     DEFAULT_OPTS = {
-      :html_png_resolution => 200
+      :ppi => 72.0,
+      :zoom => 1.0
     }
 
     def initialize(opts = {})
-      @os ||= (
-        host_os = RbConfig::CONFIG['host_os']
-        case host_os
-        when /darwin|mac os/
-          "macosx"
-        when /linux/
-          "linux"
-        else
-          raise Error, "unknown os: #{host_os.inspect}"
-        end
-      )
+      raise(TypeError, "opts must be a hash!") unless opts.is_a? Hash
 
-      opts = DEFAULT_OPTS.merge(opts)
-      @temp_dir = Dir.mktmpdir
-      @args = [
-              '--png',
-              '--use-preview-package',
-              # '--shell-dvipng',
-              # "'dvipng -D #{Shellwords.shellescape opts[:html_png_resolution].to_s}'",
-             ]
+      @config = DEFAULT_OPTS.merge(opts)
+      begin
+        @processer = Mathematical::Process.new(@config)
+      rescue TypeError => e # some error in the C code
+        raise
+      end
+
     end
-
 
     def render(text)
-      in_tmpdir do |tmpdir|
-        @args << "--temp-directory #{Shellwords.shellescape tmpdir.first}"
-        @args << "--png-directory #{Shellwords.shellescape tmpdir.first}"
+      raise(TypeError, "text must be a string!") unless text.is_a? String
 
-        text.gsub(Mathematical::Parser::REGEX) do |maths|
-          if maths =~ /^\$(?!\$)/
-            just_maths = maths[1..-2]
-            type = :inline
-          elsif maths =~ /^\\\((?!\\\[)/
-            just_maths = maths[2..-4]
-            type = :inline
-          elsif maths =~ /^\\\[(?!\\\[)/
-            just_maths = maths[2..-4]
-            type = :display
-          elsif maths =~ /^\\begin(?!\\begin)/
-            just_maths = maths[16..-15]
-            type = :display
-          end
-
-          data = run_blahtex(just_maths, type)
-
-          if error = data.match("<error>(.+?)</error>")
-            if data.match("<message>Unrecogni[sz]?ed command")
-              return maths
-            else
-              raise ParseError, error
-            end
-          elsif filename = data.match("<md5>(.+?)</md5>")
-            filename = filename[1]
-            depth = data.match("<depth>(.+?)</depth>")[1]
-            "<img class=\"#{type.to_s}-math\" style=\"vertical-align: #{depth}px\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
-          end
+      # TODO: figure out how to write svgs without the tempfile
+      tempfile = Tempfile.new('foo')
+      text.gsub(Mathematical::Parser::REGEX) do |maths|
+        if maths =~ /^\$(?!\$)/
+          just_maths = maths[1..-2]
+          type = :inline
+        elsif maths =~ /^\\\((?!\\\[)/
+          just_maths = maths[2..-4]
+          type = :inline
+        elsif maths =~ /^\\\[(?!\\\[)/
+          just_maths = maths[2..-4]
+          type = :display
+        elsif maths =~ /^\\begin(?!\\begin)/
+          just_maths = maths[16..-15]
+          type = :display
         end
+
+        # this is the format itex2MML expects
+        if type == :inline
+          just_maths = "$#{just_maths}$"
+        else
+          just_maths = "$$#{just_maths}$$"
+        end
+
+        begin
+          status = @processer.process(just_maths, tempfile.path)
+          raise RuntimeError unless status == 0
+          svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
+          svg_content = svg_content.lines.to_a[1..-1].join
+        rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
+          $stderr.puts e.message
+          return just_maths
+        end
+
+        "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
       end
+      tempfile.close
+      tempfile.unlink
     end
 
-    def run_blahtex(tex, type)
-      raise CommandNotFoundError, "Required commands missing: #{missing_commands.join(', ')} in PATH. (#{ENV['PATH']})" unless missing_commands.empty?
-      @args << '--displaymath' if type == :equation
-
-      IO.popen(["bin/blahtex/#{@os}/blahtex", *@args].join(' '), 'w+') do |blahtex|
-        blahtex.write tex
-        blahtex.close_write
-
-        output = blahtex.read
-        blahtex.close_read
-
-        raise "Error running blahtex" unless $?.success?
-
-        output
-      end
+    def svg_to_base64(contents)
+      Base64.strict_encode64(contents)
     end
 
-    def png_to_base64(path)
-      File.open(path, 'r') { |image_file| Base64.encode64(image_file.read).gsub(/\n/, '') }
-    end
-
-private
-
-    # Check toolchain availability and returns array of missing tools
-    def missing_commands
-      commands = []
-      commands << "dvipng" unless can_run?("dvipng -v")
-      commands
-    end
-
-    # Trial command and check if return code is zero
-    def can_run?(command)
-      `#{command} 2>&1`
-      $?.exitstatus.zero?
-    end
-
-    def in_tmpdir
-      path = FileUtils.mkdir_p Dir.tmpdir
-      yield path
-    ensure
-      FileUtils.rm_rf( path )
+    def named_type(type)
+      "#{type.to_s}-math"
     end
   end
 end
