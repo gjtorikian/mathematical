@@ -11,6 +11,7 @@ Rake::TestTask.new do |t|
 end
 
 task :default => [:test]
+Rake::Task[:test].prerequisites << :compile
 
 require 'rake/extensiontask'
 spec = Gem::Specification.load('mathematical.gemspec')
