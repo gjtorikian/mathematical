@@ -32,8 +32,8 @@ They look something like this:
 
 ``` html
 <img class="type-inline" data-math-type="type-inline" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0..."/>
-
 ```
+
 Inline math will have `class="type-inline" data-math-type="type-inline"` set, and display math will have
 `class="type-display" data-math-type="type-display"`.
 
@@ -70,6 +70,8 @@ This package depends on the following libraries:
 * cairo
 * pango
 * pangocairo
+
+To install these dependencies:
 
 * On a Mac, pretty much everything can be installed via Homebrew.
 * On a *nix machine, I'm sure it's possible via package managers to install all of these.
