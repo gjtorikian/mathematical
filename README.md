@@ -26,10 +26,16 @@ The simplest way to do this is
 Mathematical::Render.new.render(string_with_math)
 ```
 
-`text` should just be a string, containing inline or display style math. The
-output will be all the math equations converted into base64 encoded images.
-Inline math will have `class="inline-math"` set, and display math will have
-`class="display-math"`.
+`string_with_math` should just be a string, containing inline or display style math.
+The output will be all the math equations, as SVGs, converted into base64 encoded images.
+They look something like this:
+
+``` html
+<img class="type-inline" data-math-type="type-inline" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0..."/>
+
+```
+Inline math will have `class="type-inline" data-math-type="type-inline"` set, and display math will have
+`class="type-display" data-math-type="type-display"`.
 
 ### Matched math notations
 
@@ -42,7 +48,32 @@ Currently, the following formats are supported:
 
 ## Options
 
+`Mathematical::Render.new` can take a few options:
+
+* `:ppi`, the pixels per inch of the resulting SVG (default: `72.0`)
+* `:zoom`, the zoome level of the resulting SVG (default: `1.0`)
+
+Pass these in as an options hash; these *must* be Float values! For example:
+
+``` ruby
+opts = { :ppi => 200.0, :zoom => 5.0 }
+renderer = Mathematical::Render.new(opts)
+```
+
 ## Dependencies
+
+This package depends on the following libraries:
+
+* glib-2.0
+* gdk-pixbuf-2.0
+* xml2
+* cairo
+* pango
+* pangocairo
+
+* On a Mac, pretty much everything can be installed via Homebrew.
+* On a *nix machine, I'm sure it's possible via package managers to install all of these.
+* On a Windows machine, I have no idea.
 
 ## History
 
@@ -99,11 +130,11 @@ geniuses, is absoloutely incomprehnsible, due in part to JavaScript's inability
 to possess a coherent structure.
 
 * Near the end of my wits, I mimicked the behavior of [`mathrender2`](https://github.com/quipper/mathrender2),
- which uses [PhantomJS](http://phantomjs.org/) to embed MathJax onto a fake
- HTML page. This produced exactly what I needed: a bunch of accurate SVG files with
- no intermediate binaries. It was, unfortunately, a bit slow: for an arbitrary
- composition of 880 equations, it took about eight seconds to complete. Could I
- do better?
+which uses [PhantomJS](http://phantomjs.org/) to embed MathJax onto a fake
+HTML page. This produced exactly what I needed: a bunch of accurate SVG files with
+no intermediate binaries. It was, unfortunately, a bit slow: for an arbitrary
+composition of 880 equations, it took about eight seconds to complete. Could I
+do better?
 
 * I came across [Lasem](https://wiki.gnome.org/action/show/Projects/Lasem?action=show&redirect=Lasem),
 which meet every need. It has no external binary dependencies (only library packages),
