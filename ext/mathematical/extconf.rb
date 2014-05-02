@@ -18,7 +18,6 @@ find_header("cairo.h", "/opt/X11/include/cairo")
 
 begin
   brew_output = %x[brew list pango]
-  puts brew_output, "POOP"
   match = brew_output.match(/(\S+?\/include\/\S+?)\/pango\/pango-\w+\.h/)
   raise ArgumentError if match.nil?
   brew_pango_includes = match[1]
