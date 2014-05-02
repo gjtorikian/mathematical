@@ -111,7 +111,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   g_object_unref (document);
 
-  return 0;
+  return Qtrue;
 }
 
 void Init_mathematical() {
