@@ -26,7 +26,7 @@ module Mathematical
 
       # TODO: figure out how to write svgs without the tempfile
       tempfile = Tempfile.new('foo')
-      text.gsub(Mathematical::Parser::REGEX) do |maths|
+      text = text.gsub(Mathematical::Parser::REGEX) do |maths|
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
           type = :inline
@@ -62,6 +62,7 @@ module Mathematical
       end
       tempfile.close
       tempfile.unlink
+      text
     end
 
     def svg_to_base64(contents)
