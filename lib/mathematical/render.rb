@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'base64'
 
 module Mathematical
   class Render
@@ -18,7 +19,6 @@ module Mathematical
       end
 
     end
-
 
     def render(text)
       raise(TypeError, "text must be a string!") unless text.is_a? String
@@ -48,25 +48,24 @@ module Mathematical
         begin
           FileUtils.touch('file.svg')
           @processer.process(just_maths, 'file.svg')
-          contents = File.read('file.svg')
+          svg_content = File.open('file.svg', 'r') { |image_file| image_file.read }
+          svg_content = svg_content.lines.to_a[1..-1].join
           File.delete('file.svg')
-        rescue RuntimeError => e # some error in the C code
+        rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts e.message
           return just_maths
         end
 
-        # if error = data.match("<error>(.+?)</error>")
-        #   if data.match("<message>Unrecogni[sz]?ed command")
-        #     return maths
-        #   else
-        #     raise ParseError, error
-        #   end
-        # elsif filename = data.match("<md5>(.+?)</md5>")
-        #   filename = filename[1]
-        #   depth = data.match("<depth>(.+?)</depth>")[1]
-        #   "<img class=\"#{type.to_s}-math\" style=\"vertical-align: #{depth}px\" src=\"data:image/png;base64,#{png_to_base64(File.join(tmpdir, "#{filename}.png"))}\"/>"
-        # end
+        "<img class=\"#{named_type(type)}\" data=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
       end
+    end
+
+    def svg_to_base64(contents)
+      Base64.strict_encode64(contents)
+    end
+
+    def named_type(type)
+      "#{type.to_s}-math"
     end
   end
 end
