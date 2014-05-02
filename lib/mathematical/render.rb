@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'base64'
+require 'tempfile'
 
 module Mathematical
   class Render
@@ -23,6 +24,8 @@ module Mathematical
     def render(text)
       raise(TypeError, "text must be a string!") unless text.is_a? String
 
+      # TODO: figure out how to write svgs without the tempfile
+      tempfile = Tempfile.new('foo')
       text.gsub(Mathematical::Parser::REGEX) do |maths|
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
@@ -46,11 +49,10 @@ module Mathematical
         end
 
         begin
-          FileUtils.touch('file.svg')
-          @processer.process(just_maths, 'file.svg')
-          svg_content = File.open('file.svg', 'r') { |image_file| image_file.read }
+          status = @processer.process(just_maths, tempfile.path)
+          raise RuntimeError unless status == 0
+          svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
           svg_content = svg_content.lines.to_a[1..-1].join
-          File.delete('file.svg')
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts e.message
           return just_maths
@@ -58,6 +60,8 @@ module Mathematical
 
         "<img class=\"#{named_type(type)}\" data=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
       end
+      tempfile.close
+      tempfile.unlink
     end
 
     def svg_to_base64(contents)
