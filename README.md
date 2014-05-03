@@ -62,20 +62,46 @@ renderer = Mathematical::Render.new(opts)
 
 ## Dependencies
 
-This package depends on the following libraries:
+Before using this gem, you must install the following libraries:
 
 * glib-2.0
 * gdk-pixbuf-2.0
 * xml2
 * cairo
 * pango
-* pangocairo
 
-To install these dependencies:
+### Mac install
 
-* On a Mac, pretty much everything can be installed via Homebrew.
-* On a *nix machine, I'm sure it's possible via package managers to install all of these.
-* On a Windows machine, I have no idea.
+To install these dependencies on a Mac, everything can be installed via Homebrew:
+
+```
+brew install glib gdk-pixbuf cairo pango
+```
+
+`xml2` should already be on your machine.
+
+### *nix install
+
+To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
+
+```
+sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
+```
+
+### Windows install
+
+On a Windows machine, I have no idea.
+
+## Hacking
+
+After cloning the repo:
+
+``` bash
+script/bootstrap
+bundle exec rake compile
+```
+
+If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
 ## History
 
