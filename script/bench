@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
-require './lib/mathematical.rb'
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'mathematical'
 require 'benchmark'
 
 include Benchmark
@@ -13,7 +15,7 @@ repeats = ARGV[1] ? ARGV[1].to_i : 1
 file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * repeats
 
 puts "Benchmarking....\n"
-puts "Size: " + file.bytesize.to_s + " bytes\n"
+puts "Size: " + (file.bytesize / 1000).to_s + " megabytes\n"
 puts "Iterations: " + num.to_s + "\n"
 
 Benchmark.bm(40) do |x|
