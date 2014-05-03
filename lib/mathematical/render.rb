@@ -54,7 +54,7 @@ module Mathematical
           svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
           svg_content = svg_content.lines.to_a[1..-1].join
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
-          $stderr.puts e.message
+          $stderr.puts "#{e.message}: #{maths}"
           return maths
         end
 
