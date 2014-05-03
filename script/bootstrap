@@ -3,17 +3,15 @@
 set -e
 export CC=gcc
 
-if [ -z "$TRAVIS" ]; then
-  echo "==> Installing required libraries…"
+echo "==> Installing required libraries…"
 
-  if [ "$(uname)" == "Darwin" ]; then
-    brew install glib
-    brew install gdk-pixbuf
-    brew install cairo
-    brew install pango
-  elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
-  fi
+if [ "$(uname)" == "Darwin" ]; then
+  brew install glib
+  brew install gdk-pixbuf
+  brew install cairo
+  brew install pango
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+  sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
 fi
 
 echo "==> Installing gem dependencies…"
