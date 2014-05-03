@@ -393,7 +393,7 @@ j_{\ast} H_2(X) \simeq H_2(X)/ \sum_{[P]} H_2(e'(P)).
 We briefly review the mapping-cone-complex realization of the cohomology of compact supports of $X$. For a more detailed discussion, see \cite{FMspec}, section~5.
 
 We let $A_c^{\bullet}(X)$ be the complex of compactly supported differential forms on $X$ which gives rise to $H_c^{\bullet}(X)$, the cohomology of compact supports. We now represent the compactly-supported cohomology of $X$ by the cohomology of the mapping cone $C^{\bullet}$ of $i^*$, see \cite{Weibel}, p.19, where as before $i: X \hookrightarrow \overline{X}$. However, we will change the sign of the differential on $C^{\bullet}$ and shift the grading down by one. Thus we have
-$$C^i =\{ (a,b), a \in A^i (\overline{X}), b \in A^{i-1}(\partial \overline{X})\}$$
+
 with $d(a,b) = (da, i^*a - db)$.
 If $(a,b)$ is a cocycle in $C^{\bullet}$ we will use $[[a,b]]$ to denote its cohomology class. We have
 \begin{proposition} \label{quasiiso}
