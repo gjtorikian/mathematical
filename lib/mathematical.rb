@@ -1,4 +1,4 @@
-require "mathematical/mathematical"
+require "mathematical.bundle"
 require "mathematical/parser"
 require "mathematical/render"
 require "mathematical/version"
