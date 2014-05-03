@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Garen Torikian"]
   spec.email         = ["gjtorikian@gmail.com"]
   spec.summary       = %q{Turn itex math equations into base64 SVGs.}
-  spec.description   = %q{This is a general purpose wrapper to GNOME's Lasem. It's a fast and aesthetically pleasing mechanism to turn math equations into base64 SVGs, to embed on the web.}
+  spec.description   = %q{It's a fast and aesthetically pleasing mechanism to turn math equations into base64 SVGs, to embed on the web. It's a general purpose wrapper to GNOME's Lasem. }
   spec.homepage      = "https://github.com/gjtorikian/mathematical"
   spec.license       = "MIT"
 
@@ -18,8 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rake-compiler"
-
+  spec.add_development_dependency "rake-compiler"
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "mocha", "~> 1.0"
 end
