@@ -4,7 +4,7 @@ rvm:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
+  - sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx
 
 install:
   - bundle install
