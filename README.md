@@ -141,7 +141,7 @@ great: a pure C implementation that turned TeX equations into a rasterized repre
 and then into a PNG. The speed was there, but the output image was pretty jagged.
 I tweaked the program to output BMPs, and tried to sharpen those with [`potrace`](http://potrace.sourceforge.net/),
 but the results were less then pleasant. The "update" to `mimetex` is [`mathtex`](http://www.forkosh.com/mathtex.html),
-but it, too, depend on `LaTeX` and `dvipng` binaries to produce images.
+but it, too, depends on `LaTeX` and `dvipng` binaries to produce images.
 
 * [`pmml2svg`](http://pmml2svg.sourceforge.net/) had potential. It's a set of
 XSLT stylesheets to convert MathML to SVG. Unfortunately, it relies on XSLT 2.0,
@@ -164,7 +164,7 @@ it into SVG)
 
 * At one point, I began to try and convert the MathJax code to Ruby to figure out
 how it accomplished its `toSVG` methods. The MathJax codebase, while written by
-geniuses, is absoloutely incomprehnsible, due in part to JavaScript's inability
+geniuses, is incomprehensible, due in part to JavaScript's inability
 to possess a coherent structure.
 
 * Near the end of my wits, I mimicked the behavior of [`mathrender2`](https://github.com/quipper/mathrender2),
