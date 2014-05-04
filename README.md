@@ -48,7 +48,7 @@ Currently, the following formats are supported:
 | `$...$`      | `[...]`
 | `(...)`      | `\begin{equation}...\end{equation}`
 
-## Options
+### Options
 
 `Mathematical::Render.new` can take a few options:
 
@@ -90,9 +90,11 @@ To install these dependencies on a *nix machine, fetch the packages through your
 sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
 ```
 
+`glib` and `gdk-pixbuf` should be on your machine.
+
 ### Windows install
 
-On a Windows machine, I have no idea.
+On a Windows machine, I have no idea. Pull requests welcome!
 
 ## Hacking
 
@@ -124,9 +126,10 @@ week. Here was my journey:
 TeX equations and converts them to PNG. This wasn't a bad idea, but it took too long;
 for twelve equations, it took eight seconds. It was slow because it shelled out
 to [`LaTeX`](http://www.latex-project.org/), *then* [`dvipng`](http://www.nongnu.org/dvipng/).
-  In fact, as I discovered, most projects on the 'Net shell out to `LaTeX`, then
+
+In fact, as I discovered, most projects on the 'Net shell out to `LaTeX`, then
 something else, which makes performance absolutely horrid. I had to find something
-better, with no preferably dependency on `LaTeX`.
+better, with preferably no dependency on `LaTeX`.
 
 * [`mimetex`](http://www.forkosh.com/mimetex.html) was my next attempt. It looked
 great: a pure C implementation that turned TeX equations into a rasterized representation,
