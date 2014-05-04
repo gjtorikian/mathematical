@@ -2,6 +2,8 @@
 
 Convert mathematical equations to base64 encoded images.
 
+[![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=setup-travis)](https://travis-ci.org/gjtorikian/mathematical)
+
 ![](https://i.imgur.com/JC7HT32.gif)
 
 ## Installation
