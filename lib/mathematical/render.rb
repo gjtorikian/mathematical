@@ -55,7 +55,7 @@ module Mathematical
           svg_content = svg_content.lines.to_a[1..-1].join
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts "#{e.message}: #{maths}"
-          return maths
+          next(maths)
         end
 
         "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
