@@ -24,6 +24,7 @@
 
 #include <math.h>
 #include <lsmsvglength.h>
+#include <lsmsvgenums.h>
 
 LsmSvgViewbox *
 lsm_svg_viewbox_new (double resolution_ppi,
@@ -90,4 +91,62 @@ lsm_svg_length_normalize (const LsmSvgLength *length,
 	g_warning ("[LsmSvg::normalize_length] Invalid length property");
 
 	return 0.0;
+}
+
+gboolean
+lsm_svg_parse_length (char **str, LsmSvgLength *length)
+{
+	char *c;
+
+	if (str == NULL || *str == NULL || length == NULL)
+		return FALSE;
+
+	if (!lsm_str_parse_double (str, &length->value_unit))
+		return FALSE;
+
+	c = *str;
+
+	if (c[0] != '\0') {
+		if (c[0] == '%') {
+			length->type = LSM_SVG_LENGTH_TYPE_PERCENTAGE;
+			c++;
+		} else if (c[0] == 'e') {
+			if (c[1] == 'm') {
+				length->type = LSM_SVG_LENGTH_TYPE_EMS;
+				c += 2;
+			} else if (c[1] == 'x') {
+				length->type = LSM_SVG_LENGTH_TYPE_EXS;
+				c += 2;
+			} else
+				length->type = LSM_SVG_LENGTH_TYPE_ERROR;
+		} else if (c[0] == 'p') {
+			if (c[1] == 'x') {
+				length->type = LSM_SVG_LENGTH_TYPE_PX;
+				c += 2;
+			} else if (c[1] == 'c') {
+				length->type = LSM_SVG_LENGTH_TYPE_PC;
+				c += 2;
+			} else if (c[1] == 't') {
+				length->type = LSM_SVG_LENGTH_TYPE_PT;
+				c += 2;
+			} else
+				length->type = LSM_SVG_LENGTH_TYPE_ERROR;
+		} else if (c[0] == 'c' && c[0] == 'm') {
+				length->type = LSM_SVG_LENGTH_TYPE_CM;
+				c += 2;
+		} else if (c[0] == 'm' && c[0] == 'm') {
+				length->type = LSM_SVG_LENGTH_TYPE_MM;
+				c += 2;
+		} else if (c[0] == 'i' && c[0] == 'n') {
+				length->type = LSM_SVG_LENGTH_TYPE_IN;
+				c += 2;
+		} else
+			length->type = LSM_SVG_LENGTH_TYPE_NUMBER;
+	} else {
+		length->type = LSM_SVG_LENGTH_TYPE_NUMBER;
+	}
+
+	*str = c;
+
+	return TRUE;
 }

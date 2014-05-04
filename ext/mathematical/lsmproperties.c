@@ -26,7 +26,7 @@
 #include <lsmstr.h>
 #include <string.h>
 
-#define PROPERTY_TRAIT(property) ((void *) (((void *) property) + sizeof (LsmProperty)))
+#define PROPERTY_TRAIT(property) ((void *) (((char *) property) + sizeof (LsmProperty)))
 #define PROPERTY_SIZE(trait_class) (trait_class->size + sizeof (LsmProperty))
 
 struct _LsmPropertyManager {
@@ -341,13 +341,13 @@ lsm_property_manager_apply_property_bag (LsmPropertyManager *manager,
 		if (property->id < manager->n_properties) {
 			if (manager->property_check[property->id] != manager->property_check_count) {
 				if (g_strcmp0 (property->value, "inherit") != 0)
-					*((LsmProperty **) ((void*) style
+					*((LsmProperty **) ((char *) style
 							    + LSM_PROPERTY_ID_TO_OFFSET (property->id))) = property;
 				else {
 					if (parent_style != NULL)
-						*((LsmProperty **) ((void*) style
+						*((LsmProperty **) ((char *) style
 								    + LSM_PROPERTY_ID_TO_OFFSET (property->id))) =
-							*((LsmProperty **) ((void*) parent_style
+							*((LsmProperty **) ((char *) parent_style
 									    + LSM_PROPERTY_ID_TO_OFFSET (property->id)));
 				}
 
@@ -404,7 +404,7 @@ void lsm_property_manager_init_default_style (LsmPropertyManager *property_manag
 			trait_class->from_string (PROPERTY_TRAIT (property),
 						  (char *) property_infos->trait_default);
 
-		*((LsmProperty **) ((void*) style
+		*((LsmProperty **) ((char *) style
 				    + LSM_PROPERTY_ID_TO_OFFSET (property->id))) = property;
 	}
 }

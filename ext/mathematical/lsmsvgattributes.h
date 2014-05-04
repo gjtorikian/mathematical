@@ -60,6 +60,11 @@ typedef struct {
 
 typedef struct {
 	LsmAttribute base;
+	LsmSvgLengthList list;
+} LsmSvgLengthListAttribute;
+
+typedef struct {
+	LsmAttribute base;
 	LsmSvgPaint paint;
 } LsmSvgPaintAttribute;
 

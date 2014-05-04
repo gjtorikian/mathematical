@@ -67,15 +67,16 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   g_type_init ();
 
   // convert the TeX math to MathML
-  char * mathml = itex2MML_parse(latex_code, latex_size);
+  char * mathml = lsm_itex_to_mathml(latex_code, latex_size);
 
-  if (mathml == 0) rb_raise(rb_eRuntimeError, "Failed to parse itex");
+  if (mathml == NULL) rb_raise(rb_eRuntimeError, "Failed to parse itex");
 
   int mathml_size = strlen(mathml);
 
   LsmDomDocument *document;
   document = lsm_dom_document_new_from_memory(mathml, mathml_size, NULL);
-  g_free (mathml);
+
+  lsm_itex_free_mathml_buffer (mathml);
 
   if (document == NULL) rb_raise(rb_eRuntimeError, "Failed to create document");
 

@@ -52,37 +52,56 @@ lsm_svg_text_element_render (LsmSvgElement *self, LsmSvgView *view)
 	LsmSvgTextElement *text = LSM_SVG_TEXT_ELEMENT (self);
 	LsmDomNode *node = LSM_DOM_NODE (self);
 	LsmDomNode *iter;
-	GString *string = g_string_new ("");
-	double x, y;
+	double *x, *y, *dx, *dy;
+	unsigned int n_x, n_y, n_dx, n_dy;
+	gboolean first_text = TRUE;
 
 	if (node->first_child == NULL)
 		return;
 
-	for (iter = LSM_DOM_NODE (self)->first_child; iter != NULL; iter = iter->next_sibling) {
+	lsm_svg_view_start_text (view);
+
+	x = lsm_svg_view_normalize_length_list (view, &text->x.list, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL, &n_x);
+	y = lsm_svg_view_normalize_length_list (view, &text->y.list, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL, &n_y);
+	dx = lsm_svg_view_normalize_length_list (view, &text->dx.list, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL, &n_dx);
+	dy = lsm_svg_view_normalize_length_list (view, &text->dy.list, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL, &n_dy);
+
+	iter = LSM_DOM_NODE (self)->first_child;
+	while (iter != NULL) {
 		if (LSM_IS_DOM_TEXT (iter)) {
-			g_string_append (string, lsm_dom_node_get_node_value (iter));
+			GString *string;
+			string = g_string_new ("");
+			for (; LSM_IS_DOM_TEXT (iter); iter = iter->next_sibling)
+				g_string_append (string, lsm_dom_node_get_node_value (iter));
+			lsm_str_consolidate (string->str);
+			if (first_text) {
+				lsm_svg_view_show_text (view, string->str, n_x, x, n_y, y, n_dx, dx, n_dy, dy);
+				first_text = FALSE;
+			} else 
+				lsm_svg_view_show_text (view, string->str, 0, NULL, 0, NULL, 0, NULL, 0, NULL);
+			g_string_free (string, TRUE);
+		} else {
+		       	if (LSM_IS_SVG_ELEMENT (iter))
+				lsm_svg_element_render (LSM_SVG_ELEMENT (iter), view);
+			iter = iter->next_sibling;
 		}
 	}
 
-	x = lsm_svg_view_normalize_length (view, &text->x.length, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL);
-	y = lsm_svg_view_normalize_length (view, &text->y.length, LSM_SVG_LENGTH_DIRECTION_VERTICAL);
+	g_free (x);
+	g_free (y);
+	g_free (dx);
+	g_free (dy);
 
-	lsm_svg_view_show_text (view, g_strstrip (string->str), x, y);
-
-	g_string_free (string, TRUE);
-
-	for (iter = LSM_DOM_NODE (self)->first_child; iter != NULL; iter = iter->next_sibling)
-		if (LSM_IS_SVG_ELEMENT (iter))
-		    lsm_svg_element_render (LSM_SVG_ELEMENT (iter), view);
+	lsm_svg_view_end_text (view);
 }
 
 static void
 lsm_svg_text_element_get_extents (LsmSvgElement *self, LsmSvgView *view, LsmExtents *extents)
 {
-	LsmSvgTextElement *text = LSM_SVG_TEXT_ELEMENT (self);
+/*        LsmSvgTextElement *text = LSM_SVG_TEXT_ELEMENT (self);*/
 	LsmDomNode *iter;
 	GString *string = g_string_new ("");
-	double x, y;
+/*        double x, y;*/
 
 	for (iter = LSM_DOM_NODE (self)->first_child; iter != NULL; iter = iter->next_sibling) {
 		if (LSM_IS_DOM_TEXT (iter)) {
@@ -90,10 +109,10 @@ lsm_svg_text_element_get_extents (LsmSvgElement *self, LsmSvgView *view, LsmExte
 		}
 	}
 
-	x = lsm_svg_view_normalize_length (view, &text->x.length, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL);
-	y = lsm_svg_view_normalize_length (view, &text->y.length, LSM_SVG_LENGTH_DIRECTION_VERTICAL);
+/*        x = lsm_svg_view_normalize_length (view, &text->x.length, LSM_SVG_LENGTH_DIRECTION_HORIZONTAL);*/
+/*        y = lsm_svg_view_normalize_length (view, &text->y.length, LSM_SVG_LENGTH_DIRECTION_VERTICAL);*/
 
-	lsm_svg_view_text_extents (view, g_strstrip (string->str), x, y, extents);
+	lsm_svg_view_text_extents (view, g_strstrip (string->str), 0, 0, 0, NULL, 0, NULL, extents);
 
 	g_string_free (string, TRUE);
 }
@@ -106,13 +125,15 @@ lsm_svg_text_element_new (void)
 	return g_object_new (LSM_TYPE_SVG_TEXT_ELEMENT, NULL);
 }
 
-static const LsmSvgLength length_default = 	 { .value_unit =   0.0, .type = LSM_SVG_LENGTH_TYPE_PX};
+static const LsmSvgLengthList length_list_default =	{.n_lengths = 0, .lengths = NULL}; 
 
 static void
 lsm_svg_text_element_init (LsmSvgTextElement *self)
 {
-	self->x.length = length_default;
-	self->y.length = length_default;
+	self->x.list = length_list_default;
+	self->y.list = length_list_default;
+	self->dx.list = length_list_default;
+	self->dy.list = length_list_default;
 }
 
 static void
@@ -127,14 +148,26 @@ static const LsmAttributeInfos lsm_svg_text_element_attribute_infos[] = {
 	{
 		.name = "x",
 		.attribute_offset = offsetof (LsmSvgTextElement, x),
-		.trait_class = &lsm_svg_length_trait_class,
-		.trait_default = &length_default
+		.trait_class = &lsm_svg_length_list_trait_class,
+		.trait_default = &length_list_default
 	},
 	{
 		.name = "y",
 		.attribute_offset = offsetof (LsmSvgTextElement, y),
-		.trait_class = &lsm_svg_length_trait_class,
-		.trait_default = &length_default
+		.trait_class = &lsm_svg_length_list_trait_class,
+		.trait_default = &length_list_default
+	},
+	{
+		.name = "dx",
+		.attribute_offset = offsetof (LsmSvgTextElement, dx),
+		.trait_class = &lsm_svg_length_list_trait_class,
+		.trait_default = &length_list_default
+	},
+	{
+		.name = "dy",
+		.attribute_offset = offsetof (LsmSvgTextElement, dy),
+		.trait_class = &lsm_svg_length_list_trait_class,
+		.trait_default = &length_list_default
 	}
 };
 

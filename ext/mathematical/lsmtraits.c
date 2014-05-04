@@ -86,7 +86,7 @@ lsm_box_trait_from_string (LsmTrait *abstract_trait, char *string)
 	return FALSE;
 }
 
-char *
+static char *
 lsm_box_trait_to_string (LsmTrait *abstract_trait)
 {
 	LsmBox *trait = (LsmBox *) abstract_trait;

@@ -73,7 +73,7 @@ lsm_mathml_element_set_attribute (LsmDomElement *self, const char* name, const c
 					     self, name, value);
 }
 
-const char *
+static const char *
 lsm_mathml_element_get_attribute (LsmDomElement *self, const char *name)
 {
 	LsmMathmlElementClass *m_element_class = LSM_MATHML_ELEMENT_GET_CLASS(self);

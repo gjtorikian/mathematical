@@ -84,6 +84,7 @@ extern const LsmTraitClass lsm_svg_font_stretch_trait_class;
 extern const LsmTraitClass lsm_svg_font_style_trait_class;
 extern const LsmTraitClass lsm_svg_font_weight_trait_class;
 extern const LsmTraitClass lsm_svg_length_trait_class;
+extern const LsmTraitClass lsm_svg_length_list_trait_class;
 extern const LsmTraitClass lsm_svg_line_join_trait_class;
 extern const LsmTraitClass lsm_svg_line_cap_trait_class;
 extern const LsmTraitClass lsm_svg_marker_units_trait_class;

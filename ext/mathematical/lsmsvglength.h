@@ -53,6 +53,12 @@ double 			lsm_svg_length_normalize	(const LsmSvgLength *length,
 							 const LsmSvgViewbox *viewbox,
 							 double font_size,
 							 LsmSvgLengthDirection direction);
+gboolean 		lsm_svg_parse_length 		(char **str, LsmSvgLength *length);
+
+typedef struct {
+	unsigned int n_lengths;
+	LsmSvgLength *lengths;
+} LsmSvgLengthList;
 
 G_END_DECLS
 

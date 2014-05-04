@@ -36,6 +36,7 @@ static const struct {
 	{"Acy",                   "\xd0\x90"                }, /* А [CYRILLIC CAPITAL LETTER A]*/
 	{"Afr",                   "\xf0\x9d\x94\x84"        }, /* 𝔄 [MATHEMATICAL FRAKTUR CAPITAL A]*/
 	{"Agrave",                "\xc3\x80"                }, /* À [LATIN CAPITAL LETTER A WITH GRAVE]*/
+	{"Alpha",		  "\xce\x91"		    }, /* Α [GREEK CAPITAL LETTER ALPHA] */
 	{"Amacr",                 "\xc4\x80"                }, /* Ā [LATIN CAPITAL LETTER A WITH MACRON]*/
 	{"And",                   "\xe2\xa9\x93"            }, /* ⩓ [DOUBLE LOGICAL AND]*/
 	{"Aogon",                 "\xc4\x84"                }, /* Ą [LATIN CAPITAL LETTER A WITH OGONEK]*/
@@ -52,6 +53,7 @@ static const struct {
 	{"Bcy",                   "\xd0\x91"                }, /* Б [CYRILLIC CAPITAL LETTER BE]*/
 	{"Because",               "\xe2\x88\xb5"            }, /* ∵ [BECAUSE]*/
 	{"Bernoullis",            "\xe2\x84\xac"            }, /* ℬ [SCRIPT CAPITAL B]*/
+	{"Beta",		  "\xce\x92"                }, /* Β [GREEK CAPITAL LETTER BETA] */
 	{"Bfr",                   "\xf0\x9d\x94\x85"        }, /* 𝔅 [MATHEMATICAL FRAKTUR CAPITAL B]*/
 	{"Bopf",                  "\xf0\x9d\x94\xb9"        }, /* 𝔹 [MATHEMATICAL DOUBLE-STRUCK CAPITAL B]*/
 	{"Breve",                 "\xcb\x98"                }, /* ˘ [BREVE]*/
@@ -159,11 +161,13 @@ static const struct {
 	{"EmptyVerySmallSquare",  "\xe2\x96\xab"            }, /* ▫ [WHITE SMALL SQUARE]*/
 	{"Eogon",                 "\xc4\x98"                }, /* Ę [LATIN CAPITAL LETTER E WITH OGONEK]*/
 	{"Eopf",                  "\xf0\x9d\x94\xbc"        }, /* 𝔼 [MATHEMATICAL DOUBLE-STRUCK CAPITAL E]*/
+	{"Epsilon",               "\xce\x95"                }, /* Ε [GREEK CAPITAL LETTER EPSILON] */
 	{"Equal",                 "\xe2\xa9\xb5"            }, /* ⩵ [TWO CONSECUTIVE EQUALS SIGNS]*/
 	{"EqualTilde",            "\xe2\x89\x82"            }, /* ≂ [MINUS TILDE]*/
 	{"Equilibrium",           "\xe2\x87\x8c"            }, /* ⇌ [RIGHTWARDS HARPOON OVER LEFTWARDS HARPOON]*/
 	{"Escr",                  "\xe2\x84\xb0"            }, /* ℰ [SCRIPT CAPITAL E]*/
 	{"Esim",                  "\xe2\xa9\xb3"            }, /* ⩳ [EQUALS SIGN ABOVE TILDE OPERATOR]*/
+	{"Eta",                   "\xce\x97"                }, /* Η [GREEK CAPITAL LETTER ETA] */
 	{"Euml",                  "\xc3\x8b"                }, /* Ë [LATIN CAPITAL LETTER E WITH DIAERESIS]*/
 	{"Exists",                "\xe2\x88\x83"            }, /* ∃ [THERE EXISTS]*/
 	{"ExponentialE",          "\xe2\x85\x87"            }, /* ⅇ [DOUBLE-STRUCK ITALIC SMALL E]*/
@@ -227,6 +231,7 @@ static const struct {
 	{"InvisibleTimes",        "\xe2\x81\xa2"            }, /* ⁢ [INVISIBLE TIMES]*/
 	{"Iogon",                 "\xc4\xae"                }, /* Į [LATIN CAPITAL LETTER I WITH OGONEK]*/
 	{"Iopf",                  "\xf0\x9d\x95\x80"        }, /* 𝕀 [MATHEMATICAL DOUBLE-STRUCK CAPITAL I]*/
+	{"Iota",                  "\xce\x99"                }, /* Ι [GREEK CAPITAL LETTER IOTA] */
 	{"Iscr",                  "\xe2\x84\x90"            }, /* ℐ [SCRIPT CAPITAL I]*/
 	{"Itilde",                "\xc4\xa8"                }, /* Ĩ [LATIN CAPITAL LETTER I WITH TILDE]*/
 	{"Iukcy",                 "\xd0\x86"                }, /* І [CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I]*/
@@ -238,6 +243,7 @@ static const struct {
 	{"Jscr",                  "\xf0\x9d\x92\xa5"        }, /* 𝒥 [MATHEMATICAL SCRIPT CAPITAL J]*/
 	{"Jsercy",                "\xd0\x88"                }, /* Ј [CYRILLIC CAPITAL LETTER JE]*/
 	{"Jukcy",                 "\xd0\x84"                }, /* Є [CYRILLIC CAPITAL LETTER UKRAINIAN IE]*/
+	{"Kappa",                 "\xce\x9a"                }, /* Κ [GREEK CAPITAL LETTER KAPPA] */
 	{"KHcy",                  "\xd0\xa5"                }, /* Х [CYRILLIC CAPITAL LETTER HA]*/
 	{"KJcy",                  "\xd0\x8c"                }, /* Ќ [CYRILLIC CAPITAL LETTER KJE]*/
 	{"Kcedil",                "\xc4\xb6"                }, /* Ķ [LATIN CAPITAL LETTER K WITH CEDILLA]*/
@@ -310,6 +316,7 @@ static const struct {
 	{"Mfr",                   "\xf0\x9d\x94\x90"        }, /* 𝔐 [MATHEMATICAL FRAKTUR CAPITAL M]*/
 	{"MinusPlus",             "\xe2\x88\x93"            }, /* ∓ [MINUS-OR-PLUS SIGN]*/
 	{"Mopf",                  "\xf0\x9d\x95\x84"        }, /* 𝕄 [MATHEMATICAL DOUBLE-STRUCK CAPITAL M]*/
+	{"Mu",                    "\xce\x9c"                }, /* Μ [GREEK CAPITAL LETTER MU] */
 	{"Mscr",                  "\xe2\x84\xb3"            }, /* ℳ [SCRIPT CAPITAL M]*/
 	{"NJcy",                  "\xd0\x8a"                }, /* Њ [CYRILLIC CAPITAL LETTER NJE]*/
 	{"Nacute",                "\xc5\x83"                }, /* Ń [LATIN CAPITAL LETTER N WITH ACUTE]*/
@@ -382,6 +389,7 @@ static const struct {
 	{"NotVerticalBar",        "\xe2\x88\xa4"            }, /* ∤ [DOES NOT DIVIDE]*/
 	{"Nscr",                  "\xf0\x9d\x92\xa9"        }, /* 𝒩 [MATHEMATICAL SCRIPT CAPITAL N]*/
 	{"Ntilde",                "\xc3\x91"                }, /* Ñ [LATIN CAPITAL LETTER N WITH TILDE]*/
+	{"Nu",                    "\xce\x9d"                }, /* Ν [GREEK CAPITAL LETTER NU] */
 	{"OElig",                 "\xc5\x92"                }, /* Œ [LATIN CAPITAL LIGATURE OE]*/
 	{"Oacute",                "\xc3\x93"                }, /* Ó [LATIN CAPITAL LETTER O WITH ACUTE]*/
 	{"Ocirc",                 "\xc3\x94"                }, /* Ô [LATIN CAPITAL LETTER O WITH CIRCUMFLEX]*/
@@ -439,6 +447,7 @@ static const struct {
 	{"ReverseEquilibrium",    "\xe2\x87\x8b"            }, /* ⇋ [LEFTWARDS HARPOON OVER RIGHTWARDS HARPOON]*/
 	{"ReverseUpEquilibrium",  "\xe2\xa5\xaf"            }, /* ⥯ [DOWNWARDS HARPOON WITH BARB LEFT BESIDE UPWARDS HARPOON WITH BARB RIGHT]*/
 	{"Rfr",                   "\xe2\x84\x9c"            }, /* ℜ [BLACK-LETTER CAPITAL R]*/
+	{"Rho",	                  "\xce\xa1"                }, /* Ρ [GREEK CAPITAL LETTER RHO] */
 	{"RightAngleBracket",     "\xe2\x8c\xaa"            }, /* 〉 [RIGHT-POINTING ANGLE BRACKET]*/
 	{"RightArrow",            "\xe2\x86\x92"            }, /* → [RIGHTWARDS ARROW]*/
 	{"RightArrowBar",         "\xe2\x87\xa5"            }, /* ⇥ [RIGHTWARDS ARROW TO BAR]*/
@@ -514,6 +523,7 @@ static const struct {
 	{"TSHcy",                 "\xd0\x8b"                }, /* Ћ [CYRILLIC CAPITAL LETTER TSHE]*/
 	{"TScy",                  "\xd0\xa6"                }, /* Ц [CYRILLIC CAPITAL LETTER TSE]*/
 	{"Tab",                   "\x9"                     }, /* 	 [CHARACTER TABULATION]*/
+	{"Tau",                   "\xce\xa4"                }, /* Τ [GREEK CAPITAL LETTER TAU] */
 	{"Tcaron",                "\xc5\xa4"                }, /* Ť [LATIN CAPITAL LETTER T WITH CARON]*/
 	{"Tcedil",                "\xc5\xa2"                }, /* Ţ [LATIN CAPITAL LETTER T WITH CEDILLA]*/
 	{"Tcy",                   "\xd0\xa2"                }, /* Т [CYRILLIC CAPITAL LETTER TE]*/
@@ -608,6 +618,7 @@ static const struct {
 	{"Zcy",                   "\xd0\x97"                }, /* З [CYRILLIC CAPITAL LETTER ZE]*/
 	{"Zdot",                  "\xc5\xbb"                }, /* Ż [LATIN CAPITAL LETTER Z WITH DOT ABOVE]*/
 	{"ZeroWidthSpace",        "\xe2\x80\x8b"            }, /* ​ [ZERO WIDTH SPACE]*/
+	{"Zeta",                  "\xce\x96"                }, /* Ζ [GREEK CAPITAL LETTER ZETA] */
 	{"Zfr",                   "\xe2\x84\xa8"            }, /* ℨ [BLACK-LETTER CAPITAL Z]*/
 	{"Zopf",                  "\xe2\x84\xa4"            }, /* ℤ [DOUBLE-STRUCK CAPITAL Z]*/
 	{"Zscr",                  "\xf0\x9d\x92\xb5"        }, /* 𝒵 [MATHEMATICAL SCRIPT CAPITAL Z]*/

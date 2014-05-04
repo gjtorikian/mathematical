@@ -43,11 +43,7 @@ typedef struct _LsmDomDocumentClass LsmDomDocumentClass;
 struct _LsmDomDocument {
 	LsmDomNode node;
 
-	GHashTable *	ids;
-	GHashTable *	elements;
-
 	char *		url;
-
 };
 
 struct _LsmDomDocumentClass {
@@ -65,9 +61,6 @@ GType lsm_dom_document_get_type (void);
 LsmDomElement* 	lsm_dom_document_get_document_element 	(LsmDomDocument* self);
 LsmDomElement* 	lsm_dom_document_create_element 	(LsmDomDocument* self, const char *tag_name);
 LsmDomText* 	lsm_dom_document_create_text_node 	(LsmDomDocument* self, const char *data);
-LsmDomElement *	lsm_dom_document_get_element_by_id 	(LsmDomDocument *self, const char *id);
-
-void 		lsm_dom_document_register_element 	(LsmDomDocument *self, LsmDomElement *element, const char *id);
 
 LsmDomView*	lsm_dom_document_create_view		(LsmDomDocument *self);
 

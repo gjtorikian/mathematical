@@ -36,10 +36,7 @@ typedef enum {
 	LSM_DEBUG_LEVEL_COUNT
 } LsmDebugLevel;
 
-typedef struct {
-	char *name;
-	LsmDebugLevel level;
-} LsmDebugCategory;
+typedef struct _LsmDebugCategory LsmDebugCategory;
 
 extern LsmDebugCategory lsm_debug_category_dom;
 extern LsmDebugCategory lsm_debug_category_measure;

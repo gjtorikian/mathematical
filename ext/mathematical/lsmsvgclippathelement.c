@@ -60,7 +60,7 @@ lsm_svg_clip_path_element_render (LsmSvgElement *self, LsmSvgView *view)
 
 	if (is_object_bounding_box) {
 		const LsmBox *viewport;
-		const static LsmBox viewbox = {.x = 0.0, .y = 0.0, .width = 1.0, .height = 1.0};
+		static const LsmBox viewbox = {.x = 0.0, .y = 0.0, .width = 1.0, .height = 1.0};
 
 		viewport = lsm_svg_view_get_clip_extents (view);
 

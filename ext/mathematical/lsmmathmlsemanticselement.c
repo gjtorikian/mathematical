@@ -45,6 +45,7 @@ lsm_mathml_semantics_element_can_append_child (LsmDomNode *self, LsmDomNode *chi
 
 /* LsmMathmlSemanticsElement implementation */
 
+#if 0 /* Unused code - remove? */
 LsmMathmlElement *
 lsm_mathml_semantics_element_get_body (LsmMathmlSemanticsElement *semantics)
 {
@@ -56,6 +57,7 @@ lsm_mathml_semantics_element_get_body (LsmMathmlSemanticsElement *semantics)
 
 	return LSM_MATHML_ELEMENT (node->first_child);
 }
+#endif /* 0 */
 
 LsmDomNode *
 lsm_mathml_semantics_element_new (void)

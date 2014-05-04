@@ -41,8 +41,10 @@ typedef struct _LsmSvgTextElementClass LsmSvgTextElementClass;
 struct _LsmSvgTextElement {
 	LsmSvgTransformable base;
 
-	LsmSvgLengthAttribute	x;
-	LsmSvgLengthAttribute	y;
+	LsmSvgLengthListAttribute	x;
+	LsmSvgLengthListAttribute	y;
+	LsmSvgLengthListAttribute	dx;
+	LsmSvgLengthListAttribute	dy;
 };
 
 struct _LsmSvgTextElementClass {

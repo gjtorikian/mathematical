@@ -1,6 +1,6 @@
-/* Lasem
+/* Lasem - SVG and Mathml library
  *
- * Copyright © 2007-2012 Emmanuel Pacaud
+ * Copyright © 2013 Emmanuel Pacaud
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,34 +21,16 @@
  * 	Emmanuel Pacaud <emmanuel@gnome.org>
  */
 
-#include <lsmutils.h>
+#ifndef LSM_ITEX_H
+#define LSM_ITEX_H
 
-static LsmExtents *
-lsm_extents_duplicate (const LsmExtents *from)
-{
-	LsmExtents *extents;
+#include <lsmtypes.h>
 
-	g_return_val_if_fail (from != NULL, NULL);
+G_BEGIN_DECLS
 
-	extents = g_new (LsmExtents, 1);
-	*extents = *from;
+char *		lsm_itex_to_mathml		(const char *itex, int size);
+void		lsm_itex_free_mathml_buffer	(char *mathml);
 
-	return extents;
-}
+G_END_DECLS
 
-G_DEFINE_BOXED_TYPE (LsmExtents, lsm_extents, lsm_extents_duplicate, g_free)
-
-static LsmBox *
-lsm_box_duplicate (const LsmBox *from)
-{
-	LsmBox *box;
-
-	g_return_val_if_fail (from != NULL, NULL);
-
-	box = g_new (LsmBox, 1);
-	*box = *from;
-
-	return box;
-}
-
-G_DEFINE_BOXED_TYPE (LsmBox, lsm_box, lsm_box_duplicate, g_free)
+#endif

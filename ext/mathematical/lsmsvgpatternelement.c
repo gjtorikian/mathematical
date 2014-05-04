@@ -24,7 +24,7 @@
 #include <lsmsvgpatternelement.h>
 #include <lsmsvgview.h>
 #include <lsmdebug.h>
-#include <lsmdomdocument.h>
+#include <lsmsvgdocument.h>
 #include <stdio.h>
 
 typedef struct {
@@ -68,13 +68,13 @@ _pattern_element_get_node_name (LsmDomNode *node)
 /* LsmSvgElement implementation */
 
 static LsmSvgPatternElement *
-lsm_svg_pattern_element_inherit_referenced (LsmDomDocument *owner,
+lsm_svg_pattern_element_inherit_referenced (LsmSvgDocument *owner,
 					    LsmSvgPatternElement *pattern,
 					    LsmSvgPatternElementAttributes *attributes,
 					    GSList **elements)
 {
 	LsmSvgPatternElement *referenced_pattern = pattern;
-	LsmDomElement *element;
+	LsmSvgElement *element;
 
 	*elements = g_slist_prepend (*elements, pattern);
 
@@ -89,7 +89,7 @@ lsm_svg_pattern_element_inherit_referenced (LsmDomDocument *owner,
 		if (*id == '#')
 			id++;
 
-		element = lsm_dom_document_get_element_by_id (owner, id);
+		element = lsm_svg_document_get_element_by_id (owner, id);
 
 		for (iter = *elements; iter != NULL; iter = iter->next)
 			if (iter->data == element) {
@@ -99,7 +99,7 @@ lsm_svg_pattern_element_inherit_referenced (LsmDomDocument *owner,
 			}
 
 		if (!circular_reference_found) {
-			if (LSM_IS_SVG_PATTERN_ELEMENT (element), elements) {
+			if (LSM_IS_SVG_PATTERN_ELEMENT (element)) {
 				lsm_debug_render ("[LsmSvgPatternElement::inherit_attributes] "
 						  "Found referenced element '%s'", id);
 
@@ -160,11 +160,11 @@ lsm_svg_pattern_element_render (LsmSvgElement *self, LsmSvgView *view)
 
 	if (lsm_attribute_is_defined (&pattern->href)) {
 		LsmSvgPatternElementAttributes attributes;
-		LsmDomDocument *owner;
+		LsmSvgDocument *owner;
 		attributes = default_attributes;
 		GSList *elements = NULL;
 
-		owner = lsm_dom_node_get_owner_document (LSM_DOM_NODE (self));
+		owner = LSM_SVG_DOCUMENT (lsm_dom_node_get_owner_document (LSM_DOM_NODE (self)));
 
 		referenced_pattern = lsm_svg_pattern_element_inherit_referenced (owner, pattern,
 										 &attributes, &elements);
