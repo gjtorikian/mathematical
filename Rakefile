@@ -28,14 +28,29 @@ desc "Generate and publish to gh-pages"
 task :publish do
   Dir.mktmpdir do |tmp|
     system "cp test/mathematical/fixtures/after/* #{tmp}"
-    system "git checkout gh-pages"
+    # system "git checkout gh-pages"
+    titles_to_content = {}
+    Dir.glob("#{tmp}/compliance_*.html") do |item|
+      titles_to_content[File.basename(item)] = File.read(item)
+    end
+
+    li_listing = titles_to_content.keys.map { |title| "<li><a href='#{title}'>#{File.basename(title, File.extname(title))}</a></li>" }
+    IO.write("index.html", File.open("index.html") {|f| f.read.sub(/<!-- LIST_GOES_HERE -->/, li_listing) })
+
+    layout = File.read("layout.text")
+    titles_to_content.each do |title, content|
+      new_layout = layout.sub(/<!-- TITLE_GOES_HERE -->/, title)
+      new_layout = new_layout.sub(/<!-- CONTENT_GOES_HERE -->/, content)
+      File.open("#{title}.html", 'w') { |file| file.write(content) }
+    end
+
     # system "rm -rf *"
-    system "mv #{tmp}/* ."
+    # system "mv #{tmp}/* ."
     message = "Site updated at #{Time.now.utc}"
-    system "git add ."
-    system "git commit -am #{message.shellescape}"
-    system "git push origin gh-pages --force"
-    system "git checkout master"
-    system "echo yolo"
+    # system "git add ."
+    # system "git commit -am #{message.shellescape}"
+    # system "git push origin gh-pages --force"
+    # system "git checkout master"
+    # system "echo yolo"
   end
 end
