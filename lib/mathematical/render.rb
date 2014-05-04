@@ -25,7 +25,7 @@ module Mathematical
       raise(TypeError, "text must be a string!") unless text.is_a? String
 
       # TODO: figure out how to write svgs without the tempfile
-      tempfile = Tempfile.new('foo')
+      tempfile = Tempfile.new('mathematical-temp.svg')
       text = text.gsub(Mathematical::Parser::REGEX) do |maths|
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
@@ -54,8 +54,8 @@ module Mathematical
           svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
           svg_content = svg_content.lines.to_a[1..-1].join
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
-          $stderr.puts e.message
-          return just_maths
+          $stderr.puts "#{e.message}: #{maths}"
+          return maths
         end
 
         "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"

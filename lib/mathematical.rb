@@ -1,7 +1,8 @@
-require "./lib/mathematical/parser"
-require "./lib/mathematical/render"
-require "./lib/mathematical/version"
-require "./lib/mathematical.bundle"
+require "mathematical/mathematical"
+
+require "mathematical/parser"
+require "mathematical/render"
+require "mathematical/version"
 
 module Mathematical
   # Raised when missing binaries for images rendering.

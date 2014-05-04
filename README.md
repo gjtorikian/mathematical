@@ -2,6 +2,8 @@
 
 Convert mathematical equations to base64 encoded images.
 
+[![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=setup-travis)](https://travis-ci.org/gjtorikian/mathematical)
+
 ![](https://i.imgur.com/JC7HT32.gif)
 
 ## Installation
@@ -32,8 +34,8 @@ They look something like this:
 
 ``` html
 <img class="type-inline" data-math-type="type-inline" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0..."/>
-
 ```
+
 Inline math will have `class="type-inline" data-math-type="type-inline"` set, and display math will have
 `class="type-display" data-math-type="type-display"`.
 
@@ -46,7 +48,7 @@ Currently, the following formats are supported:
 | `$...$`      | `[...]`
 | `(...)`      | `\begin{equation}...\end{equation}`
 
-## Options
+### Options
 
 `Mathematical::Render.new` can take a few options:
 
@@ -62,18 +64,48 @@ renderer = Mathematical::Render.new(opts)
 
 ## Dependencies
 
-This package depends on the following libraries:
+Before using this gem, you must install the following libraries:
 
 * glib-2.0
 * gdk-pixbuf-2.0
 * xml2
 * cairo
 * pango
-* pangocairo
 
-* On a Mac, pretty much everything can be installed via Homebrew.
-* On a *nix machine, I'm sure it's possible via package managers to install all of these.
-* On a Windows machine, I have no idea.
+### Mac install
+
+To install these dependencies on a Mac, everything can be installed via Homebrew:
+
+```
+brew install glib gdk-pixbuf cairo pango
+```
+
+`xml2` should already be on your machine.
+
+### *nix install
+
+To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
+
+```
+sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
+```
+
+`glib` and `gdk-pixbuf` should be on your machine.
+
+### Windows install
+
+On a Windows machine, I have no idea. Pull requests welcome!
+
+## Hacking
+
+After cloning the repo:
+
+``` bash
+script/bootstrap
+bundle exec rake compile
+```
+
+If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
 ## History
 
@@ -94,9 +126,10 @@ week. Here was my journey:
 TeX equations and converts them to PNG. This wasn't a bad idea, but it took too long;
 for twelve equations, it took eight seconds. It was slow because it shelled out
 to [`LaTeX`](http://www.latex-project.org/), *then* [`dvipng`](http://www.nongnu.org/dvipng/).
-  In fact, as I discovered, most projects on the 'Net shell out to `LaTeX`, then
+
+In fact, as I discovered, most projects on the 'Net shell out to `LaTeX`, then
 something else, which makes performance absolutely horrid. I had to find something
-better, with no preferably dependency on `LaTeX`.
+better, with preferably no dependency on `LaTeX`.
 
 * [`mimetex`](http://www.forkosh.com/mimetex.html) was my next attempt. It looked
 great: a pure C implementation that turned TeX equations into a rasterized representation,

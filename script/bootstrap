@@ -1,7 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 export CC=gcc
+
+echo "==> Installing required libraries…"
+
+if [ "$(uname)" == "Darwin" ]; then
+  brew install glib gdk-pixbuf cairo pango
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+  sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
+fi
 
 echo "==> Installing gem dependencies…"
 bundle check --path vendor/gems 2>&1 > /dev/null || {
