@@ -37,7 +37,7 @@ task :publish do
 
     li_listing = titles_to_content.keys.map { |title| "<li><a href='#{title}'>#{File.basename(title, File.extname(title))}</a></li>" }
     index = File.read("index.html")
-    File.open("index.html", 'w') { |file| file.write(index.sub(/<!-- LIST_GOES_HERE -->/, li_listing)) }
+    File.open("index.html", 'w') { |file| file.write(index.sub(/<!-- LIST_GOES_HERE -->/, li_listing.join("\n"))) }
 
     layout = File.read("layout_shell.text")
     titles_to_content.each do |title, content|
