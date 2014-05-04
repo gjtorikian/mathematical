@@ -28,11 +28,12 @@ desc "Generate and publish to gh-pages"
 task :publish do
   Dir.mktmpdir do |tmp|
     system "cp test/mathematical/fixtures/after/* #{tmp}"
-    # system "git checkout gh-pages"
     titles_to_content = {}
     Dir.glob("#{tmp}/compliance_*.html") do |item|
       titles_to_content[File.basename(item)] = File.read(item)
     end
+
+    system "git checkout gh-pages"
 
     li_listing = titles_to_content.keys.map { |title| "<li><a href='#{title}'>#{File.basename(title, File.extname(title))}</a></li>" }
     IO.write("index.html", File.open("index.html") {|f| f.read.sub(/<!-- LIST_GOES_HERE -->/, li_listing) })
