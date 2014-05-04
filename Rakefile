@@ -43,7 +43,7 @@ task :publish do
     titles_to_content.each do |title, content|
       new_layout = layout.sub(/<!-- TITLE_GOES_HERE -->/, title)
       new_layout = new_layout.sub(/<!-- CONTENT_GOES_HERE -->/, content)
-      File.open("#{title}.html", 'w') { |file| file.write(content) }
+      File.open("#{title}", 'w') { |file| file.write(content) }
     end
 
     # system "rm -rf *"
