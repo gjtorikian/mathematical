@@ -89,7 +89,7 @@ brew install glib gdk-pixbuf cairo pango
 
 `xml2` should already be on your machine.
 
-You can grab the necessary fonts [from here](https://gjtorikian.github.io/mathematical/cm-fonts.zip), then copy them all into * ~/Library/Fonts/*.
+The fonts should also be available on your system.
 
 ### *nix install
 
