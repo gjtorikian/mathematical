@@ -1,0 +1,34 @@
+\arccos: $y = \arccos x$ <br>
+\arcsin: $y = \arcsin x$ <br>
+\arctan: $y = \arctan x$ <br>
+\arg: $\arg$ <br>
+\cos: $y = \cos x$ <br>
+\cosh: $y = \cosh x$ <br>
+\cot: $y = \cot x$ <br>
+\coth: $y = \coth x$ <br>
+\csc: $\csc x$ <br>
+\deg: $\deg \pi$ <br>
+\det: $\det(A)$ <br>
+\dim: $\dim M$ <br>
+\exp: $y=\exp(\lambda t)$ <br>
+\gcd: $gcd(a/m, b/m)$ <br>
+\inf: $\inf(p)$ <br>
+\hom: $\hom(A,B)$ <br>
+\ker: $\ker(h)\subseteq A^2$ <br>
+\lg: $2^{\lg{n}}$ <br>
+\lim: $\lim_{x\to\pi/6}$ <br>
+\liminf: $\liminf_n (x_n + y_n)$ <br>
+\limsup: $\limsup_{n\to\infty}(a_n+b_n)$ <br>
+\ln: $\ds y=3^x\ln x$ <br>
+\log: $\log_b(x)$ <br>
+\max: $\max\limits_{1\leq j\leq n}$ <br>
+\min: $\min\limits_{1\leq j\leq n}$ <br>
+\mod*: $\mod n$ <br>
+\pmod*: $\pmod{n}$ <br>
+\Pr: $\Pr(m = n \mid m + n = 3)$ <br>
+\sec: $y = \sec x$ <br>
+\sin: $y = \sin x$ <br>
+\sinh: $y = \sinh x$ <br>
+\sup: $M \sup M_1 \sup \dots \sup M_l = 0$ </br>
+\tan: $y =\tan x$ <br>
+\tanh: $y =\tanh x$ <br>
