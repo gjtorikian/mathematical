@@ -184,7 +184,7 @@ lsm_mathml_space_list_attribute_normalize (LsmMathmlSpaceListAttribute *attribut
 		return;
 	}
 
-	space_attribute.base.value = "";
+	space_attribute.base.value = (char *) "";
 
 	attribute->values = g_new (double, space_list->n_spaces);
 	attribute->n_values = space_list->n_spaces;

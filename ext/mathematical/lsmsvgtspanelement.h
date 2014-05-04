@@ -41,8 +41,10 @@ typedef struct _LsmSvgTspanElementClass LsmSvgTspanElementClass;
 struct _LsmSvgTspanElement {
 	LsmSvgElement element;
 
-	LsmSvgLengthAttribute	x;
-	LsmSvgLengthAttribute	y;
+	LsmSvgLengthListAttribute	x;
+	LsmSvgLengthListAttribute	y;
+	LsmSvgLengthListAttribute	dx;
+	LsmSvgLengthListAttribute	dy;
 };
 
 struct _LsmSvgTspanElementClass {

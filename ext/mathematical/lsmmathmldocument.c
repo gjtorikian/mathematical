@@ -216,13 +216,11 @@ LsmMathmlDocument *
 lsm_mathml_document_new_from_itex (const char *itex, int size, GError **error)
 {
 	LsmDomDocument *document;
-	char *xml;
+	char *mathml;
 
-	g_return_val_if_fail (itex != NULL, NULL);
+	mathml = lsm_itex_to_mathml (itex, size);
 
-	xml = itex2MML_parse (itex, size);
-
-	if (xml == NULL) {
+	if (mathml == NULL) {
 		lsm_debug_dom ("[LsmMathmlDocument::new_from_itex] Invalid document");
 
 		g_set_error (error,
@@ -233,9 +231,9 @@ lsm_mathml_document_new_from_itex (const char *itex, int size, GError **error)
 		return NULL;
 	}
 
-	document = lsm_dom_document_new_from_memory (xml, -1, error);
+	document = lsm_dom_document_new_from_memory (mathml, -1, error);
 
-	itex2MML_free_string (xml);
+	lsm_itex_free_mathml_buffer (mathml);
 
 	if (document == NULL)
 		return NULL;

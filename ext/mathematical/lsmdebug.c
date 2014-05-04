@@ -25,33 +25,38 @@
 #include <glib/gprintf.h>
 #include <stdlib.h>
 
+struct _LsmDebugCategory {
+	char *name;
+	LsmDebugLevel level;
+};
+
 LsmDebugCategory lsm_debug_category_dom =
 {
-	.name = "dom",
+	.name = (char *) "dom",
 	.level = -1
 };
 
 LsmDebugCategory lsm_debug_category_measure =
 {
-	.name = "measure",
+	.name = (char *) "measure",
 	.level = -1
 };
 
 LsmDebugCategory lsm_debug_category_update =
 {
-	.name = "update",
+	.name = (char *) "update",
 	.level = -1
 };
 
 LsmDebugCategory lsm_debug_category_render =
 {
-	.name = "render",
+	.name = (char *) "render",
 	.level = -1
 };
 
 LsmDebugCategory lsm_debug_category_viewport =
 {
-	.name = "viewport",
+	.name = (char *) "viewport",
 	.level = -1
 };
 
@@ -72,8 +77,7 @@ lsm_debug_initialize (const char *debug_var)
 	if (lsm_debug_categories != NULL)
 		return;
 
-	lsm_debug_categories = g_hash_table_new_full (g_str_hash, g_str_equal,
-						      (GDestroyNotify) lsm_debug_category_free, NULL);
+	lsm_debug_categories = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) lsm_debug_category_free);
 
 	if (debug_var != NULL) {
 		char **categories;

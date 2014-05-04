@@ -102,7 +102,7 @@ lsm_dom_node_child_list_get_length (LsmDomNodeList *list)
 	return length;
 }
 
-LsmDomNodeList *
+static LsmDomNodeList *
 lsm_dom_node_child_list_new (LsmDomNode *parent_node)
 {
 	LsmDomNodeChildList *list;
@@ -341,16 +341,9 @@ lsm_dom_node_get_attributes (LsmDomNode* self)
 LsmDomDocument *
 lsm_dom_node_get_owner_document (LsmDomNode* self)
 {
-	LsmDomNode *parent;
-
 	g_return_val_if_fail (LSM_IS_DOM_NODE (self), NULL);
 
-	for (parent = self;
-	     parent != NULL &&
-	     !LSM_IS_DOM_DOCUMENT (parent);
-	     parent = parent->parent_node);
-
-	return LSM_DOM_DOCUMENT (parent);
+	return self->owner_document;
 }
 
 /**
@@ -378,7 +371,7 @@ lsm_dom_node_insert_before (LsmDomNode* self, LsmDomNode* new_child, LsmDomNode*
 	LsmDomNodeClass *node_class;
 
 	if (ref_child == NULL)
-		lsm_dom_node_append_child (self, new_child);
+		return lsm_dom_node_append_child (self, new_child);
 
 	g_return_val_if_fail (LSM_IS_DOM_NODE (new_child), NULL);
 
@@ -387,6 +380,12 @@ lsm_dom_node_insert_before (LsmDomNode* self, LsmDomNode* new_child, LsmDomNode*
 
 	if (!LSM_IS_DOM_NODE (self)) {
 		g_critical ("%s: self is not a LsmDomNode", G_STRFUNC);
+		g_object_unref (new_child);
+		return NULL;
+	}
+
+	if (self->owner_document != new_child->owner_document &&
+	    self->owner_document != NULL) {
 		g_object_unref (new_child);
 		return NULL;
 	}
@@ -484,6 +483,13 @@ lsm_dom_node_replace_child (LsmDomNode* self, LsmDomNode* new_child, LsmDomNode*
 
 	if (!LSM_IS_DOM_NODE (self)) {
 		g_critical ("%s: self is not a LsmDomNode", G_STRFUNC);
+		g_object_unref (new_child);
+		g_object_unref (old_child);
+		return NULL;
+	}
+
+	if (self->owner_document != new_child->owner_document &&
+	    self->owner_document != NULL) {
 		g_object_unref (new_child);
 		g_object_unref (old_child);
 		return NULL;
@@ -589,6 +595,12 @@ lsm_dom_node_append_child (LsmDomNode* self, LsmDomNode* new_child)
 
 	if (!LSM_IS_DOM_NODE (self)) {
 		g_critical ("%s: self is not a LsmDomNode", G_STRFUNC);
+		g_object_unref (new_child);
+		return NULL;
+	}
+
+	if (self->owner_document != new_child->owner_document &&
+	    self->owner_document != NULL) {
 		g_object_unref (new_child);
 		return NULL;
 	}

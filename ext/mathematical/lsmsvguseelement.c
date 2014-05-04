@@ -24,7 +24,7 @@
 #include <lsmsvguseelement.h>
 #include <lsmsvgview.h>
 #include <lsmdebug.h>
-#include <lsmdomdocument.h>
+#include <lsmsvgdocument.h>
 #include <stdio.h>
 
 static GObjectClass *parent_class;
@@ -67,7 +67,7 @@ _get_used_element (LsmSvgUseElement *use_element)
 	if (*id == '#')
 		id++;
 
-	element = lsm_dom_document_get_element_by_id (document, id);
+	element = LSM_DOM_ELEMENT (lsm_svg_document_get_element_by_id (LSM_SVG_DOCUMENT (document), id));
 	if (!LSM_IS_SVG_ELEMENT (element)) {
 		lsm_debug_dom ("[LsmSvgUseElement::_get_used_element] Target '%s' not found", id);
 		return NULL;

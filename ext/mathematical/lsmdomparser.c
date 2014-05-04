@@ -49,7 +49,7 @@ typedef struct {
 	GHashTable *entities;
 } LsmDomSaxParserState;
 
-void
+static void
 _free_entity (void *data)
 {
 	xmlEntity *entity = data;
@@ -180,7 +180,7 @@ lsm_dom_parser_get_entity (void *user_data, const xmlChar *name)
 	return xmlGetPredefinedEntity(name);
 }
 
-void
+static void
 lsm_dom_parser_declare_entity (void * user_data, const xmlChar * name, int type,
 			       const xmlChar * publicId, const xmlChar * systemId,
 			       xmlChar * content)

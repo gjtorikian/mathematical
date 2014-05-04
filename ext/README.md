@@ -3,7 +3,7 @@ style sheets (only rendering is implemented for now). It uses cairo and pango as
 it's rendering abstraction layer, and then support numerous output formats: xlib,
 PNG, SVG, PDF, PS, EPS... It's written by Emmanuel Pacaud.
 
-Currently, this is version `lasem@0.4.1`.
+Currently, this is version `lasem@f14a8a63eac4debf27a04e70bd64ca0adc3706e9`.
 
 Some documentation can be found here:
 

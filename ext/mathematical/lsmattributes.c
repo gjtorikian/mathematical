@@ -35,7 +35,7 @@ lsm_attribute_is_defined (const LsmAttribute *attribute)
 	return attribute->value != NULL;
 }
 
-#define ATTRIBUTE_TRAIT(attribute) ((void *) (((void *) attribute) + sizeof (LsmAttribute)))
+#define ATTRIBUTE_TRAIT(attribute) ((void *) (((char *) attribute) + sizeof (LsmAttribute)))
 
 struct _LsmAttributeManager {
 	GHashTable *			hash_by_name;
@@ -146,7 +146,7 @@ lsm_attribute_manager_set_attribute (LsmAttributeManager *manager,
 	if (attribute_infos == NULL)
 		return FALSE;
 
-	attribute = (void *)(instance + attribute_infos->attribute_offset);
+	attribute = (void *)(((char *) instance) + attribute_infos->attribute_offset);
 	g_return_val_if_fail (attribute != NULL, FALSE);
 
 	trait_class = attribute_infos->trait_class;
@@ -199,7 +199,7 @@ lsm_attribute_manager_get_attribute (LsmAttributeManager *manager,
 	if (attribute_infos == NULL)
 		return NULL;
 
-	attribute = (void *)(instance + attribute_infos->attribute_offset);
+	attribute = (void *)(((char *)instance) + attribute_infos->attribute_offset);
 	g_return_val_if_fail (attribute != NULL, NULL);
 
 	return attribute->value;
@@ -222,7 +222,7 @@ lsm_attribute_manager_clean_attributes (LsmAttributeManager *manager,
 		attribute_infos = value;
 		trait_class = attribute_infos->trait_class;
 
-		attribute = (void *)(instance + attribute_infos->attribute_offset);
+		attribute = (void *)(((char *)instance) + attribute_infos->attribute_offset);
 		g_free (attribute->value);
 		attribute->value = NULL;
 
@@ -251,7 +251,7 @@ lsm_attribute_manager_serialize	(LsmAttributeManager *manager,
 	g_hash_table_iter_init (&iter, manager->hash_by_name);
 	while (g_hash_table_iter_next (&iter, &key, &value)) {
 		attribute_infos = value;
-		attribute = (void *)(instance + attribute_infos->attribute_offset);
+		attribute = (void *)(((char *)instance) + attribute_infos->attribute_offset);
 
 		if (attribute->value != NULL) {
 			if (!attribute_found) {

@@ -32,5 +32,8 @@
 #include <lsmtraits.h>
 #include <lsmattributes.h>
 #include <lsmproperties.h>
+#include <lsmitex.h>
+
+void lsm_shutdown (void);
 
 #endif

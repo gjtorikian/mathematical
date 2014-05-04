@@ -740,7 +740,7 @@ const LsmTraitClass lsm_mathml_space_trait_class = {
 	.to_string = lsm_mathml_space_trait_to_string
 };
 
-gboolean
+static gboolean
 lsm_mathml_space_list_trait_from_string (LsmTrait *abstract_trait, char *string)
 {
 	LsmMathmlSpaceList *space_list = (LsmMathmlSpaceList *) abstract_trait;

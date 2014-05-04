@@ -56,6 +56,8 @@ typedef struct _LsmDomNodeClass LsmDomNodeClass;
 struct _LsmDomNode {
 	GObject	object;
 
+	LsmDomDocument	*owner_document;
+
 	LsmDomNode	*next_sibling;
 	LsmDomNode	*previous_sibling;
 	LsmDomNode	*parent_node;

@@ -79,6 +79,8 @@ struct _LsmSvgView {
 	gboolean debug_filter;
 	gboolean debug_mask;
 	gboolean debug_pattern;
+	gboolean debug_group;
+	gboolean debug_text;
 };
 
 struct _LsmSvgViewClass {
@@ -91,6 +93,8 @@ LsmSvgView *	lsm_svg_view_new 			(LsmSvgDocument *document);
 
 double 		lsm_svg_view_normalize_length 		(LsmSvgView *view, const LsmSvgLength *length,
 							 LsmSvgLengthDirection direction);
+double * 	lsm_svg_view_normalize_length_list 	(LsmSvgView *view, const LsmSvgLengthList *list, LsmSvgLengthDirection direction,
+							 unsigned int *n_data);
 
 const LsmBox *	lsm_svg_view_get_pattern_extents	(LsmSvgView *view);
 const LsmBox * 	lsm_svg_view_get_object_extents 	(LsmSvgView *view);
@@ -124,8 +128,15 @@ void		lsm_svg_view_show_path		(LsmSvgView *view, const char *d);
 void 		lsm_svg_view_show_line 		(LsmSvgView *view, double x1, double y1, double x2, double y2);
 void 		lsm_svg_view_show_polyline	(LsmSvgView *view, const char *points);
 void 		lsm_svg_view_show_polygon	(LsmSvgView *view, const char *points);
-void 		lsm_svg_view_show_text 		(LsmSvgView *view, char const *text, double x, double y);
-void 		lsm_svg_view_text_extents 	(LsmSvgView *view, char const *string, double x, double y, LsmExtents *extents);
+void 		lsm_svg_view_start_text 	(LsmSvgView *view);
+void 		lsm_svg_view_end_text 		(LsmSvgView *view);
+void 		lsm_svg_view_show_text 		(LsmSvgView *view, char const *string, 
+						 unsigned int n_x, double *x, unsigned int n_y, double *y,
+						 unsigned int n_dx, double *dx, unsigned int n_dy, double *dy);
+void 		lsm_svg_view_text_extents 	(LsmSvgView *view, char const *string,
+						 double x, double y,
+						 unsigned int n_dx, double *dx, unsigned int n_dy, double *dy,
+						 LsmExtents *extents);
 void		lsm_svg_view_show_pixbuf	(LsmSvgView *view, GdkPixbuf *pixbuf);
 
 void 		lsm_svg_view_push_viewbox 		(LsmSvgView *view, const LsmBox *viewbox);

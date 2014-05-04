@@ -23,7 +23,7 @@
 
 #include <lsmsvgradialgradientelement.h>
 #include <lsmsvgview.h>
-#include <lsmdomdocument.h>
+#include <lsmsvgdocument.h>
 #include <lsmdebug.h>
 #include <stdio.h>
 #include <math.h>
@@ -66,14 +66,14 @@ lsm_svg_radial_gradient_element_get_node_name (LsmDomNode *node)
 
 /* LsmSvgGradientElement implementation */
 
-LsmSvgGradientElement *
-lsm_svg_radial_gradient_element_inherit_referenced (LsmDomDocument *owner,
+static LsmSvgGradientElement *
+lsm_svg_radial_gradient_element_inherit_referenced (LsmSvgDocument *owner,
 						    LsmSvgGradientElement *gradient,
 						    LsmSvgRadialGradientElementAttributes *attributes,
 						    GSList **elements)
 {
 	LsmSvgGradientElement *referenced_gradient = gradient;
-	LsmDomElement *element;
+	LsmSvgElement *element;
 
 	*elements = g_slist_prepend (*elements, gradient);
 
@@ -88,7 +88,7 @@ lsm_svg_radial_gradient_element_inherit_referenced (LsmDomDocument *owner,
 		if (*id == '#')
 			id++;
 
-		element = lsm_dom_document_get_element_by_id (owner, id);
+		element = lsm_svg_document_get_element_by_id (owner, id);
 
 		for (iter = *elements; iter != NULL; iter = iter->next)
 			if (iter->data == element) {
@@ -159,11 +159,11 @@ lsm_svg_radial_gradient_element_create_gradient (LsmSvgElement *self,
 
 	if (lsm_attribute_is_defined (&gradient->base.href)) {
 		LsmSvgRadialGradientElementAttributes attributes;
-		LsmDomDocument *owner;
+		LsmSvgDocument *owner;
 		attributes = default_attributes;
 		GSList *elements = NULL;
 
-		owner = lsm_dom_node_get_owner_document (LSM_DOM_NODE (self));
+		owner = LSM_SVG_DOCUMENT (lsm_dom_node_get_owner_document (LSM_DOM_NODE (self)));
 
 		referenced_gradient = lsm_svg_radial_gradient_element_inherit_referenced
 			(owner, LSM_SVG_GRADIENT_ELEMENT (gradient), &attributes, &elements);

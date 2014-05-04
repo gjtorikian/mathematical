@@ -22,6 +22,7 @@
  */
 
 #include <lsmdomimplementation.h>
+#include <lsm.h>
 
 void
 lsm_shutdown (void)

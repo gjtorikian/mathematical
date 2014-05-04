@@ -60,6 +60,8 @@
 #include <lsmsvgview.h>
 #include <string.h>
 
+static GObjectClass *parent_class;
+
 /* LsmDomNode implementation */
 
 static gboolean
@@ -73,7 +75,7 @@ lsm_svg_document_can_append_child (LsmDomNode *self, LsmDomNode *child)
 LsmSvgElement *
 lsm_svg_document_get_element_by_url (LsmSvgDocument *document, const char *url)
 {
-	LsmDomElement *element;
+	LsmSvgElement *element;
 	char *end;
 	char *id;
 
@@ -86,11 +88,11 @@ lsm_svg_document_get_element_by_url (LsmSvgDocument *document, const char *url)
 	for (end = id; *end != '\0' && *end != ')'; end++);
 	*end = '\0';
 
-	element = lsm_dom_document_get_element_by_id (LSM_DOM_DOCUMENT (document), id);
+	element = lsm_svg_document_get_element_by_id (document, id);
 
 	g_free (id);
 
-	return LSM_SVG_ELEMENT (element);
+	return element;
 }
 
 static LsmDomElement *
@@ -196,6 +198,46 @@ lsm_svg_document_create_view (LsmDomDocument *document)
 
 /* LsmSvgDocument implementation */
 
+/**
+ * lsm_svg_document_get_element_by_id:
+ * @self: a #LsmSvgDocument
+ * @id: id of the element to find
+ *
+ * Returns: (transfer none): the requested element, NULL if not found.
+ */
+
+LsmSvgElement *
+lsm_svg_document_get_element_by_id (LsmSvgDocument *self, const char *id)
+{
+	g_return_val_if_fail (LSM_IS_SVG_DOCUMENT (self), NULL);
+	g_return_val_if_fail (id != NULL, NULL);
+
+	lsm_debug_dom ("[LsmSvgDocument::get_element_by_id] Lookup '%s'", id);
+
+	return g_hash_table_lookup (self->ids, id);
+}
+
+void
+lsm_svg_document_register_element (LsmSvgDocument *self, LsmSvgElement *element, const char *id, const char *old_id)
+{
+	g_return_if_fail (LSM_IS_SVG_DOCUMENT (self));
+	g_return_if_fail (LSM_IS_SVG_ELEMENT (element));
+
+	if (old_id != NULL) {
+		lsm_debug_dom ("[LsmSvgDocument::register_element] Unregister '%s'", old_id);
+
+		g_hash_table_remove (self->ids, old_id);
+	}
+
+	if (id != NULL) {
+		char *new_id = g_strdup (id);
+
+		lsm_debug_dom ("[LsmSvgDocument::register_element] Register '%s'", id);
+
+		g_hash_table_replace (self->ids, new_id, element);
+	}
+}
+
 LsmDomDocument *
 lsm_svg_document_new (void)
 {
@@ -205,6 +247,17 @@ lsm_svg_document_new (void)
 static void
 lsm_svg_document_init (LsmSvgDocument *document)
 {
+	document->ids = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+}
+
+static void
+lsm_svg_document_finalize (GObject *object)
+{
+	LsmSvgDocument *document = LSM_SVG_DOCUMENT (object);
+
+	g_hash_table_unref (document->ids);
+
+	parent_class->finalize (object);
 }
 
 LsmSvgSvgElement *
@@ -216,10 +269,15 @@ lsm_svg_document_get_root_element (const LsmSvgDocument *document)
 /* LsmSvgDocument class */
 
 static void
-lsm_svg_document_class_init (LsmSvgDocumentClass *m_document_class)
+lsm_svg_document_class_init (LsmSvgDocumentClass *this_class)
 {
-	LsmDomNodeClass *d_node_class = LSM_DOM_NODE_CLASS (m_document_class);
-	LsmDomDocumentClass *d_document_class = LSM_DOM_DOCUMENT_CLASS (m_document_class);
+	GObjectClass *object_class = G_OBJECT_CLASS (this_class);
+	LsmDomNodeClass *d_node_class = LSM_DOM_NODE_CLASS (this_class);
+	LsmDomDocumentClass *d_document_class = LSM_DOM_DOCUMENT_CLASS (this_class);
+
+	parent_class = g_type_class_peek_parent (this_class);
+
+	object_class->finalize = lsm_svg_document_finalize;
 
 	d_node_class->can_append_child = lsm_svg_document_can_append_child;
 
