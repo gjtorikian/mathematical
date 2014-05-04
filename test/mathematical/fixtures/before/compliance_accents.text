@@ -1,0 +1,17 @@
+\bar: $\bar{x}$ <br>
+\overline ( = \closure  = \widebar): $\overline{x} ( = \closure{x}  = \widebar{x})$ <br>
+\underline: $\underline{x}$ <br>
+\vec: $\vec{x}$ <br>
+\widevec: $\widevec{x}$ <br>
+\dot: $\dot{x}$ <br>
+\ddot: $\ddot{x}$ <br>
+\dddot: $\dddot{x}$ <br>
+\ddddot: $\ddddot{x}$ <br>
+\tilde: $\tilde{x}$ <br>
+\widetilde: $\widetilde{x}$ <br>
+\check: $\check{x}$ <br>
+\widecheck: $\widecheck{x}$ <br>
+\hat: $\hat{x}$ <br>
+\widehat: $\widehat{x}$ <br>
+\slash: $Fruits \slash Vegetables$ <br>
+\boxed: \[ \boxed{F = m \cdot \ddot{x} + k \cdot x = 0} \]
