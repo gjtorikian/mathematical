@@ -64,6 +64,8 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   const char *tempfile = StringValueCStr(rb_TempFile);
 
+  g_type_init ();
+
   // convert the TeX math to MathML
   char * mathml = itex2MML_parse(latex_code, latex_size);
 
