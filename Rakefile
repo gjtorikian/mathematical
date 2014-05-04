@@ -10,9 +10,15 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-task :default => [:test]
-Rake::Task[:test].prerequisites << :compile
-
 require 'rake/extensiontask'
 spec = Gem::Specification.load('mathematical.gemspec')
-Rake::ExtensionTask.new('mathematical', spec)
+Rake::ExtensionTask.new('mathematical', spec) do |ext|
+  ext.lib_dir = File.join('lib', 'mathematical')
+end
+
+Gem::PackageTask.new(spec) do |pkg|
+end
+
+Rake::Task[:test].prerequisites << :compile
+
+task :default => [:test]
