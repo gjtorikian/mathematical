@@ -36,9 +36,10 @@ task :publish do
     system "git checkout gh-pages"
 
     li_listing = titles_to_content.keys.map { |title| "<li><a href='#{title}'>#{File.basename(title, File.extname(title))}</a></li>" }
-    IO.write("index.html", File.open("index.html") {|f| f.read.sub(/<!-- LIST_GOES_HERE -->/, li_listing) })
+    index = File.read("index.html")
+    File.open("index.html", 'w') { |file| file.write(index.sub(/<!-- LIST_GOES_HERE -->/, li_listing)) }
 
-    layout = File.read("layout.text")
+    layout = File.read("layout_shell.text")
     titles_to_content.each do |title, content|
       new_layout = layout.sub(/<!-- TITLE_GOES_HERE -->/, title)
       new_layout = new_layout.sub(/<!-- CONTENT_GOES_HERE -->/, content)
