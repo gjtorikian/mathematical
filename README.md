@@ -48,6 +48,11 @@ Currently, the following formats are supported:
 | `$...$`      | `[...]`
 | `(...)`      | `\begin{equation}...\end{equation}`
 
+### Supported commands and symbols
+
+Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html)
+is supported, because it acts as the interpretation engine for mathematical.
+
 ### Options
 
 `Mathematical::Render.new` can take a few options:
@@ -125,7 +130,7 @@ week. Here was my journey:
 * I started out with [`blahtexml`](https://github.com/gvanas/blahtexml), which takes
 TeX equations and converts them to PNG. This wasn't a bad idea, but it took too long;
 for twelve equations, it took eight seconds. It was slow because it shelled out
-to [`LaTeX`](http://www.latex-project.org/), *then* [`dvipng`](http://www.nongnu.org/dvipng/).  
+to [`LaTeX`](http://www.latex-project.org/), *then* [`dvipng`](http://www.nongnu.org/dvipng/).
 
   In fact, as I discovered, most projects on the 'Net shell out to `LaTeX`, then
 something else, which makes performance absolutely horrid. I had to find something
