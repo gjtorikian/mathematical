@@ -1,0 +1,4 @@
+\color{red}lorem ipsum!: $\color{red}lorem ipsum!$ <br>
+\color{#124589}lorem ipsum!: $\color{#124589}lorem ipsum!$ <br>
+\color{#1AC}lorem ipsum!: $\color{#1AC}lorem ipsum!$ <br>
+a { b \color{red} c \color{#0F0} d } e: $a { b \color{red} c \color{#0F0} d } e$

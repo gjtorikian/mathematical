@@ -9,6 +9,13 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     assert_equal output, '$\align$'
   end
 
+  def test_it_does_not_error_on_nested_commands
+    render = Mathematical::Render.new
+    output = nil
+    assert_nothing_raised { output = render.render('$$ a \ne \text{foo $\Gamma$ bar} b$$') }
+    assert_equal output, '$$ a \ne \text{foo $\Gamma$ bar} b$$'
+  end
+
   def test_it_does_not_blow_up_on_bad_arguments
     # need to pass a hash here
     assert_raise TypeError do
