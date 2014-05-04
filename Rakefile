@@ -28,7 +28,6 @@ desc "Generate and publish to gh-pages"
 task :publish do
   Dir.mktmpdir do |tmp|
     system "cp test/mathematical/fixtures/after/* #{tmp}"
-    system "cp README.md #{tmp}"
     system "git checkout gh-pages"
     # system "rm -rf *"
     system "mv #{tmp}/* ."
