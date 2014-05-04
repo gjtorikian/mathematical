@@ -77,6 +77,8 @@ Before using this gem, you must install the following libraries:
 * cairo
 * pango
 
+You will also need fonts for cmr10, cmmi10, cmex10, and cmsy10.
+
 ### Mac install
 
 To install these dependencies on a Mac, everything can be installed via Homebrew:
@@ -87,12 +89,14 @@ brew install glib gdk-pixbuf cairo pango
 
 `xml2` should already be on your machine.
 
+You can grab the necessary fonts [from here](https://gjtorikian.github.io/mathematical/cm-fonts.zip), then copy them all into * ~/Library/Fonts/*.
+
 ### *nix install
 
 To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
 
 ```
-sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev
+sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx
 ```
 
 `glib` and `gdk-pixbuf` should be on your machine.
