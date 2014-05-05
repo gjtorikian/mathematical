@@ -18,7 +18,7 @@ module Mathematical
       rescue TypeError => e # some error in the C code
         raise
       end
-
+      @cached_symbols = {}
     end
 
     def render(text)
@@ -27,6 +27,8 @@ module Mathematical
       # TODO: figure out how to write svgs without the tempfile
       tempfile = Tempfile.new('mathematical-temp.svg')
       text = text.gsub(Mathematical::Parser::REGEX) do |maths|
+        next(@cached_symbols[maths]) if @cached_symbols.has_key? maths
+
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
           type = :inline
@@ -55,13 +57,21 @@ module Mathematical
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts "#{e.message}: #{maths}"
           next(maths)
+        ensure
+          # success or fail, store the content
+          @cached_symbols[maths] = svg_content
         end
 
-        "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"#{svg_to_base64(svg_content)}\"/>"
+        image_wrap(type, svg_content)
       end
+
       tempfile.close
       tempfile.unlink
       text
+    end
+
+    def image_wrap(type, svg_content)
+      "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"#{svg_to_base64(svg_content)}\"/>"
     end
 
     def svg_to_base64(contents)
