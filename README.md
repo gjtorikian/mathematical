@@ -105,6 +105,16 @@ sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx
 
 On a Windows machine, I have no idea. Pull requests welcome!
 
+## Benchmarks
+
+```
+Benchmarking....
+Size: 1175 kilobytes
+Iterations: 10
+                                               user     system      total        real
+Rendering...                               9.470000   0.750000  10.220000 ( 13.909420)
+```
+
 ## Hacking
 
 After cloning the repo:
