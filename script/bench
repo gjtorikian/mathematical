@@ -15,7 +15,7 @@ repeats = ARGV[1] ? ARGV[1].to_i : 1
 file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * repeats
 
 puts "Benchmarking....\n"
-puts "Size: " + (file.bytesize / 1000).to_s + " megabytes\n"
+puts "Size: " + (file.bytesize / 1000).to_s + " kilobytes\n"
 puts "Iterations: " + num.to_s + "\n"
 
 Benchmark.bm(40) do |x|
