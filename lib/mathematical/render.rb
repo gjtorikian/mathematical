@@ -56,13 +56,11 @@ module Mathematical
           svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts "#{e.message}: #{maths}"
+          @cached_symbols[maths] = maths
           next(maths)
-        ensure
-          # success or fail, store the content
-          @cached_symbols[maths] = svg_content
         end
 
-        image_wrap(type, svg_content)
+         @cached_symbols[maths] = image_wrap(type, svg_content)
       end
 
       tempfile.close
