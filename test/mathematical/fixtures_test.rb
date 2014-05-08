@@ -1,6 +1,10 @@
 require "test_helper"
 
 class Mathematical::FixturesTest < Test::Unit::TestCase
+  # the same SVGs sometimes get random id values, throwing off the tests
+  def strip_id(blob)
+    blob.gsub(/id="surface.+?"/, '')
+  end
 
   Dir['test/mathematical/fixtures/before/*.text'].each do |before|
     name = before.split('/').last
@@ -8,13 +12,19 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
     define_method "test_#{name}" do
       source = File.read(before)
 
-      actual = Mathematical::Render.new.render(source).rstrip
+      actual = MathToItex(source).convert do |eq, type|
+        svg_content = Mathematical::Render.new(:base64 => true).render(eq)
+
+        %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|
+      end.rstrip
 
       expected_file = before.sub(/before/, "after").sub(/text/, "html")
 
       File.open(expected_file, "w") { |file| file.write(actual) } unless ENV['DEBUG_MATHEMATICAL'].nil?
 
-      expected = File.read(expected_file).rstrip
+      expected = File.read(expected_file)
+
+      expected = (MathToItex(expected).convert {|string| Mathematical::Render.new.render(string)}).rstrip
 
       # Travis and OS X each render SVGs differently. For now, let's just be happy
       # that something renders at all.

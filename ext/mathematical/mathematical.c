@@ -39,21 +39,22 @@
 static VALUE rb_mMathematical;
 static VALUE rb_cMathematicalProcess;
 
-VALUE readFile(char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) return NULL;
+char* readFile(const char* filename) {
+  FILE* file = fopen(filename, "r");
+  if (file == NULL) return NULL;
 
-    fseek(file, 0, SEEK_END);
-    long int size = ftell(file);
-    rewind(file);
+  fseek(file, 0, SEEK_END);
+  long int size = ftell(file);
+  rewind(file);
 
-    char* content = calloc(size + 1, 1);
+  char* content = calloc(size + 1, 1);
 
-    fread(content, 1, size, file);
+  fread(content, 1, size, file);
 
-    fclose(file);
+  fclose(file);
+  unlink(file);
 
-    return content;
+  return content;
 }
 
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
@@ -126,10 +127,12 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   lsm_dom_view_render (view, cairo, 0, 0);
 
   cairo_destroy (cairo);
-
   g_object_unref (view);
-
   g_object_unref (document);
+
+  char* svg_contents = readFile(tempfile);
+
+  if (svg_contents == NULL) rb_raise(rb_eRuntimeError, "Failed to read SVG contents");
 
   return rb_str_new2(readFile(tempfile));
 }

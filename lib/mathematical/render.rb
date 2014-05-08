@@ -6,7 +6,8 @@ module Mathematical
   class Render
     DEFAULT_OPTS = {
       :ppi => 72.0,
-      :zoom => 1.0
+      :zoom => 1.0,
+      :base64 => false
     }
 
     def initialize(opts = {})
@@ -18,70 +19,33 @@ module Mathematical
       rescue TypeError => e # some error in the C code
         raise
       end
-      @cached_symbols = {}
     end
 
-    def render(text)
-      raise(TypeError, "text must be a string!") unless text.is_a? String
+    def render(maths)
+      raise(TypeError, "text must be a string!") unless maths.is_a? String
+      raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
-      # TODO: figure out how to write svgs without the tempfile
+      # TODO: figure out how to write SVGs without the tempfile
       tempfile = Tempfile.new('mathematical-temp.svg')
-      text = text.gsub(Mathematical::Parser::REGEX) do |maths|
-        next(@cached_symbols[maths]) if @cached_symbols.has_key? maths
-
-        if maths =~ /^\$(?!\$)/
-          just_maths = maths[1..-2]
-          type = :inline
-        elsif maths =~ /^\\\((?!\\\[)/
-          just_maths = maths[2..-4]
-          type = :inline
-        elsif maths =~ /^\\\[(?!\\\[)/
-          just_maths = maths[2..-4]
-          type = :display
-        elsif maths =~ /^\\begin(?!\\begin)/
-          just_maths = maths[16..-15]
-          type = :display
-        end
-
-        # this is the format itex2MML expects
-        if type == :inline
-          just_maths = "$#{just_maths}$"
-        else
-          just_maths = "$$#{just_maths}$$"
-        end
-
-        begin
-          svg_content = @processer.process(just_maths, tempfile.path)
-          raise RuntimeError unless svg_content.is_a? String
-          svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
-        rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
-          $stderr.puts "#{e.message}: #{maths}"
-          @cached_symbols[maths] = maths
-          next(maths)
-        end
-
-         @cached_symbols[maths] = image_wrap(type, svg_content)
+      begin
+        raise RuntimeError unless @processer.process(maths, tempfile.path)
+        svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
+        svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
+        @config[:base64] ? svg_to_base64(svg_content) : svg_content
+      rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
+        $stderr.puts "#{e.message}: #{maths}"
+        maths
       end
-
-      tempfile.close
-      tempfile.unlink
-      text
     end
 
-    def image_wrap(type, svg_content)
-      "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"#{svg_to_base64(svg_content)}\"/>"
+private
+
+    def xml_header
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
     end
 
     def svg_to_base64(contents)
       "data:image/svg+xml;base64,#{Base64.strict_encode64(contents)}"
-    end
-
-    def named_type(type)
-      "#{type.to_s}-math"
-    end
-
-    def xml_header
-      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
     end
   end
 end
