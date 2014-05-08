@@ -1,6 +1,6 @@
 # Mathematical
 
-Convert mathematical equations to base64 encoded images.
+Quickly convert math equations into beautiful SVGs.
 
 [![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical)
 
@@ -28,34 +28,23 @@ The simplest way to do this is
 Mathematical::Render.new.render(string_with_math)
 ```
 
-`string_with_math` should just be a string, containing inline or display style math.
-The output will be all the math equations, as SVGs, converted into base64 encoded images.
-They look something like this:
-
-``` html
-<img class="type-inline" data-math-type="type-inline" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0..."/>
-```
-
-Inline math will have `class="type-inline" data-math-type="type-inline"` set, and display math will have
-`class="type-display" data-math-type="type-display"`.
-
-### Supported commands and symbols
-
-Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html)
-is supported, because it acts as the interpretation engine for mathematical.
+`string_with_math` should just be a string of itex inline (`$..$`) or display (`$$..$$`) style math.
+The output will be the math equation, as an SVG blob.
 
 ### Options
 
 `Mathematical::Render.new` can take a few options:
 
-* `:ppi`, the pixels per inch of the resulting SVG (default: `72.0`)
-* `:zoom`, the zoome level of the resulting SVG (default: `1.0`)
+* `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
+* `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
+* `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
 
-Pass these in as an options hash; these *must* be Float values! For example:
+Pass these in as an options hash:
 
 ``` ruby
-opts = { :ppi => 200.0, :zoom => 5.0 }
+opts = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
 renderer = Mathematical::Render.new(opts)
+renderer.render('$a \ne b$')
 ```
 
 ## Dependencies
@@ -185,3 +174,8 @@ can convert directly to SVG, and it's fast. The same arbitrary 880 equations wer
 rendered in less than three seconds.
 
 And thus a wrapper was born.
+
+## More math stuff
+
+Check out [math-to-itex](https://github.com/gjtorikian/math-to-itex/), which quickly
+parses out itex notation from strings.
