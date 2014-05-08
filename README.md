@@ -39,15 +39,6 @@ They look something like this:
 Inline math will have `class="type-inline" data-math-type="type-inline"` set, and display math will have
 `class="type-display" data-math-type="type-display"`.
 
-### Matched math notations
-
-Currently, the following formats are supported:
-
-| inline formulas | displayed equations |
-| ------------- |-------------|
-| `$...$`      | `[...]`
-| `(...)`      | `\begin{equation}...\end{equation}`
-
 ### Supported commands and symbols
 
 Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html)
