@@ -47,6 +47,10 @@ renderer = Mathematical::Render.new(opts)
 renderer.render('$a \ne b$')
 ```
 
+### Supported commands and symbols
+
+Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html) is supported, because it acts as the interpretation engine for mathematical.
+
 ## Dependencies
 
 Before using this gem, you must install the following libraries:
