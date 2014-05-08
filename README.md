@@ -179,3 +179,14 @@ And thus a wrapper was born.
 
 Check out [math-to-itex](https://github.com/gjtorikian/math-to-itex/), which quickly
 parses out itex notation from strings.
+
+With it, you could do something fun like:
+
+``` ruby
+MathToItex(string).convert do |eq, type|
+  svg_content = Mathematical::Render.new(:base64 => true).render(eq)
+
+  # create image tags of math with base64-encoded SVGs
+  %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|
+end
+```
