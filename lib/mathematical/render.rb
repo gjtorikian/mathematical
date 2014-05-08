@@ -18,7 +18,7 @@ module Mathematical
       rescue TypeError => e # some error in the C code
         raise
       end
-
+      @cached_symbols = {}
     end
 
     def render(text)
@@ -27,6 +27,8 @@ module Mathematical
       # TODO: figure out how to write svgs without the tempfile
       tempfile = Tempfile.new('mathematical-temp.svg')
       text = text.gsub(Mathematical::Parser::REGEX) do |maths|
+        next(@cached_symbols[maths]) if @cached_symbols.has_key? maths
+
         if maths =~ /^\$(?!\$)/
           just_maths = maths[1..-2]
           type = :inline
@@ -49,28 +51,37 @@ module Mathematical
         end
 
         begin
-          status = @processer.process(just_maths, tempfile.path)
-          raise RuntimeError unless status
-          svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
-          svg_content = svg_content.lines.to_a[1..-1].join
+          svg_content = @processer.process(just_maths, tempfile.path)
+          raise RuntimeError unless svg_content.is_a? String
+          svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
         rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
           $stderr.puts "#{e.message}: #{maths}"
+          @cached_symbols[maths] = maths
           next(maths)
         end
 
-        "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"data:image/svg+xml;base64,#{svg_to_base64(svg_content)}\"/>"
+         @cached_symbols[maths] = image_wrap(type, svg_content)
       end
+
       tempfile.close
       tempfile.unlink
       text
     end
 
+    def image_wrap(type, svg_content)
+      "<img class=\"#{named_type(type)}\" data-math-type=\"#{named_type(type)}\" src=\"#{svg_to_base64(svg_content)}\"/>"
+    end
+
     def svg_to_base64(contents)
-      Base64.strict_encode64(contents)
+      "data:image/svg+xml;base64,#{Base64.strict_encode64(contents)}"
     end
 
     def named_type(type)
       "#{type.to_s}-math"
+    end
+
+    def xml_header
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
     end
   end
 end
