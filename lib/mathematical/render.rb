@@ -22,6 +22,7 @@ module Mathematical
 
     def render(maths)
       raise(TypeError, "text must be a string!") unless maths.is_a? String
+      raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
       # TODO: figure out how to write svgs without the tempfile
       tempfile = Tempfile.new('mathematical-temp.svg')
