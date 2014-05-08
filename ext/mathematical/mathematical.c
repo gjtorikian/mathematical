@@ -131,6 +131,10 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   g_object_unref (document);
 
+  char* svg_contents = readFile(tempfile);
+
+  if (svg_contents == NULL) rb_raise(rb_eRuntimeError, "Failed to read SVG contents");
+
   return rb_str_new2(readFile(tempfile));
 }
 
