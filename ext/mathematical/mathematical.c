@@ -42,6 +42,8 @@ static VALUE rb_cMathematicalProcess;
 static VALUE rb_eParseError;
 // Raised when the SVG document could not be created
 static VALUE rb_eDocumentCreationError;
+// Raised when the SVG document could not be read
+static VALUE rb_eDocumentReadError;
 
 char* readFile(const char* filename) {
   FILE* file = fopen(filename, "r");
@@ -100,7 +102,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   lsm_itex_free_mathml_buffer (mathml);
 
-  if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
+  if (document == NULL) rb_raise(rb_eDocumentReadError, "Failed to create document");
 
   LsmDomView *view;
 
@@ -136,7 +138,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   char* svg_contents = readFile(tempfile);
 
-  if (svg_contents == NULL) rb_raise(rb_eRuntimeError, "Failed to read SVG contents");
+  if (svg_contents == NULL) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
 
   return rb_str_new2(readFile(tempfile));
 }
@@ -147,6 +149,7 @@ void Init_mathematical() {
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
   rb_eParseError = rb_define_class_under(rb_mMathematical, "ParseError", rb_eStandardError);
   rb_eDocumentCreationError = rb_define_class_under(rb_mMathematical, "DocumentCreationError", rb_eStandardError);
+  rb_eDocumentReadError = rb_define_class_under(rb_mMathematical, "DocumentReadError", rb_eStandardError);
 
   rb_define_method(rb_cMathematicalProcess, "initialize", MATHEMATICAL_init, 1);
   rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 2);

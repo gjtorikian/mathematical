@@ -26,7 +26,7 @@ module Mathematical
         svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
         svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
         @config[:base64] ? svg_to_base64(svg_content) : svg_content
-      rescue ParseError, DocumentCreationError => e # an error in the C code, probably a bad TeX parse
+      rescue ParseError, DocumentCreationError, DocumentReadError => e # an error in the C code, probably a bad TeX parse
         $stderr.puts "#{e.message}: #{maths}"
         maths
       end
