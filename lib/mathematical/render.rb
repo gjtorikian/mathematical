@@ -11,14 +11,8 @@ module Mathematical
     }
 
     def initialize(opts = {})
-      raise(TypeError, "opts must be a hash!") unless opts.is_a? Hash
-
       @config = DEFAULT_OPTS.merge(opts)
-      begin
-        @processer = Mathematical::Process.new(@config)
-      rescue TypeError => e # some error in the C code
-        raise
-      end
+      @processer = Mathematical::Process.new(@config)
     end
 
     def render(maths)
@@ -32,7 +26,7 @@ module Mathematical
         svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
         svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
         @config[:base64] ? svg_to_base64(svg_content) : svg_content
-      rescue RuntimeError => e # an error in the C code, probably a bad TeX parse
+      rescue ParseError, DocumentCreationError, DocumentReadError => e # an error in the C code, probably a bad TeX parse
         $stderr.puts "#{e.message}: #{maths}"
         maths
       end
