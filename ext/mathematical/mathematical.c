@@ -38,6 +38,7 @@
 
 static VALUE rb_mMathematical;
 static VALUE rb_cMathematicalProcess;
+
 // Raised when the contents could not be parsed
 static VALUE rb_eParseError;
 // Raised when the SVG document could not be created
@@ -102,7 +103,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   lsm_itex_free_mathml_buffer (mathml);
 
-  if (document == NULL) rb_raise(rb_eDocumentReadError, "Failed to create document");
+  if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
   LsmDomView *view;
 
