@@ -1,6 +1,6 @@
 require 'mkmf'
 
-system("export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig")
+system("export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:$PKG_CONFIG_PATH")
 
 have_library("xml2")
 find_header("libxml/tree.h", "/usr/include/libxml2", "/usr/local/include/libxml2")
