@@ -13,6 +13,4 @@ have_library("pangocairo-1.0")
 $LDFLAGS += " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`}"
 $CFLAGS += " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`}"
 
-with_cflags("-DGTK_DISABLE_DEPRECATED") do
-  create_makefile("mathematical/mathematical")
-end
+create_makefile("mathematical/mathematical")
