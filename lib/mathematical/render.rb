@@ -22,10 +22,10 @@ module Mathematical
       # TODO: figure out how to write SVGs without the tempfile
       tempfile = Tempfile.new('mathematical-temp.svg')
       begin
-        raise RuntimeError unless @processer.process(maths, tempfile.path)
-        svg_content = File.open(tempfile.path, 'r') { |image_file| image_file.read }
-        svg_content = svg_content[xml_header.length..-1] # remove starting <?xml...> tag
-        @config[:base64] ? svg_to_base64(svg_content) : svg_content
+        raise RuntimeError unless svg_hash = @processer.process(maths, tempfile.path)
+        svg_hash["svg"] = svg_hash["svg"][xml_header.length..-1] # remove starting <?xml...> tag
+        svg_hash["svg"] = svg_to_base64(svg_hash["svg"]) if @config[:base64]
+        svg_hash
       rescue ParseError, DocumentCreationError, DocumentReadError => e # an error in the C code, probably a bad TeX parse
         $stderr.puts "#{e.message}: #{maths}"
         maths

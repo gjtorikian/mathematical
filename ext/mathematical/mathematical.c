@@ -141,7 +141,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   if (svg_contents == NULL) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
 
-  return rb_str_new2(readFile(tempfile));
+  VALUE result_hash = rb_hash_new();
+
+  rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
+  rb_hash_aset (result_hash, rb_tainted_str_new2 ("height"), INT2FIX(height_pt));
+  rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_str_new2(svg_contents));
+
+  return result_hash;
 }
 
 void Init_mathematical() {
