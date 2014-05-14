@@ -29,7 +29,12 @@ Mathematical::Render.new.render(string_with_math)
 ```
 
 `string_with_math` should just be a string of itex inline (`$..$`) or display (`$$..$$`) style math.
-The output will be the math equation, as an SVG blob.
+
+The output will be a hash, with the following data:
+
+* `width`: the width of the resulting SVG file
+* `height: the height of the resulting SVG file
+* `svg`: the actual string of SVG
 
 ### Options
 

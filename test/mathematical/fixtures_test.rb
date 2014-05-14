@@ -15,7 +15,7 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
       actual = MathToItex(source).convert do |eq, type|
         svg_content = Mathematical::Render.new(:base64 => true).render(eq)
 
-        %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|
+        %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content['svg']}"/>|
       end.rstrip
 
       expected_file = before.sub(/before/, "after").sub(/text/, "html")
