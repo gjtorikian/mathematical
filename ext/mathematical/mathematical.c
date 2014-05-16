@@ -55,6 +55,7 @@ char* readFile(const char* filename) {
   rewind(file);
 
   char* content = calloc(size + 1, 1);
+  if (content == NULL) return NULL;
 
   fread(content, 1, size, file);
 
