@@ -126,8 +126,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   width_pt *= zoom;
   height_pt *= zoom;
-  width *= zoom;
-  height *= zoom;
 
   cairo_t *cairo;
   cairo_surface_t *surface;
