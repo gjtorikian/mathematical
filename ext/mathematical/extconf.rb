@@ -1,6 +1,10 @@
 require 'mkmf'
+require 'rbconfig'
+host_os = RbConfig::CONFIG['host_os']
 
-system("export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:$PKG_CONFIG_PATH")
+if host_os =~ /darwin|mac os/
+  ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
+end
 
 have_library("xml2")
 find_header("libxml/tree.h", "/usr/include/libxml2", "/usr/local/include/libxml2")
