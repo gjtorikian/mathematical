@@ -23,6 +23,7 @@
 #include "ruby.h"
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <lsm.h>
 #include <lsmmathml.h>
 #include <glib.h>
@@ -39,6 +40,8 @@
 static VALUE rb_mMathematical;
 static VALUE rb_cMathematicalProcess;
 
+// Raised when the size of the latex string is too large
+static VALUE rb_eMaxsizeError;
 // Raised when the contents could not be parsed
 static VALUE rb_eParseError;
 // Raised when the SVG document could not be created
@@ -67,16 +70,19 @@ char* readFile(const char* filename) {
 
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   Check_Type (rb_Options, T_HASH);
-  VALUE ppi, zoom;
+  VALUE rb_ppi, rb_zoom, rb_maxsize;
 
-  ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
-  zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
+  rb_ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
+  rb_zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
+  rb_maxsize = rb_hash_aref(rb_Options, CSTR2SYM("maxsize"));
 
-  Check_Type(ppi, T_FLOAT);
-  Check_Type(zoom, T_FLOAT);
+  Check_Type(rb_ppi, T_FLOAT);
+  Check_Type(rb_zoom, T_FLOAT);
+  Check_Type(rb_maxsize, T_FIXNUM);
 
-  rb_iv_set(self, "@ppi", ppi);
-  rb_iv_set(self, "@zoom", zoom);
+  rb_iv_set(self, "@ppi", rb_ppi);
+  rb_iv_set(self, "@zoom", rb_zoom);
+  rb_iv_set(self, "@maxsize", rb_maxsize);
 
   return self;
 }
@@ -85,8 +91,22 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   Check_Type (rb_LatexCode, T_STRING);
   Check_Type (rb_TempFile, T_STRING);
 
+  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
+
   const char *latex_code = StringValueCStr(rb_LatexCode);
-  unsigned long latex_size = strlen(latex_code);
+  unsigned long latex_size = (unsigned long) strlen(latex_code);
+
+  // make sure that the passed latex string is not larger than the maximum value of an unsigned long (or the maxsize option)
+  if (maxsize == 0) {
+    if (latex_size > ULONG_MAX) {
+      rb_raise(rb_eMaxsizeError, "Size of latex string (%lu), is greater than the size of an unsigned long!", latex_size);
+    }
+  }
+  else {
+    if (latex_size > maxsize) {
+      rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
+    }
+  }
 
   const char *tempfile = StringValueCStr(rb_TempFile);
 
@@ -157,6 +177,7 @@ void Init_mathematical() {
   rb_mMathematical = rb_define_module("Mathematical");
 
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
+  rb_eMaxsizeError = rb_define_class_under(rb_mMathematical, "MaxsizeError", rb_eStandardError);
   rb_eParseError = rb_define_class_under(rb_mMathematical, "ParseError", rb_eStandardError);
   rb_eDocumentCreationError = rb_define_class_under(rb_mMathematical, "DocumentCreationError", rb_eStandardError);
   rb_eDocumentReadError = rb_define_class_under(rb_mMathematical, "DocumentReadError", rb_eStandardError);

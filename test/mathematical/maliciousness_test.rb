@@ -30,6 +30,23 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     assert_raise TypeError do
       render = Mathematical::Render.new({:zoom => "not a number"})
     end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:maxsize => "not a number"})
+    end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:maxsize => -23})
+    end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:maxsize => 5.3})
+    end
+
+    assert_raise Mathematical::MaxsizeError do
+      render = Mathematical::Render.new({:maxsize => 2})
+      render.render('$a \ne b$')
+    end
   end
 
 
