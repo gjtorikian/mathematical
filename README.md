@@ -33,7 +33,7 @@ Mathematical::Render.new.render(string_with_math)
 The output will be a hash, with the following data:
 
 * `width`: the width of the resulting SVG file
-* `height: the height of the resulting SVG file
+* `height`: the height of the resulting SVG file
 * `svg`: the actual string of SVG
 
 ### Options
@@ -121,7 +121,7 @@ Rendering...                               9.470000   0.750000  10.220000 ( 13.9
 
 After cloning the repo:
 
-``` bash
+``` 
 script/bootstrap
 bundle exec rake compile
 ```
