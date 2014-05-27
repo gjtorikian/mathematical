@@ -113,13 +113,8 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   g_type_init ();
 
   // convert the TeX math to MathML
-  char* mathml = itex2MML_parse (latex_code, latex_size);
-	if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse itex");
-
-	if (mathml[0] == '\0') {
-		lsm_itex_free_mathml_buffer (mathml);
-		rb_raise(rb_eParseError, "Found erroneous null char while parsing itex");
-	}
+  char * mathml = lsm_itex_to_mathml(latex_code, latex_size);
+  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse itex");
 
   int mathml_size = strlen(mathml);
 
