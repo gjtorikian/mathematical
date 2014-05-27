@@ -110,7 +110,9 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
 
   const char *tempfile = StringValueCStr(rb_TempFile);
 
+#if !GLIB_CHECK_VERSION(2,36,0)
   g_type_init ();
+#endif
 
   // convert the TeX math to MathML
   char * mathml = lsm_itex_to_mathml(latex_code, latex_size);
