@@ -20,6 +20,10 @@ end
 Gem::PackageTask.new(spec) do |pkg|
 end
 
+Rake::Task["compile"].enhance do
+  Rake::Task["destroy_copies"].invoke
+end
+
 Rake::Task[:test].prerequisites << :compile
 
 task :default => [:test]
@@ -52,5 +56,13 @@ task :publish do
     system "git push origin gh-pages --force"
     system "git checkout master"
     system "echo yolo"
+  end
+end
+
+task :destroy_copies do
+  ext_dir = File.join(File.dirname(__FILE__), "ext", "mathematical")
+  Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
+    next if f =~ /extconf.rb/ || f =~ /mathematical.c/
+    File.delete(f)
   end
 end
