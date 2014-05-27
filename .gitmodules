@@ -1,0 +1,3 @@
+[submodule "ext/mathematical/lasem"]
+	path = ext/mathematical/lasem
+	url = git://git.gnome.org/lasem
