@@ -3,6 +3,10 @@
 set -e
 export CC=gcc
 
+echo "==> Initing Git submodules"
+
+git submodule update --init --recursive
+
 echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
