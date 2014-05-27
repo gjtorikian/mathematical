@@ -3,7 +3,7 @@ style sheets (only rendering is implemented for now). It uses cairo and pango as
 it's rendering abstraction layer, and then support numerous output formats: xlib,
 PNG, SVG, PDF, PS, EPS... It's written by Emmanuel Pacaud.
 
-Currently, this is version `lasem@f14a8a63eac4debf27a04e70bd64ca0adc3706e9`.
+Lasem was added as a Git submodule of this project.
 
 Some documentation can be found here:
 
@@ -15,7 +15,7 @@ Some documentation can be found here:
 itex2MML transforms itex (a dialect of latex) into MathML. itex2MML is developed by
 Paul Gartside and Jacques Distler.
 
-Currently, this is version `itex2MML@1.5.1`.
+itex2MML is a Baazar project, so its source files are copied here. Currently, this is version `itex2MML@1.5.1`.
 
 Some documentation can be found here:
 
