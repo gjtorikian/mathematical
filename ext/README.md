@@ -8,7 +8,7 @@ Currently, this is version `lasem@f14a8a63eac4debf27a04e70bd64ca0adc3706e9`.
 Some documentation can be found here:
 
 * http://blogs.gnome.org/emmanuel/category/lasem/
-* https://github.com/GNOME/lasem
+* https://git.gnome.org/browse/lasem/
 
 * * *
 
