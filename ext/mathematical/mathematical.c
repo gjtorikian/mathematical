@@ -51,8 +51,8 @@ cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data
   if (rb_iv_get(self, "@svg") == Qnil) {
     rb_iv_set(self, "@svg", rb_str_new2(""));
   }
-  VALUE svg = rb_iv_get(self, "@svg");
-  rb_str_cat(svg, data, length);
+
+  rb_str_cat(rb_iv_get(self, "@svg"), data, length);
 
   return CAIRO_STATUS_SUCCESS;
 }
