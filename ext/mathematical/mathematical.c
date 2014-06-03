@@ -72,8 +72,9 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   Check_Type(rb_zoom, T_FLOAT);
   Check_Type(rb_maxsize, T_FIXNUM);
 
-  rb_iv_set(self, "@ppi", ppi);
-  rb_iv_set(self, "@zoom", zoom);
+  rb_iv_set(self, "@ppi", rb_ppi);
+  rb_iv_set(self, "@zoom", rb_zoom);
+  rb_iv_set(self, "@maxsize", rb_maxsize);
   rb_iv_set(self, "@svg", Qnil);
 
   return self;
