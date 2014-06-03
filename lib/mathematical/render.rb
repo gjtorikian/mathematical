@@ -22,10 +22,8 @@ module Mathematical
       raise(TypeError, "text must be a string!") unless maths.is_a? String
       raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
-      # TODO: figure out how to write SVGs without the tempfile
-      tempfile = Tempfile.new('mathematical-temp.svg')
       begin
-        raise RuntimeError unless svg_hash = @processer.process(maths, tempfile.path)
+        raise RuntimeError unless svg_hash = @processer.process(maths)
         svg_hash["svg"] = svg_hash["svg"][xml_header.length..-1] # remove starting <?xml...> tag
         svg_hash["svg"] = svg_to_base64(svg_hash["svg"]) if @config[:base64]
         svg_hash

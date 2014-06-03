@@ -49,23 +49,15 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
-char* readFile(const char* filename) {
-  FILE* file = fopen(filename, "r");
-  if (file == NULL) return NULL;
+cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length) {
+  VALUE self = (VALUE) closure;
+  if (rb_iv_get(self, "@svg") == Qnil) {
+    rb_iv_set(self, "@svg", rb_str_new2(""));
+  }
 
-  fseek(file, 0, SEEK_END);
-  long int size = ftell(file);
-  rewind(file);
+  rb_str_cat(rb_iv_get(self, "@svg"), data, length);
 
-  char* content = calloc(size + 1, 1);
-  if (content == NULL) return NULL;
-
-  fread(content, 1, size, file);
-
-  fclose(file);
-  unlink(file);
-
-  return content;
+  return CAIRO_STATUS_SUCCESS;
 }
 
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
@@ -80,16 +72,15 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   Check_Type(rb_zoom, T_FLOAT);
   Check_Type(rb_maxsize, T_FIXNUM);
 
-  rb_iv_set(self, "@ppi", rb_ppi);
-  rb_iv_set(self, "@zoom", rb_zoom);
-  rb_iv_set(self, "@maxsize", rb_maxsize);
+  rb_iv_set(self, "@ppi", ppi);
+  rb_iv_set(self, "@zoom", zoom);
+  rb_iv_set(self, "@svg", Qnil);
 
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempFile) {
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   Check_Type (rb_LatexCode, T_STRING);
-  Check_Type (rb_TempFile, T_STRING);
 
   unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
 
@@ -107,8 +98,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
       rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
     }
   }
-
-  const char *tempfile = StringValueCStr(rb_TempFile);
 
 #if !GLIB_CHECK_VERSION(2,36,0)
   g_type_init ();
@@ -147,7 +136,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   cairo_t *cairo;
   cairo_surface_t *surface;
 
-  surface = cairo_svg_surface_create (tempfile, width_pt, height_pt);
+  surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
   cairo = cairo_create (surface);
   cairo_surface_destroy (surface);
   cairo_scale (cairo, zoom, zoom);
@@ -157,15 +146,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode, VALUE rb_TempF
   g_object_unref (view);
   g_object_unref (document);
 
-  char* svg_contents = readFile(tempfile);
-
-  if (svg_contents == NULL) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
+  if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
 
   VALUE result_hash = rb_hash_new();
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("height"), INT2FIX(height_pt));
-  rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_str_new2(svg_contents));
+  rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
 
   return result_hash;
 }
@@ -180,5 +167,5 @@ void Init_mathematical() {
   rb_eDocumentReadError = rb_define_class_under(rb_mMathematical, "DocumentReadError", rb_eStandardError);
 
   rb_define_method(rb_cMathematicalProcess, "initialize", MATHEMATICAL_init, 1);
-  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 2);
+  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 1);
 }
