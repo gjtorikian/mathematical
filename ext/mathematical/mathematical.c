@@ -83,10 +83,10 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
 static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   Check_Type (rb_LatexCode, T_STRING);
 
-  gsize maxsize = (gsize) FIX2INT(rb_iv_get(self, "@maxsize"));
+  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
 
   const char *latex_code = StringValueCStr(rb_LatexCode);
-  gsize latex_size = (gsize) strlen(latex_code);
+  unsigned long latex_size = (unsigned long) strlen(latex_code);
 
   // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
   if (maxsize == 0)
