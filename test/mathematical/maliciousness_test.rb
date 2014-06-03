@@ -47,8 +47,17 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
       render = Mathematical::Render.new({:maxsize => 2})
       render.render('$a \ne b$')
     end
-  end
 
+    assert_nothing_raised RangeError do
+      render = Mathematical::Render.new({:maxsize => 2147483647}) # signed long max
+      render.render('$a \ne b$')
+    end
+
+    assert_raise RangeError do
+      render = Mathematical::Render.new({:maxsize => 4294967295}) # unsigned long max
+      render.render('$a \ne b$')
+    end
+  end
 
   def test_it_does_not_blow_up_on_bad_input
     assert_raise TypeError do

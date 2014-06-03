@@ -88,17 +88,12 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   const char *latex_code = StringValueCStr(rb_LatexCode);
   gsize latex_size = (gsize) strlen(latex_code);
 
-  // make sure that the passed latex string is not larger than the maximum value of an unsigned long (or the maxsize option)
-  if (maxsize == 0) {
-    if (latex_size > ULONG_MAX) {
-      rb_raise(rb_eMaxsizeError, "Size of latex string (%lu), is greater than the size of an unsigned long!", latex_size);
-    }
-  }
-  else {
-    if (latex_size > maxsize) {
-      rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
-    }
-  }
+  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
+  if (maxsize == 0)
+    maxsize = LONG_MAX;
+
+  if (latex_size > maxsize)
+    rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
 
 #if !GLIB_CHECK_VERSION(2,36,0)
   g_type_init ();
