@@ -7,11 +7,14 @@ module Mathematical
     DEFAULT_OPTS = {
       :ppi => 72.0,
       :zoom => 1.0,
-      :base64 => false
+      :base64 => false,
+      :maxsize => 0
     }
 
     def initialize(opts = {})
       @config = DEFAULT_OPTS.merge(opts)
+      raise(TypeError, "maxsize must be an integer!") unless @config[:maxsize].is_a? Fixnum
+      raise(TypeError, "maxsize cannot be less than 0!") if @config[:maxsize] < 0
       @processer = Mathematical::Process.new(@config)
     end
 
