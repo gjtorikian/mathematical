@@ -6,4 +6,11 @@ class Mathematical::BasicTest < Test::Unit::TestCase
     assert Mathematical::VERSION
   end
 
+  def test_multiple_calls
+    render = Mathematical::Render.new
+    render.render('$\pi$')
+    output = render.render('$\pi$')['svg']
+    assert_equal 1, output.scan(/<svg/).size, 'should only contain one svg'
+  end
+
 end

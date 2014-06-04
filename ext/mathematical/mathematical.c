@@ -150,6 +150,9 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("height"), INT2FIX(height_pt));
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
 
+  // we need to clear out this key when attempting multiple calls. See http://git.io/i1hblQ
+  rb_iv_set(self, "@svg", Qnil);
+
   return result_hash;
 }
 
