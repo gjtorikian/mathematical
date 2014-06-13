@@ -22,6 +22,13 @@ module Mathematical
       raise(TypeError, "text must be a string!") unless maths.is_a? String
       raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
+      # seems to be a bug in itex@1.5.1 where the "Vertical spacing and page breaks in multiline display" (\\)
+      # do not work, and yield an "unknown character" error
+      maths.gsub!(/\\\\/, "\\\\\\\\")
+
+      maths.gsub!(/\\begin\{align\}/, "\\begin{aligned}")
+      maths.gsub!(/\\end\{align\}/, "\\end{aligned}")
+
       begin
         raise RuntimeError unless svg_hash = @processer.process(maths)
         svg_hash["svg"] = svg_hash["svg"][xml_header.length..-1] # remove starting <?xml...> tag
