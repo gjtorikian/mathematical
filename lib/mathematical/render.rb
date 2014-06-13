@@ -26,6 +26,7 @@ module Mathematical
       # do not work, and yield an "unknown character" error
       maths.gsub!(/\\\\/, "\\\\\\\\")
 
+      # `{align}` *should* be valid, according to AMS-Latex, but it seems itex@1.5.1 does not like it.
       maths.gsub!(/\\begin\{align\}/, "\\begin{aligned}")
       maths.gsub!(/\\end\{align\}/, "\\end{aligned}")
 

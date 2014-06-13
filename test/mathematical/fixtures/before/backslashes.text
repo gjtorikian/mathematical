@@ -6,7 +6,6 @@ $$
 \end{array}
 $$
 
-
 $$
 \begin{aligned}
 \dot{x} & = \sigma(y-x) \\\\
