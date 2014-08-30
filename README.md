@@ -25,6 +25,8 @@ Or install it yourself as:
 The simplest way to do this is
 
 ``` ruby
+require 'mathematical'
+
 Mathematical::Render.new.render(string_with_math)
 ```
 
