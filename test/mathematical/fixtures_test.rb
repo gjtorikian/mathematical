@@ -12,6 +12,16 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
     define_method "test_#{name}" do
       source = File.read(before)
 
+      if ENV['MATHEMATICAL_GENERATE_SAMPLE']
+        i = 0
+        actual = MathToItex(source).convert do |eq, type|
+          svg_content = Mathematical::Render.new(:base64 => false).render(eq)
+          filename = eq.sub(/\s*/, '-').sub(/\$*/, '')
+          File.open("samples/#{name}_#{i}.svg", "w") { |file| file.write svg_content["svg"] }
+          i += 1
+        end
+      end
+
       actual = MathToItex(source).convert do |eq, type|
         svg_content = Mathematical::Render.new(:base64 => true).render(eq)
 
