@@ -6,14 +6,87 @@ require 'mathematical'
 
 `export MATHEMATICAL_GENERATE_SAMPLE=1`
 
-# system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
+system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
 
 quality = {
-  'fourier_transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
-  'An_Identity_of_Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$'
+  'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
+  'An Identity of Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
+  'The Cauchy-Schwarz Inequality' => '$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$',
+  'A Rogers-Ramanujan Identity' => '$$1 + \frac{q^2}{(1-q)} + \frac{q^6}{(1-q)(1-q^2)} + \cdots= \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},\quad\quad for\,|q| \lt 1.$$',
+  'Mathclap sample' => '''
+$$
+ y = a + f(\underbrace{b x}_{
+                    \ge 0 \text{ by assumption}})
+   = a + f(\underbrace{b x}_{
+          \mathclap{\ge 0 \text{ by assumption}}})
+$$
+''',
+  'Maxwell\'s Equations' => '''
+$$
+\begin{aligned}
+\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} & = \frac{4\pi}{c}\vec{\mathbf{j}} \\\   \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\\
+\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\\
+\nabla \cdot \vec{\mathbf{B}} & = 0 \end{aligned}
+$$
+''',
+  'colors' => '''
+$$
+\begin{array}{|rc|}
+black& \color{black}{text} \\\
+gray& \color{gray}{text} \\\
+silver& \color{silver}{text} \\\
+white& \color{white}{text} \\\
+maroon& \color{maroon}{text} \\\
+red& \color{red}{text} \\\
+yellow& \color{yellow}{text} \\\
+lime& \color{lime}{text} \\\
+olive& \color{olive}{text} \\\
+green& \color{green}{text} \\\
+teal& \color{teal}{text} \\\
+aqua& \color{aqua}{text} \\\
+blue& \color{blue}{text} \\\
+navy& \color{navy}{text} \\\
+purple& \color{purple}{text} \\\
+fuchsia& \color{magenta}{text} \\\
+\end{array}
+$$
+''',
+  'big braces' => '''
+$$
+f\left(
+   \left[
+     \frac{
+       1+\left\{x,y\right\}
+     }{
+       \left(
+          \frac{x}{y}+\frac{y}{x}
+       \right)
+       \left(u+1\right)
+     }+a
+   \right]^{3/2}
+\right)
+$$
+''',
+  'Integral equation' => '$\phi_n(\kappa) =\frac{1}{4\pi^2\kappa^2} \int_0^\infty\frac{\sin(\kappa R)}{\kappa R}\frac{\partial}{\partial R}\left[R^2\frac{\partial D_n(R)}{\partial R}\right]\,dR$',
+  'stacked equations' => '''
+$$
+\begin{gathered}
+a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\,\mathrm{d}x\\\
+\begin{split}
+a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,\mathrm{d}x=\\\
+=\frac{1}{\pi}\int_{-\pi}^{\pi}x^2\cos nx\,\mathrm{d}x
+\end{split}\\\
+\begin{split}
+b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,\mathrm{d}x=\\\
+=\frac{1}{\pi}\int_{-\pi}^{\pi}x^2\sin nx\,\mathrm{d}x
+\end{split}\\\
+\end{gathered}
+$$
+'''
 }
 
 quality.each_pair do |filename, eq|
+  filename = filename.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '').downcase
   svg_content = Mathematical::Render.new(:base64 => false).render(eq)
-  File.open("samples/quality/#{filename.downcase}.svg", "w") { |file| file.write svg_content["svg"] }
+  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
 end

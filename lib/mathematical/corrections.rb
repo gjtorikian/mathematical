@@ -5,6 +5,8 @@ module Mathematical
       maths = adjust_slashes(maths)
       maths = adjust_alignment(maths)
       maths = adjust_frac(maths)
+      maths = adjust_lt_gt(maths)
+      maths = adjust_limits(maths)
     end
 
     # seems to be a bug in itex@1.5.1 where the "Vertical spacing and page breaks in multiline display" (\\)
@@ -22,6 +24,18 @@ module Mathematical
     # seems like KaTeX/MathJax supports \frac\d\d, but itex does not
     def adjust_frac(maths)
       maths.gsub(/\\frac(\d)(\d)/, '\frac{\1}{\2}')
+    end
+
+    # from the itex website:
+    # It is possible (though probably not recommended) to insert MathML markup
+    # inside itex equations. So "<" and ">" are significant.
+    # To obtain a less-than or greater-than sign, you should use \lt or \gt, respectively.
+    def adjust_lt_gt(maths)
+      maths.gsub(/</, '\lt').gsub(/>/, '\gt')
+    end
+
+    def adjust_limits(maths)
+      maths.gsub(/\\int\\limits_/, '\int_')
     end
   end
 end

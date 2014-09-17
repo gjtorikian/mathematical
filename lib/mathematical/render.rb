@@ -22,6 +22,7 @@ module Mathematical
 
     def render(maths)
       raise(TypeError, "text must be a string!") unless maths.is_a? String
+      maths = maths.strip
       raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
       maths = apply_corrections(maths)
