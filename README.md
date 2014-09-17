@@ -45,6 +45,7 @@ The output will be a hash, with the following data:
 * `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
 * `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
 * `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
+* `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
 
 Pass these in as an options hash:
 
@@ -123,7 +124,7 @@ Rendering...                               9.470000   0.750000  10.220000 ( 13.9
 
 After cloning the repo:
 
-``` 
+```
 script/bootstrap
 bundle exec rake compile
 ```
