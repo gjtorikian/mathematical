@@ -18,7 +18,7 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
           svg_content = Mathematical::Render.new(:base64 => false).render(eq)
           # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
           filename = eq.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '')
-          File.open("samples/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
+          File.open("samples/fixtures/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
         end
       end
 
