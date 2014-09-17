@@ -1,3 +1,19 @@
-export MATHEMATICAL_GENERATE_SAMPLE=1
+#!/usr/bin/ruby
 
-bundle exec rake test
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'mathematical'
+
+`export MATHEMATICAL_GENERATE_SAMPLE=1`
+
+# system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
+
+quality = {
+  'fourier_transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
+  'An_Identity_of_Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$'
+}
+
+quality.each_pair do |filename, eq|
+  svg_content = Mathematical::Render.new(:base64 => false).render(eq)
+  File.open("samples/quality/#{filename.downcase}.svg", "w") { |file| file.write svg_content["svg"] }
+end

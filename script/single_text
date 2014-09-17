@@ -1,15 +1,19 @@
 #!/usr/bin/ruby
 
-require './lib/mathematical.rb'
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'mathematical'
 
 `bundle exec rake compile`
+
+svg = Mathematical::Render.new.render('$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$')['svg']
 
 text = """
 <html>
 
 <body>
 
-#{Mathematical::Render.new.render('\begin{equation}x = {-b \pm \sqrt{b^2-4ac} \over 2a}\end{equation}')}
+#{svg}
 
 </body>
 
