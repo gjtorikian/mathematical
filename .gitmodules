@@ -2,3 +2,6 @@
 	path = ext/mathematical/lasem
 	url = git://git.gnome.org/lasem
 	ignore = dirty
+[submodule "ext/mathematical/itexToMML"]
+	path = ext/mathematical/itexToMML
+	url = git@github.com:gjtorikian/amsmath-tex2MML.git
