@@ -82,6 +82,15 @@ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,\mathrm{d}x=\\\
 \end{split}\\\
 \end{gathered}
 $$
+''',
+  'fussy spacing' => '''
+$$
+\begin{array}{c|c}
+\mathrm{Bad} & \mathrm{Better} \\\\
+\hline \\\\
+\iiint_V f(x)dz dy dx & \iiint_V f(x)\,dz\,dy\,dx
+\end{array}
+$$
 '''
 }
 
