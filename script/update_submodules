@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+cd ext/mathematical/itexToMML
+git checkout master && git pull
+sha=`git rev-parse HEAD`
+cd ../../..
+git add ext/mathematical/itexToMML
+git commit -m "Update itexToMML to ${sha}"
+
+cd ext/mathematical/lasem
+git checkout master && git pull
+sha=`git rev-parse HEAD`
+cd ..
+git add ext/mathematical/lasem
+git commit -m "Update Lasem to ${sha}"
