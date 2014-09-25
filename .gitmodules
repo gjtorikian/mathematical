@@ -4,5 +4,5 @@
   ignore = dirty
 [submodule "ext/mathematical/itexToMML"]
   path = ext/mathematical/itexToMML
-  url = git@github.com:gjtorikian/amsmath-tex2MML.git
+  url = https://github.com/gjtorikian/amsmath-tex2MML.git
   ignore = dirty
