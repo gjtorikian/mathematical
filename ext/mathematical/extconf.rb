@@ -3,7 +3,7 @@ require 'rbconfig'
 host_os = RbConfig::CONFIG['host_os']
 
 LASEM_DIR = File.join(File.dirname(__FILE__), "lasem", "src")
-ITEX_DIR = File.join(File.dirname(__FILE__), "itexToMML")
+ITEX_DIR = File.join(File.dirname(__FILE__), "itexToMML", "src")
 
 if host_os =~ /darwin|mac os/
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
@@ -20,7 +20,7 @@ find_header("libxml/xpathInternals.h", "/usr/include/libxml2", "/usr/local/inclu
 FileUtils.cp_r(Dir.glob("#{LASEM_DIR}/*"), File.dirname(__FILE__))
 File.delete(File.join(File.dirname(__FILE__), "lasemrender.c"))
 
-FileUtils.cp_r(Dir.glob("#{ITEX_DIR}/*"), File.dirname(__FILE__))
+FileUtils.cp_r(Dir.glob("#{ITEX_DIR}/*.{c,h,cc}"), File.dirname(__FILE__))
 
 have_library("pangocairo-1.0")
 
