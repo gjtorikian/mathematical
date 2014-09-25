@@ -30,6 +30,6 @@ FileUtils.cp_r(Dir.glob("#{ITEX_DIR}/*.{c,h,cc}"), File.dirname(__FILE__))
 have_library("pangocairo-1.0")
 
 $LDFLAGS += " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS += " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR} -I#{ITEX_DIR}"
+$CFLAGS += " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -DFLIP_OFFSET_VAL -I#{LASEM_DIR} -I#{ITEX_DIR}"
 
 create_makefile("mathematical/mathematical")
