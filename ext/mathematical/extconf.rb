@@ -20,6 +20,11 @@ find_header("libxml/xpathInternals.h", "/usr/include/libxml2", "/usr/local/inclu
 FileUtils.cp_r(Dir.glob("#{LASEM_DIR}/*"), File.dirname(__FILE__))
 File.delete(File.join(File.dirname(__FILE__), "lasemrender.c"))
 
+# build itexToMML Bison files
+Dir.chdir(ITEX_DIR) do
+  system "make"
+end
+
 FileUtils.cp_r(Dir.glob("#{ITEX_DIR}/*.{c,h,cc}"), File.dirname(__FILE__))
 
 have_library("pangocairo-1.0")
