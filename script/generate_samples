@@ -4,10 +4,6 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
 
-`export MATHEMATICAL_GENERATE_SAMPLE=1`
-
-system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
-
 quality = {
   'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
   'An Identity of Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
@@ -90,6 +86,49 @@ $$
 \hline \\\\
 \iiint_V f(x)dz dy dx & \iiint_V f(x)\,dz\,dy\,dx
 \end{array}
+$$
+''',
+  'fancy looking matrix' => '''
+$$
+\begin{pmatrix}
+     1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
+     1 & a_2 & a_2^2 & \cdots & a_2^n \\\\
+     \vdots  & \vdots& \vdots & \ddots & \vdots \\\\
+     1 & a_m & a_m^2 & \cdots & a_m^n
+     \end{pmatrix}
+$$
+''',
+  'augment matrix' => '''
+$$ \left[
+    \begin{array}{cc|c}
+      1&2&3\\\\
+      4&5&6
+    \end{array}
+\right] $$
+''',
+  'definition cases' => '''
+$$
+f(n) =
+\begin{cases}
+\frac{n}{2},  & \text{if n is even} \\\\ [2ex]
+3n+1, & \text{if n is odd}
+\end{cases}
+$$
+''',
+ 'big braces' => '''
+$$
+f\left(
+   \left[
+     \frac{
+       1+\left\{x,y\right\}
+     }{
+       \left(
+          \frac{x}{y}+\frac{y}{x}
+       \right)
+       \left(u+1\right)
+     }+a
+   \right]^{3/2}
+\right)
 $$
 '''
 }
