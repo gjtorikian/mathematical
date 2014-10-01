@@ -33,7 +33,7 @@
 #include <cairo-pdf.h>
 #include <cairo-svg.h>
 #include <cairo-ps.h>
-#include "itex2MML.h"
+#include "mtex2MML.h"
 
 #define CSTR2SYM(str) ID2SYM(rb_intern(str))
 
@@ -48,6 +48,58 @@ static VALUE rb_eParseError;
 static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
+
+/**
+ * lsm_mtex_to_mathml:
+ * @mtex: (allow-none): an mtex string
+ * @size: mtex string length, -1 if NULL terminated
+ *
+ * Converts an mtex string to a Mathml representation.
+ *
+ * Return value: a newly allocated string, NULL on parse error. The returned data must be freed using @lsm_mtex_free_mathml_buffer.
+ */
+
+char *
+lsm_mtex_to_mathml (const char *mtex, gssize size)
+{
+  gsize usize;
+  char *mathml;
+
+  if (mtex == NULL)
+    return NULL;
+
+  if (size < 0)
+    usize = strlen (mtex);
+  else
+    usize = size;
+
+  mathml = mtex2MML_parse (mtex, usize);
+  if (mathml == NULL)
+    return NULL;
+
+  if (mathml[0] == '\0') {
+    mtex2MML_free_string (mathml);
+    return NULL;
+  }
+
+  return mathml;
+}
+
+/**
+ * lsm_mtex_free_mathml_buffer:
+ * @mathml: (allow-none): a mathml buffer
+ *
+ * Free the buffer returned by @lsm_mtex_to_mathml.
+ */
+
+void
+lsm_mtex_free_mathml_buffer (char *mathml)
+{
+  if (mathml == NULL)
+    return;
+
+  mtex2MML_free_string (mathml);
+}
 
 cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length) {
   VALUE self = (VALUE) closure;
@@ -100,15 +152,15 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 #endif
 
   // convert the TeX math to MathML
-  char * mathml = lsm_itex_to_mathml(latex_code, latex_size);
-  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse itex");
+  char * mathml = mtex2MML_parse(latex_code, latex_size);
+  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
 
   int mathml_size = strlen(mathml);
 
   LsmDomDocument *document;
   document = lsm_dom_document_new_from_memory(mathml, mathml_size, NULL);
 
-  lsm_itex_free_mathml_buffer (mathml);
+  mtex2MML_free_string(mathml);
 
   if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
