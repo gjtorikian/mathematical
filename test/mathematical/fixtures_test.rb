@@ -6,7 +6,7 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
     blob.gsub(/id="surface.+?"/, '')
   end
 
-  Dir['test/mathematical/fixtures/before/*.text'].each do |before|
+  Dir["#{fixtures_dir}/before/*.text"].each do |before|
     name = before.split('/').last
 
     define_method "test_#{name}" do

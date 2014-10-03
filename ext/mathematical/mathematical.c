@@ -112,21 +112,37 @@ cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data
   return CAIRO_STATUS_SUCCESS;
 }
 
+cairo_status_t cairoPngSurfaceCallback (void *closure, const unsigned char *data, unsigned int length) {
+  VALUE self = (VALUE) closure;
+  if (rb_iv_get(self, "@png") == Qnil) {
+    rb_iv_set(self, "@png", rb_str_new2(""));
+  }
+
+  rb_str_cat(rb_iv_get(self, "@png"), data, length);
+
+  return CAIRO_STATUS_SUCCESS;
+}
+
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   Check_Type (rb_Options, T_HASH);
-  VALUE rb_ppi, rb_zoom, rb_maxsize;
+  VALUE rb_ppi, rb_zoom, rb_maxsize, rb_format;
 
   rb_ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
   rb_zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
   rb_maxsize = rb_hash_aref(rb_Options, CSTR2SYM("maxsize"));
+  rb_format = rb_hash_aref(rb_Options, CSTR2SYM("format"));
 
   Check_Type(rb_ppi, T_FLOAT);
   Check_Type(rb_zoom, T_FLOAT);
   Check_Type(rb_maxsize, T_FIXNUM);
+  Check_Type(rb_format, T_STRING);
 
   rb_iv_set(self, "@ppi", rb_ppi);
   rb_iv_set(self, "@zoom", rb_zoom);
   rb_iv_set(self, "@maxsize", rb_maxsize);
+  rb_iv_set(self, "@format", rb_format);
+
+  rb_iv_set(self, "@png", Qnil);
   rb_iv_set(self, "@svg", Qnil);
 
   return self;
@@ -168,6 +184,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   double ppi = NUM2DBL(rb_iv_get(self, "@ppi"));
   double zoom = NUM2DBL(rb_iv_get(self, "@zoom"));
+  const char* format = RSTRING_PTR(rb_iv_get(self, "@format"));
 
   view = lsm_dom_document_create_view (document);
   lsm_dom_view_set_resolution (view, ppi);
@@ -184,26 +201,43 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   cairo_t *cairo;
   cairo_surface_t *surface;
 
-  surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
+  if (strncmp(format, "svg", 3) == 0) {
+    surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
+  }
+  else if (strncmp(format, "png", 3) == 0) {
+    surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+  }
+
   cairo = cairo_create (surface);
   cairo_surface_destroy (surface);
   cairo_scale (cairo, zoom, zoom);
   lsm_dom_view_render (view, cairo, 0, 0);
 
+  if (strncmp(format, "png", 3) == 0) {
+    cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
+  }
+
   cairo_destroy (cairo);
   g_object_unref (view);
   g_object_unref (document);
 
-  if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
-
   VALUE result_hash = rb_hash_new();
+
+  if (strncmp(format, "svg", 3) == 0) {
+    if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
+  }
+  else if (strncmp(format, "png", 3) == 0) {
+    if (rb_iv_get(self, "@png") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read PNG contents");
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
+  }
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("height"), INT2FIX(height_pt));
-  rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
 
   // we need to clear out this key when attempting multiple calls. See http://git.io/i1hblQ
   rb_iv_set(self, "@svg", Qnil);
+  rb_iv_set(self, "@png", Qnil);
 
   return result_hash;
 }
