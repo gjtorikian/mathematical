@@ -5,6 +5,7 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
   def test_it_does_not_error_on_unrecognized_commands
     render = Mathematical::Render.new
     output = nil
+    # In C, we raise a ParseError, but Mathematical suppresses it.
     assert_nothing_raised { output = render.render('$\align$') }
     assert_equal output, '$\align$'
   end
