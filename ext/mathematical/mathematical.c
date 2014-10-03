@@ -49,6 +49,11 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
+typedef enum {
+  FORMAT_SVG,
+  FORMAT_PNG
+} FileFormat;
+
 /**
  * lsm_mtex_to_mathml:
  * @mtex: (allow-none): an mtex string
@@ -181,10 +186,11 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
   LsmDomView *view;
+  FileFormat format;
 
   double ppi = NUM2DBL(rb_iv_get(self, "@ppi"));
   double zoom = NUM2DBL(rb_iv_get(self, "@zoom"));
-  const char* format = RSTRING_PTR(rb_iv_get(self, "@format"));
+  const char* rb_format = RSTRING_PTR(rb_iv_get(self, "@format"));
 
   view = lsm_dom_document_create_view (document);
   lsm_dom_view_set_resolution (view, ppi);
@@ -201,10 +207,12 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   cairo_t *cairo;
   cairo_surface_t *surface;
 
-  if (strncmp(format, "svg", 3) == 0) {
+  if (strncmp(rb_format, "svg", 3) == 0) {
+    format = FORMAT_SVG;
     surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
   }
-  else if (strncmp(format, "png", 3) == 0) {
+  else if (strncmp(rb_format, "png", 3) == 0) {
+    format = FORMAT_PNG;
     surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
   }
 
@@ -213,8 +221,12 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   cairo_scale (cairo, zoom, zoom);
   lsm_dom_view_render (view, cairo, 0, 0);
 
-  if (strncmp(format, "png", 3) == 0) {
-    cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
+  switch (format) {
+    case FORMAT_PNG:
+      cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
+      break;
+    default:
+      break;
   }
 
   cairo_destroy (cairo);
@@ -223,13 +235,17 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   VALUE result_hash = rb_hash_new();
 
-  if (strncmp(format, "svg", 3) == 0) {
-    if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
-  }
-  else if (strncmp(format, "png", 3) == 0) {
-    if (rb_iv_get(self, "@png") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read PNG contents");
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
+  switch (format) {
+    case FORMAT_SVG:
+      if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
+      rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
+      break;
+    case FORMAT_PNG:
+      if (rb_iv_get(self, "@png") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read PNG contents");
+      rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
+      break;
+    default:
+      break;
   }
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
