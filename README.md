@@ -1,6 +1,6 @@
 # Mathematical
 
-Quickly convert math equations into beautiful SVGs.
+Quickly convert math equations into beautiful SVGs (or PNGs).
 
 [![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical)
 
@@ -34,9 +34,12 @@ Mathematical::Render.new.render(string_with_math)
 
 The output will be a hash, with the following data:
 
-* `width`: the width of the resulting SVG file
-* `height`: the height of the resulting SVG file
-* `svg`: the actual string of SVG
+* `width`: the width of the resulting image
+* `height`: the height of the resulting image
+* `svg`: the actual string of SVG (this is only if you set `:format == "svg"`)
+* `png`: the PNG data (this is only if you set `:format == "png"`)
+
+Note: you can only have either an SVG or a PNG--not both.
 
 ### Options
 
@@ -46,6 +49,7 @@ The output will be a hash, with the following data:
 * `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
 * `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
 * `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
+* `:format` - A string indicating whether you want an "svg" or "png" output. (default: `svg`).
 
 Pass these in as an options hash:
 
