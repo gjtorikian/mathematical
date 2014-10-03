@@ -44,6 +44,14 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
       render = Mathematical::Render.new({:maxsize => 5.3})
     end
 
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:format => 123})
+    end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:format => "something amazing"})
+    end
+
     assert_raise Mathematical::MaxsizeError do
       render = Mathematical::Render.new({:maxsize => 2})
       render.render('$a \ne b$')
