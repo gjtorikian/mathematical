@@ -28,34 +28,22 @@ Rake::Task[:test].prerequisites << :compile
 
 task :default => [:test]
 
-desc "Generate and publish to gh-pages"
+desc "Publish gh-pages content"
 task :publish do
   Dir.mktmpdir do |tmp|
-    system "cp test/mathematical/fixtures/after/* #{tmp}"
-    titles_to_content = {}
-    Dir.glob("#{tmp}/compliance_*.html") do |item|
-      titles_to_content[File.basename(item)] = File.read(item)
-    end
+    system "cp samples/quality/* #{tmp}"
 
     system "git checkout gh-pages"
 
-    li_listing = titles_to_content.keys.map { |title| "<li><a href='#{title}'>#{File.basename(title, File.extname(title))}</a></li>" }
     index = File.read("index.html")
-    File.open("index.html", 'w') { |file| file.write(index.sub(/<!-- LIST_GOES_HERE -->/, li_listing.join("\n"))) }
 
-    layout = File.read("layout_shell.text")
-    titles_to_content.each do |title, content|
-      new_layout = layout.sub(/<!-- TITLE_GOES_HERE -->/, title)
-      new_layout = new_layout.sub(/<!-- CONTENT_GOES_HERE -->/, content)
-      File.open("#{title}", 'w') { |file| file.write(new_layout) }
+    i = 1
+    Dir.glob("#{tmp}/*.svg") do |item|
+      svg = File.read(item)
+      index = index.sub /&sample#{i};/, svg
     end
 
-    message = "Site updated at #{Time.now.utc}"
-    system "git add ."
-    system "git commit -am #{message.shellescape}"
-    system "git push origin gh-pages --force"
-    system "git checkout master"
-    system "echo yolo"
+    File.open("index.html", 'w') { |file| file.write(index) }
   end
 end
 
