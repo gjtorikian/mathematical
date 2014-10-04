@@ -35,7 +35,7 @@ task :copy_samples do
 
     system "git checkout gh-pages"
 
-    system "cp -r #{tmp} ."
+    system "cp -r #{tmp}/samples ."
   end
 end
 
