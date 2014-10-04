@@ -28,23 +28,14 @@ Rake::Task[:test].prerequisites << :compile
 
 task :default => [:test]
 
-desc "Publish gh-pages content"
-task :publish do
+desc "Copy samples to gh-pages"
+task :copy_samples do
   Dir.mktmpdir do |tmp|
     system "cp samples/quality/* #{tmp}"
 
     system "git checkout gh-pages"
 
-    index = File.read("index.html")
-
-    i = 1
-    Dir.glob("#{tmp}/*.svg") do |item|
-      svg = File.read(item)
-      index = index.sub /&sample#{i};/, svg
-      i += 1
-    end
-
-    File.open("index.html", 'w') { |file| file.write(index) }
+    system "cp #{tmp} ."
   end
 end
 
