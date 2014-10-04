@@ -41,6 +41,7 @@ task :publish do
     Dir.glob("#{tmp}/*.svg") do |item|
       svg = File.read(item)
       index = index.sub /&sample#{i};/, svg
+      i += 1
     end
 
     File.open("index.html", 'w') { |file| file.write(index) }
