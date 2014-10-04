@@ -39,7 +39,7 @@ The output will be a hash, with the following data:
 * `svg`: the actual string of SVG (this is only if you set `:format == "svg"`)
 * `png`: the PNG data (this is only if you set `:format == "png"`)
 
-Note: you can only have either an SVG or a PNG--not both.
+**Note**: you can only have either an SVG or a PNG--not both.
 
 ### Options
 
@@ -62,6 +62,8 @@ renderer.render('$a \ne b$')
 ### Supported commands and symbols
 
 Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html) is supported, because it acts as the interpretation engine for Mathematical.
+
+**Note**: This library makes few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that slashes like `\\` are escaped (`\\\\`).
 
 ## Dependencies
 
