@@ -19,8 +19,6 @@ $$
 '''
     render = Mathematical::Render.new({:format => "png"})
     data_hash = render.render(string)
-    assert_equal data_hash["width"], 125
-    assert_equal data_hash["height"], 68
     File.open("#{fixtures_dir}/png/pmatrix.png", "w") { |f| f.write(data_hash["png"])}
   end
 end
