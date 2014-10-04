@@ -6,8 +6,8 @@ class Mathematical::CorrectionsTest < Test::Unit::TestCase
     @render = Mathematical::Render.new
     @slash_maths = '''
 $$
-\dot{x} & = \sigma(y-x) \\
-\dot{y} & = \rho x - y - xz \\
+\dot{x} & = \sigma(y-x) \\\\
+\dot{y} & = \rho x - y - xz \\\\
 \dot{z} & = -\beta z + xy
 $$
 '''
@@ -15,33 +15,22 @@ $$
     @aligned_maths = '''
 $$
 \begin{align}
-\dot{x} & = \sigma(y-x) \\
-\dot{y} & = \rho x - y - xz \\
+\dot{x} & = \sigma(y-x) \\\\
+\dot{y} & = \rho x - y - xz \\\\
 \dot{z} & = -\beta z + xy
 \end{align}
 $$
 '''
   end
 
-  # def test_expect_slashes_failures
-  #   @render.expects(:apply_corrections).returns(@slash_maths)
-  #
-  #   assert_raise ArgumentError do
-  #     @render.render @slash_maths
-  #   end
-  # end
+  def test_expect_slashes_failures
+    @render.expects(:apply_corrections).returns(@slash_maths)
 
-  def test_adjust_slashes
-    assert_no_match /\\\\/, @render.apply_corrections(@slash_maths)
+    printed = capture_stderr do
+      @render.render @slash_maths
+    end
+    assert_match /Failed to parse mtex/, printed
   end
-
-  # def test_expect_aligned_failures
-  #   @render.expects(:apply_corrections).returns(@aligned_maths)
-  #
-  #   assert_raise ArgumentError do
-  #     @render.render @aligned_maths
-  #   end
-  # end
 
   def test_adjust_aligned
     assert_no_match /align\}/, @render.apply_corrections(@aligned_maths)
@@ -54,10 +43,10 @@ $$
 
   def test_adjust_lt_gt
     simple_lt = '$|q| < 1$'
-    assert_match /|q| \lt 1/, @render.apply_corrections(simple_lt)
+    assert_match /|q| \\lt 1/, @render.apply_corrections(simple_lt)
 
     simple_gt = '$|q| > 1$'
-    assert_match /|q| \gt 1/, @render.apply_corrections(simple_gt)
+    assert_match /|q| \\gt 1/, @render.apply_corrections(simple_gt)
   end
 
   def test_adjust_limits
