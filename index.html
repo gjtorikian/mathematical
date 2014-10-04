@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mathematical</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Mathematical</a>
+        </div>
+        <ul class="nav navbar-nav pull-right">
+          <li><a href="https://www.github.com/gjtorikian/mathematical">View on <span class="octicon octicon-mark-github"></span></a>
+        </ul>
+      </div>
+    </div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Quickly turn math equations into SVGs</h1>
+        <p>Written in C. Wrapped in Ruby. Faster than proving Fermat's Last Theorem.</p>
+        <div class="demo row">
+          <div class="col-md-6">
+            <textarea id="demo-input" spellcheck="false">f(x) = \int_{-\infty}^\infty
+            \hat f(\xi)\,e^{2 \pi i \xi x}
+            \,d\xi
+            </textarea>
+          </div>
+          <div class="col-md-6">
+            <div class="svg-container">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Use AMS Math</h2>
+          <p>The library uses a Bison grammar that emphasizes an adherence to <a href="http://www.ams.org/publications/authors/tex/amslatex">AMS-LaTeX math</a>. The grammar is safe and discards any syntax it doesn't understand.</p>
+       </div>
+        <div class="col-md-4">
+          <h2>No JavaScript</h2>
+          <p>Reflowing a document is silly, so run this on your server. And although this particular library is wrapped in Ruby, 90% of the transformation is performed in C. Go forth and write more wrappers!</p>
+        </div>
+        <div class="col-md-4">
+          <h2>PNGs &amp; MathML</h2>
+          <p>Don't like SVGs? Okay. You can have a PNG or plain MathML, too.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container image-samples">
+      <h3>Check out some sample output</h3>
+      <div class="row">
+        <div class="col-md-4">
+          &sample1;
+       </div>
+        <div class="col-md-4">
+          &sample2;
+        </div>
+        <div class="col-md-4">
+          &sample3;
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          &sample4;
+       </div>
+        <div class="col-md-4">
+          &sample5;
+        </div>
+        <div class="col-md-4">
+          &sample6;
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          &sample7;
+       </div>
+        <div class="col-md-4">
+          &sample8;
+        </div>
+        <div class="col-md-4">
+          &sample9;
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          &sample10;
+       </div>
+        <div class="col-md-4">
+          &sample11;
+        </div>
+        <div class="col-md-4">
+          &sample12;
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          &sample13;
+       </div>
+        <div class="col-md-4">
+          &sample14;
+        </div>
+        <div class="col-md-4">
+          &sample15;
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

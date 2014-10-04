@@ -1,0 +1,6 @@
+{
+    "name": "Mathematical",
+    "dependencies": {
+      "octicons": "*"
+    }
+  }

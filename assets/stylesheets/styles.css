@@ -1,0 +1,10 @@
+.jumbotron .container {
+  padding-top: 60px;
+  text-align: center;
+}
+
+.demo textarea {
+  resize: none;
+  width: 100%;
+  height: 160px;
+}
