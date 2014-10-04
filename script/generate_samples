@@ -4,6 +4,9 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
 
+system "bundle exec rake clean && bundle exec rake compile"
+system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb MATHEMATICAL_GENERATE_SAMPLE=1"
+
 quality = {
   'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
   'An Identity of Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
