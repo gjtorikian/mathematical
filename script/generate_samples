@@ -1,3 +1,148 @@
-export MATHEMATICAL_GENERATE_SAMPLE=1
+#!/usr/bin/ruby
 
-bundle exec rake test
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'mathematical'
+
+system "bundle exec rake clean && bundle exec rake compile"
+system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb MATHEMATICAL_GENERATE_SAMPLE=1"
+
+quality = {
+  'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
+  'An Identity of Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
+  'The Cauchy-Schwarz Inequality' => '$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$',
+  'A Rogers-Ramanujan Identity' => '$$1 + \frac{q^2}{(1-q)} + \frac{q^6}{(1-q)(1-q^2)} + \cdots= \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},\quad\quad for\,|q| \lt 1.$$',
+  'Mathclap sample' => '''
+$$
+ y = a + f(\underbrace{b x}_{
+                    \ge 0 \text{ by assumption}})
+   = a + f(\underbrace{b x}_{
+          \mathclap{\ge 0 \text{ by assumption}}})
+$$
+''',
+  'Maxwell\'s Equations' => '''
+$$
+\begin{aligned}
+\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} & = \frac{4\pi}{c}\vec{\mathbf{j}} \\\   \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\\
+\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\\
+\nabla \cdot \vec{\mathbf{B}} & = 0 \end{aligned}
+$$
+''',
+  'colors' => '''
+$$
+\begin{array}{|rc|}
+black& \color{black}{text} \\\
+gray& \color{gray}{text} \\\
+silver& \color{silver}{text} \\\
+white& \color{white}{text} \\\
+maroon& \color{maroon}{text} \\\
+red& \color{red}{text} \\\
+yellow& \color{yellow}{text} \\\
+lime& \color{lime}{text} \\\
+olive& \color{olive}{text} \\\
+green& \color{green}{text} \\\
+teal& \color{teal}{text} \\\
+aqua& \color{aqua}{text} \\\
+blue& \color{blue}{text} \\\
+navy& \color{navy}{text} \\\
+purple& \color{purple}{text} \\\
+fuchsia& \color{magenta}{text} \\\
+\end{array}
+$$
+''',
+  'big braces' => '''
+$$
+f\left(
+   \left[
+     \frac{
+       1+\left\{x,y\right\}
+     }{
+       \left(
+          \frac{x}{y}+\frac{y}{x}
+       \right)
+       \left(u+1\right)
+     }+a
+   \right]^{3/2}
+\right)
+$$
+''',
+  'Integral equation' => '$\phi_n(\kappa) =\frac{1}{4\pi^2\kappa^2} \int_0^\infty\frac{\sin(\kappa R)}{\kappa R}\frac{\partial}{\partial R}\left[R^2\frac{\partial D_n(R)}{\partial R}\right]\,dR$',
+  'stacked equations' => '''
+$$
+\begin{gathered}
+a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\,\mathrm{d}x\\\
+\begin{split}
+a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,\mathrm{d}x=\\\
+=\frac{1}{\pi}\int_{-\pi}^{\pi}x^2\cos nx\,\mathrm{d}x
+\end{split}\\\
+\begin{split}
+b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,\mathrm{d}x=\\\
+=\frac{1}{\pi}\int_{-\pi}^{\pi}x^2\sin nx\,\mathrm{d}x
+\end{split}\\\
+\end{gathered}
+$$
+''',
+  'fussy spacing' => '''
+$$
+\begin{array}{c|c}
+\mathrm{Bad} & \mathrm{Better} \\\\
+\hline \\\\
+\iiint_V f(x)dz dy dx & \iiint_V f(x)\,dz\,dy\,dx
+\end{array}
+$$
+''',
+  'fancy looking matrix' => '''
+$$
+\begin{pmatrix}
+     1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
+     1 & a_2 & a_2^2 & \cdots & a_2^n \\\\
+     \vdots  & \vdots& \vdots & \ddots & \vdots \\\\
+     1 & a_m & a_m^2 & \cdots & a_m^n
+     \end{pmatrix}
+$$
+''',
+  'augment matrix' => '''
+$$ \left[
+    \begin{array}{cc|c}
+      1&2&3\\\\
+      4&5&6
+    \end{array}
+\right] $$
+''',
+  'definition cases' => '''
+$$
+f(n) =
+\begin{cases}
+\frac{n}{2},  & \text{if n is even} \\\\ [2ex]
+3n+1, & \text{if n is odd}
+\end{cases}
+$$
+''',
+ 'big braces' => '''
+$$
+f\left(
+   \left[
+     \frac{
+       1+\left\{x,y\right\}
+     }{
+       \left(
+          \frac{x}{y}+\frac{y}{x}
+       \right)
+       \left(u+1\right)
+     }+a
+   \right]^{3/2}
+\right)
+$$
+''',
+'inline smallmatrix' => '''
+$g\'_{\tau} = \left(
+\begin{smallmatrix}1&u\\\\0&1\end{smallmatrix} \right) \left(
+\begin{smallmatrix}v^{1/2}&0\\\\0&v^{-1/2}\end{smallmatrix} \right)$
+'''
+}
+
+quality.each_pair do |filename, eq|
+  filename = filename.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '').downcase
+  svg_content = Mathematical::Render.new(:base64 => false).render(eq)
+  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
+end

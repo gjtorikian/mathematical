@@ -5,8 +5,8 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
   def test_it_does_not_error_on_unrecognized_commands
     render = Mathematical::Render.new
     output = nil
-    assert_nothing_raised { output = render.render('$\align$') }
-    assert_equal output, '$\align$'
+    # In C, we raise a ParseError, but Mathematical suppresses it.
+    assert_nothing_raised { output = render.render('$\not_real_comment$') }
   end
 
   def test_it_does_not_blow_up_on_bad_arguments
@@ -41,6 +41,14 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
 
     assert_raise TypeError do
       render = Mathematical::Render.new({:maxsize => 5.3})
+    end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:format => 123})
+    end
+
+    assert_raise TypeError do
+      render = Mathematical::Render.new({:format => "something amazing"})
     end
 
     assert_raise Mathematical::MaxsizeError do

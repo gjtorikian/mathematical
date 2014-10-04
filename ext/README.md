@@ -12,14 +12,5 @@ Some documentation can be found here:
 
 * * *
 
-itex2MML transforms itex (a dialect of latex) into MathML. itex2MML is developed by
-Paul Gartside and Jacques Distler.
-
-itex2MML is a Baazar project, so its source files are copied here. Currently, this is version `itex2MML@1.5.1`.
-
-Some documentation can be found here:
-
-* http://pear.math.pitt.edu/mathzilla/itex2mml.html
-* http://golem.ph.utexas.edu/~distler/blog/
-* http://golem.ph.utexas.edu/~distler/blog/archives/000644.html
-* http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html
+mtex2MML transforms itex (a dialect of LaTeX) into MathML. mtex2MML is developed by
+me, but was forked from an original project by Paul Gartside and Jacques Distler.
