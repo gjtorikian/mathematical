@@ -31,11 +31,11 @@ task :default => [:test]
 desc "Copy samples to gh-pages"
 task :copy_samples do
   Dir.mktmpdir do |tmp|
-    system "cp samples/quality/* #{tmp}"
+    system "cp -r samples #{tmp}"
 
     system "git checkout gh-pages"
 
-    system "cp #{tmp} ."
+    system "cp -r #{tmp} ."
   end
 end
 
