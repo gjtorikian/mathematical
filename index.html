@@ -11,26 +11,13 @@
   </head>
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">Mathematical</a>
-        </div>
-        <ul class="nav navbar-nav pull-right">
-          <li><a href="https://www.github.com/gjtorikian/mathematical">View on <span class="octicon octicon-mark-github"></span></a>
-        </ul>
-      </div>
-    </div>
-
     <div class="jumbotron">
       <div class="container">
         <h1>Quickly turn math equations into SVGs</h1>
         <p>Written in C. Wrapped in Ruby. Faster than proving Fermat's Last Theorem.</p>
         <div class="demo row">
           <div class="col-md-6">
-            <textarea id="demo-input" spellcheck="false">f(x) = \int_{-\infty}^\infty
-            \hat f(\xi)\,e^{2 \pi i \xi x}
-            \,d\xi
+            <textarea id="demo-input" spellcheck="false">-b \pm \sqrt{b^2 - 4ac} \over 2a
             </textarea>
           </div>
           <div class="col-md-6">
@@ -38,22 +25,23 @@
             </div>
           </div>
         </div>
+        <p><a class="btn btn-lg btn-primary" href="https://www.github.com/gjtorikian/mathematical" role="button">See it on GitHub</a></p>
       </div>
     </div>
 
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <h2>Just Math</h2>
+          <h3>Just Math</h3>
           <p>The library uses a Bison grammar that emphasizes an adherence to <a href="http://www.ams.org/publications/authors/tex/amslatex">AMS-LaTeX math</a>. The grammar is safe and discards any syntax it doesn't understand.</p>
        </div>
         <div class="col-md-4">
-          <h2>No JavaScript</h2>
-          <p>Reflowing a document is silly, so run this on your server. And although this particular library is wrapped in Ruby, 90% of the transformation is performed in C. Go forth and write more wrappers!</p>
+          <h3>No JavaScript</h3>
+          <p>Reflowing a page is silly; serve your documents whole. And although this particular library is wrapped in Ruby, 90% of the transformation is performed in C. Go forth and write more wrappers!</p>
         </div>
         <div class="col-md-4">
-          <h2>PNG &amp; MathML</h2>
-          <p>Don't like SVGs? Okay. You can have a PNG or plain MathML, too.</p>
+          <h3>PNG &amp; MathML</h3>
+          <p>Don't like SVGs? That's fine! Mathemtical can return a PNG or plain MathML, too.</p>
         </div>
       </div>
     </div>
@@ -62,14 +50,8 @@
       <div class="container">
         <h3>Check out some sample output</h3>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6 col-md-offset-3">
             <object data="/samples/quality/a-rogers-ramanujan-identity.svg" type="image/svg+xml"></object>
-          </div>
-          <div class="col-md-4">
-
-          </div>
-          <div class="col-md-4">
-            <object data="/samples/quality/an-identity-of-ramanujan.svg" type="image/svg+xml"></object>
           </div>
         </div>
 
@@ -91,7 +73,7 @@
             <object data="/samples/quality/colors.svg" type="image/svg+xml"></object>
           </div>
           <div class="col-md-4">
-
+            <object data="/samples/quality/an-identity-of-ramanujan.svg" type="image/svg+xml"></object>
           </div>
           <div class="col-md-4">
             <object data="/samples/quality/stacked-equations.svg" type="image/svg+xml"></object>
@@ -122,6 +104,13 @@
             <object data="/samples/quality/the-cauchy-schwarz-inequality.svg" type="image/svg+xml"></object>
           </div>
         </div>
+
+         <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+            <object data="/samples/quality/crazy-complicated-math.svg" type="image/svg+xml"></object>
+          </div>
+        </div>
+
       </div>
     </div>
   </body>

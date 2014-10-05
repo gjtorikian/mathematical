@@ -1,5 +1,4 @@
 .jumbotron .container {
-  padding-top: 60px;
   text-align: center;
 }
 
@@ -10,5 +9,11 @@
 }
 
 .jumbotron.samples {
-  background-color: #d0e9c6;
+  background-color: #eaf1f1;
+  padding-bottom: 50px;
+  margin-bottom: 0px;
+}
+
+.samples .row {
+  padding-top: 50px;
 }
