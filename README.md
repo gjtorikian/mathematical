@@ -1,6 +1,6 @@
 # Mathematical
 
-Quickly convert math equations into beautiful SVGs (or PNGs).
+Quickly convert math equations into beautiful SVGs (or PNGs/MathML).
 
 [![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical)
 
@@ -32,14 +32,18 @@ Mathematical::Render.new.render(string_with_math)
 
 `string_with_math` should just be a string of itex inline (`$..$`) or display (`$$..$$`) style math.
 
-The output will be a hash, with the following data:
+The output will be a hash, with keys that depend on the format you want:
 
-* `width`: the width of the resulting image
-* `height`: the height of the resulting image
-* `svg`: the actual string of SVG (this is only if you set `:format == "svg"`)
-* `png`: the PNG data (this is only if you set `:format == "png"`)
-
-**Note**: you can only have either an SVG or a PNG--not both.
+* If you asked for an SVG, you'll get:
+  * `width`: the width of the resulting image
+  * `height`: the height of the resulting image
+  * `svg`: the actual string of SVG
+* If you asked for a PNG, you'll get:
+  * `width`: the width of the resulting image
+  * `height`: the height of the resulting image
+  * `png`: the PNG data
+* If you asked for MathML, you'll get:
+  * `mathml`: the MathML data
 
 ### Options
 
@@ -49,7 +53,7 @@ The output will be a hash, with the following data:
 * `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
 * `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
 * `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
-* `:format` - A string indicating whether you want an "svg" or "png" output. (default: `svg`).
+* `:format` - A string indicating whether you want an "svg", "png", or "mathml" output. (default: `svg`).
 
 Pass these in as an options hash:
 
