@@ -107,10 +107,8 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
 To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
 
 ```
-sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx
+sudo apt-get -qq -y install libglib2.0-dev libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx libgdk-pixbuf2.0-dev
 ```
-
-`glib` and `gdk-pixbuf` should be on your machine.
 
 ### Windows install
 
