@@ -51,7 +51,8 @@ static VALUE rb_eDocumentReadError;
 
 typedef enum {
   FORMAT_SVG,
-  FORMAT_PNG
+  FORMAT_PNG,
+  FORMAT_MATHML
 } FileFormat;
 
 /**
@@ -172,9 +173,18 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   g_type_init ();
 #endif
 
+  VALUE result_hash = rb_hash_new();
+  const char* rb_format = RSTRING_PTR(rb_iv_get(self, "@format"));
+
   // convert the TeX math to MathML
   char * mathml = mtex2MML_parse(latex_code, latex_size);
   if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
+
+  if (strncmp(rb_format, "mathml", 6) == 0) {
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"),    rb_str_new2(mathml));
+    mtex2MML_free_string(mathml);
+    return result_hash;
+  }
 
   int mathml_size = strlen(mathml);
 
@@ -190,7 +200,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   double ppi = NUM2DBL(rb_iv_get(self, "@ppi"));
   double zoom = NUM2DBL(rb_iv_get(self, "@zoom"));
-  const char* rb_format = RSTRING_PTR(rb_iv_get(self, "@format"));
 
   view = lsm_dom_document_create_view (document);
   lsm_dom_view_set_resolution (view, ppi);
@@ -232,8 +241,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   cairo_destroy (cairo);
   g_object_unref (view);
   g_object_unref (document);
-
-  VALUE result_hash = rb_hash_new();
 
   switch (format) {
     case FORMAT_SVG:

@@ -6,7 +6,7 @@ module Mathematical
   class Render
     include Corrections
 
-    FORMAT_TYPES = %w(svg png)
+    FORMAT_TYPES = %w(svg png mathml)
 
     DEFAULT_OPTS = {
       :ppi => 72.0,
@@ -41,7 +41,7 @@ module Mathematical
           data_hash["svg"] = data_hash["svg"][xml_header.length..-1] # remove starting <?xml...> tag
           data_hash["svg"] = svg_to_base64(data_hash["svg"]) if @config[:base64]
           data_hash
-        when "png"
+        when "png", "mathml"
           data_hash
         end
       rescue ParseError, DocumentCreationError, DocumentReadError => e # an error in the C code, probably a bad TeX parse
