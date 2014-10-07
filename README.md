@@ -30,7 +30,7 @@ require 'mathematical'
 Mathematical::Render.new.render(string_with_math)
 ```
 
-`string_with_math` should just be a string of itex inline (`$..$`) or display (`$$..$$`) style math.
+`string_with_math` should just be a string of math TeX inline (`$..$`) or display (`$$..$$`) style math.
 
 The output will be a hash, with keys that depend on the format you want:
 
@@ -65,9 +65,9 @@ renderer.render('$a \ne b$')
 
 ### Supported commands and symbols
 
-Literally everything on the [itex2MML homepage for version 1.5.1](http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html) is supported, because it acts as the interpretation engine for Mathematical.
+Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/mtex2MML/blob/master/SUPPORTED.md).
 
-**Note**: This library makes few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that slashes like `\\` are escaped (`\\\\`).
+**Note**: This library makes few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
 
 ## Dependencies
 
@@ -211,7 +211,7 @@ And thus a wrapper was born.
 ## More math stuff
 
 Check out [math-to-itex](https://github.com/gjtorikian/math-to-itex/), which quickly
-parses out itex notation from strings.
+parses out TeX notation from strings.
 
 With it, you could do something fun like:
 
