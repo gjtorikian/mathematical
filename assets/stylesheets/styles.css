@@ -8,6 +8,10 @@
   height: 160px;
 }
 
+#svg-container {
+  max-height: 160px;
+}
+
 .jumbotron.samples {
   background-color: #eaf1f1;
   padding-bottom: 50px;
