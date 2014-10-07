@@ -67,7 +67,7 @@ renderer.render('$a \ne b$')
 
 Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/mtex2MML/blob/master/SUPPORTED.md).
 
-**Note**: This library makes few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
+**Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
 
 ## Dependencies
 
