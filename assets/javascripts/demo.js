@@ -23,7 +23,7 @@ $( document ).ready(function() {
     tex = encodeURIComponent(tex);
 
     $.ajax({
-      url: "http://127.0.0.1:9393/render?math=" + tex,
+      url: "http://104.131.112.89:9393/render?math=" + tex,
       type: "GET",
       dataType: "text",
       crossDomain: true
