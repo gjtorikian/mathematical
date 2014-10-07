@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="./assets/stylesheets/styles.css">
     <link rel="stylesheet" href="./assets/vendor/octicons/octicons/octicons.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="/assets/javascripts/demo.js"></script>
   </head>
   <body>
 
@@ -17,11 +19,10 @@
         <p>Written in C. Wrapped in Ruby. Faster than proving Fermat's Last Theorem.</p>
         <div class="demo row">
           <div class="col-md-6">
-            <textarea id="demo-input" spellcheck="false">-b \pm \sqrt{b^2 - 4ac} \over 2a
-            </textarea>
+            <textarea id="demo-input" spellcheck="false">\begin{array}{c} {x = \frac{{ - b \pm \sqrt {b^2 - 4ac} }}{{2a}}} & when & {ax^2 + bx + c = 0} \\[20em] \end{array}</textarea>
           </div>
           <div class="col-md-6">
-            <div class="svg-container">
+            <div id="svg-container">
             </div>
           </div>
         </div>
