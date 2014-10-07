@@ -19,7 +19,8 @@
 }
 
 .samples .row {
-  padding-top: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .social-buttons li:first-child {
