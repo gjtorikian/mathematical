@@ -21,3 +21,13 @@
 .samples .row {
   padding-top: 50px;
 }
+/* These help resize the SVGs for mobile */
+div.svg-wrapper {
+  width: 100%;
+  margin: 0 auto;
+}
+
+object.svg-sample, .demo svg {
+  width: 100%;
+  height: auto;
+}
