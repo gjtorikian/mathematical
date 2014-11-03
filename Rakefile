@@ -42,8 +42,8 @@ end
 task :destroy_copies do
   ext_dir = File.join(File.dirname(__FILE__), "ext", "mathematical")
   Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
-    next if f =~ /extconf.rb/ || f =~ /mathematical.c/
+    next if f =~ /extconf.rb$/ || f =~ /mathematical.c$/
     File.delete(f)
   end
-  Dir.glob("#{ext_dir}/{lib,src,test,ext}").select { |d| FileUtils.rm_rf d }
+  Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,occurrences,str-copy,str-replace,uthash}").select { |d| FileUtils.rm_rf d }
 end
