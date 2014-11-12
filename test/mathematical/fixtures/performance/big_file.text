@@ -103,9 +103,8 @@ compactifying divisors of $\tilde{X}$. The principal result of \cite{HZ} was tha
 We show $j_{\ast} C_n^c = T_n^c$ (Proposition~\ref{CnTn}), and hence the Hirzebruch-Zagier theorem follows easily from Theorem~\ref{FMHZ-main} above, see Theorem~\ref{HZTheorem}.
 
 The main work in \cite{HZ} was to show that the generating function
-\[\vspace{-.1cm}
-F(\tau) = \sum_{n=0}^{\infty} (T_n^c \cdot T_m) q^n \vspace{-.1cm}
-\]
+
+
 for the intersection numbers in $\tilde{X}$ of $T^c_n$ with a fixed $T_m$ is a modular form of weight $2$. The Hirzebruch-Zagier proof of the modularity of $F$ was a remarkable synthesis of algebraic geometry, combinatorics, and modular forms. They explicitly computed the intersection numbers $T_n^c \cdot T_m$ as the sum of two terms, $T_n^c \cdot T_m = (T_n \cdot T_m)_X  + ({T}_n \cdot {T}_m)_{\infty}$, where $(T_n \cdot T_m)_X $ is the geometric intersection number of $T_n$ and $T_m$ in the interior of $X$ and $({T}_n \cdot {T}_m)_{\infty}$ which they called the ``contribution from infinity''. They then proved both generating functions $\sum_{n=0}^{\infty} (T_n \cdot T_m)_X  q^n$ and $\sum_{n=0}^{\infty}  (T_n \cdot T_m)_{\infty} q^n$ are the holomorphic parts of two non-holomorphic forms $F_X$ and $F_{\infty}$ with the {\it same} non-holomorphic part (with opposite signs). Hence combining these two forms gives $F(\tau)$.
 
 We recover this feature of the original Hirzebruch-Zagier proof via \eqref{mappingconelift} with $C=C_m$. The first term on the right hand side of \eqref{mappingconelift} was studied in the thesis of the first author of this paper \cite{FCompo} and gives the interior intersections $(T_n \cdot T_m)_X$ encoded in $F_X$. So via Theorem~\ref{FMHZ-main} the second term on the right hand side of \eqref{mappingconelift} must match the boundary contribution $F_{\infty}$ in \cite{HZ}, that is, we obtain
@@ -677,13 +676,7 @@ glueing homeomorphism $f \in  SL(2,\Z)$ on $H_1(T^2, \Z)$ for linking numbers fo
 
 This immediately leads to an explicit formula for the numbers $Lk(\partial C_n, \partial C_m)$. Using Lemma~\ref{LemmaB} we obtain
 
-\begin{theorem}\label{LinkCnCm}
-Let $g = (f^{-1} - I)^{-1}$. Then
- \[
- Lk( (\partial C_n)_P, (\partial C_m)_P) = \sum_{ \substack{x\in \G_M \back \mathcal{L}_W \\ (x,x)=2n}} \sum_{\substack{x'\in \G_M \back \mathcal{L}_W \\ (x,x)=2m}} (\min_{\lambda \in \Lambda_W}  {\hspace{-5pt}'}
- |(\lambda,x)|) (\min_{\mu \in \Lambda_W}  {\hspace{-5pt}'}
-|(\mu,x')|) \langle g(Jx),Jx' \rangle.
-\]
+
 Here $Jx$ is properly oriented primitive vector in $\Lambda_W$ such that $(Jx,x)=0$.
  \end{theorem}
 
@@ -1244,10 +1237,7 @@ and $\tilde{\psi'}_{0,1}(n)$ has bidegree $(0,1)$ (here we use the obvious base/
 
 \begin{lemma}\label{LemmaA}
 Under the hypothesis on $\eta$ in Proposition~\ref{finalintegral} we have
-\[
- \int_{A_n} \eta = \sum_{ \substack{x\in \G_M \back \mathcal{L}_W \\ (x,x)=2n}} \min_{\la \in \Lambda_W} {\hspace{-5pt}'} |(\la,x)| \int_{a_x} \eta
-\]
-\end{lemma}
+
 
 \begin{proof}
 We use Lemma~\ref{LemmaB}. Write $\eta = d \omega$ for some $1$-form $\omega$ which by the support condition on $\eta$ is closed in $F_n$. Since $c_{x+ku}$ and  $c_x$ are parallel hence homologous circles in $F_x$, we see $\int_{a_{x+ku}} \eta = \int_{c_{x+ku}} \omega = \int_{c_x} \omega = \int_{a_x} \eta$.
@@ -1262,9 +1252,8 @@ Proposition~\ref{finalintegral} will now follow from
 
 \begin{proposition}
 Under the hypothesis on $\eta$ in Proposition~\ref{finalintegral}, we have for any positive length vector $x \in \calL_W$
-\[
-\int_{e'(P)} \eta \wedge  \sum_{ \g \in \G_M} \g^{\ast} \tilde{\psi'}_{0,1}(x) = (\min_{\la \in \Lambda_W}   {\hspace{-2pt}'}|(\la,x)|) \left(\int_{a_x} \eta \right) e^{-\pi (x,x)}.
-\]
+
+
 \end{proposition}
 
 
@@ -1296,9 +1285,8 @@ Here $\omega_3$ is the $dw_3$ component of $\omega$ and we used that $\partial D
 of $\omega$ over (homologous) horizontal translates of the cycle $c_{e_2}$. But the restriction of $\omega$ to $F_x$ is closed so $\int_{c_{e_2}} \omega(0,w_2,w_3)$ is independent of $w_2$ and the last integral becomes
 $\left(  \int_{T^2/ c_{e_2}} dw_2 \right)\left( \int_{c_{e_2}} \omega \right)e^{- \pi \mu^2}$.
  But $\int_{c_{e_2}} \omega = \int_{A_{e_2}} \eta$. The proposition is then a consequence of
-\[
-|\mu| \int_{T^2/ \partial c_{e_2}} dw_2  = |\mu|  \min_{\la \in \Lambda_W}  {\hspace{-2pt}'} |(\la,e_2)| = \min_{\la \in \Lambda_W}  {\hspace{-2pt}'} |(\la,x)|,
-\]
+
+
 which follows from the fact that the map $W \to R$ given by $w \mapsto (w,e_2)$ induces an isomorphism $T^2/ \partial C_{e_2} \simeq R / (\min_{\la \in \Lambda_W}'|(\la,e_2)|)\Z$.
 
 \end{proof}
