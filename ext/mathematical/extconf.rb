@@ -27,6 +27,7 @@ end
 
 FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/*.{c,h,cc}"), File.dirname(__FILE__))
 FileUtils.cp_r("#{MTEX_DIR}/deps/.", File.dirname(__FILE__))
+FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/deps/**/*"), File.dirname(__FILE__))
 
 have_library("pangocairo-1.0")
 
