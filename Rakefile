@@ -45,5 +45,5 @@ task :destroy_copies do
     next if f =~ /extconf.rb$/ || f =~ /mathematical.c$/
     File.delete(f)
   end
-  Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,occurrences,str-copy,str-replace,uthash}").select { |d| FileUtils.rm_rf d }
+  Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
 end
