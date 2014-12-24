@@ -226,7 +226,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   }
 
   cairo = cairo_create (surface);
-  cairo_surface_destroy (surface);
   cairo_scale (cairo, zoom, zoom);
   lsm_dom_view_render (view, cairo, 0, 0);
 
@@ -239,6 +238,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   }
 
   cairo_destroy (cairo);
+  cairo_surface_destroy (surface);
   g_object_unref (view);
   g_object_unref (document);
 
