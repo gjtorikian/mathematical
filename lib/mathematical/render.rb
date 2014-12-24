@@ -16,6 +16,8 @@ module Mathematical
       :format => "svg"
     }
 
+    XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+
     def initialize(opts = {})
       @config = DEFAULT_OPTS.merge(opts)
 
@@ -30,7 +32,7 @@ module Mathematical
     def render(maths)
       raise(TypeError, "text must be a string!") unless maths.is_a? String
       maths = maths.strip
-      raise(ArgumentError, "text must be in itex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
+      raise(ArgumentError, "text must be in tex format (`$...$` or `$$...$$`)!") unless maths =~ /\A\${1,2}/
 
       maths = apply_corrections(maths)
 
@@ -38,7 +40,7 @@ module Mathematical
         raise RuntimeError unless data_hash = @processer.process(maths)
         case @config[:format]
         when "svg"
-          data_hash["svg"] = data_hash["svg"][xml_header.length..-1] # remove starting <?xml...> tag
+          data_hash["svg"] = data_hash["svg"][XML_HEADER.length..-1] # remove starting <?xml...> tag
           data_hash["svg"] = svg_to_base64(data_hash["svg"]) if @config[:base64]
           data_hash
         when "png", "mathml"
@@ -51,10 +53,6 @@ module Mathematical
     end
 
 private
-
-    def xml_header
-      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    end
 
     def svg_to_base64(contents)
       "data:image/svg+xml;base64,#{Base64.strict_encode64(contents)}"
