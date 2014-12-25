@@ -1,24 +1,24 @@
- /****************************************************************************
- * Mathematical_rb Copyright(c) 2014, Garen J. Torikian, All rights reserved.
- * --------------------------------------------------------------------------
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- ****************************************************************************/
+/****************************************************************************
+* Mathematical_rb Copyright(c) 2014, Garen J. Torikian, All rights reserved.
+* --------------------------------------------------------------------------
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+****************************************************************************/
 
 #include "ruby.h"
 #include <string.h>
@@ -71,17 +71,20 @@ lsm_mtex_to_mathml (const char *mtex, gssize size)
   gsize usize;
   char *mathml;
 
-  if (mtex == NULL)
+  if (mtex == NULL) {
     return NULL;
+  }
 
-  if (size < 0)
+  if (size < 0) {
     usize = strlen (mtex);
-  else
+  } else {
     usize = size;
+  }
 
   mathml = mtex2MML_parse (mtex, usize);
-  if (mathml == NULL)
+  if (mathml == NULL) {
     return NULL;
+  }
 
   if (mathml[0] == '\0') {
     mtex2MML_free_string (mathml);
@@ -101,13 +104,15 @@ lsm_mtex_to_mathml (const char *mtex, gssize size)
 void
 lsm_mtex_free_mathml_buffer (char *mathml)
 {
-  if (mathml == NULL)
+  if (mathml == NULL) {
     return;
+  }
 
   mtex2MML_free_string (mathml);
 }
 
-cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length) {
+cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length)
+{
   VALUE self = (VALUE) closure;
   if (rb_iv_get(self, "@svg") == Qnil) {
     rb_iv_set(self, "@svg", rb_str_new2(""));
@@ -118,7 +123,8 @@ cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data
   return CAIRO_STATUS_SUCCESS;
 }
 
-cairo_status_t cairoPngSurfaceCallback (void *closure, const unsigned char *data, unsigned int length) {
+cairo_status_t cairoPngSurfaceCallback (void *closure, const unsigned char *data, unsigned int length)
+{
   VALUE self = (VALUE) closure;
   if (rb_iv_get(self, "@png") == Qnil) {
     rb_iv_set(self, "@png", rb_str_new2(""));
@@ -129,7 +135,8 @@ cairo_status_t cairoPngSurfaceCallback (void *closure, const unsigned char *data
   return CAIRO_STATUS_SUCCESS;
 }
 
-static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
+static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
+{
   Check_Type (rb_Options, T_HASH);
   VALUE rb_ppi, rb_zoom, rb_maxsize, rb_format;
 
@@ -154,7 +161,8 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
+{
   Check_Type (rb_LatexCode, T_STRING);
 
   unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
@@ -163,11 +171,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   unsigned long latex_size = (unsigned long) strlen(latex_code);
 
   // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
-  if (maxsize == 0)
+  if (maxsize == 0) {
     maxsize = LONG_MAX;
+  }
 
-  if (latex_size > maxsize)
+  if (latex_size > maxsize) {
     rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
+  }
 
 #if !GLIB_CHECK_VERSION(2,36,0)
   g_type_init ();
@@ -178,7 +188,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   // convert the TeX math to MathML
   char * mathml = mtex2MML_parse(latex_code, latex_size);
-  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
+  if (mathml == NULL) { rb_raise(rb_eParseError, "Failed to parse mtex"); }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"),    rb_str_new2(mathml));
@@ -193,7 +203,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   mtex2MML_free_string(mathml);
 
-  if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
+  if (document == NULL) { rb_raise(rb_eDocumentCreationError, "Failed to create document"); }
 
   LsmDomView *view;
 
@@ -217,8 +227,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 
   if (format == FORMAT_SVG) {
     surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
-  }
-  else if (format == FORMAT_PNG) {
+  } else if (format == FORMAT_PNG) {
     surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
   }
 
@@ -227,11 +236,11 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   lsm_dom_view_render (view, cairo, 0, 0);
 
   switch (format) {
-    case FORMAT_PNG:
-      cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
-      break;
-    default:
-      break;
+  case FORMAT_PNG:
+    cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
+    break;
+  default:
+    break;
   }
 
   cairo_destroy (cairo);
@@ -240,16 +249,16 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   g_object_unref (document);
 
   switch (format) {
-    case FORMAT_SVG:
-      if (rb_iv_get(self, "@svg") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read SVG contents");
-      rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
-      break;
-    case FORMAT_PNG:
-      if (rb_iv_get(self, "@png") == Qnil) rb_raise(rb_eDocumentReadError, "Failed to read PNG contents");
-      rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
-      break;
-    default:
-      break;
+  case FORMAT_SVG:
+    if (rb_iv_get(self, "@svg") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
+    break;
+  case FORMAT_PNG:
+    if (rb_iv_get(self, "@png") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
+    break;
+  default:
+    break;
   }
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
@@ -262,7 +271,8 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   return result_hash;
 }
 
-void Init_mathematical() {
+void Init_mathematical()
+{
   rb_mMathematical = rb_define_module("Mathematical");
 
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
