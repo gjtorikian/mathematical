@@ -1,8 +1,7 @@
 module Mathematical
   module Corrections
-
     def apply_corrections(maths)
-      maths = adjust_lt_gt(maths)
+      adjust_lt_gt(maths)
     end
 
     # from the itex website:
