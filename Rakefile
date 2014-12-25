@@ -11,6 +11,8 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
+RuboCop::RakeTask.new
+
 require 'rake/extensiontask'
 spec = Gem::Specification.load('mathematical.gemspec')
 Rake::ExtensionTask.new('mathematical', spec) do |ext|
