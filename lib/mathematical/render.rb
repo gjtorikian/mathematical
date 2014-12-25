@@ -26,6 +26,8 @@ module Mathematical
       raise(TypeError, "format must be a string!") unless @config[:format].is_a? String
       raise(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(@config[:format])
 
+      @config[:formatInt] = FORMAT_TYPES.index(@config[:format])
+
       @processer = Mathematical::Process.new(@config)
     end
 

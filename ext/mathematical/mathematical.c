@@ -136,12 +136,12 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options) {
   rb_ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
   rb_zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
   rb_maxsize = rb_hash_aref(rb_Options, CSTR2SYM("maxsize"));
-  rb_format = rb_hash_aref(rb_Options, CSTR2SYM("format"));
+  rb_format = rb_hash_aref(rb_Options, CSTR2SYM("formatInt"));
 
   Check_Type(rb_ppi, T_FLOAT);
   Check_Type(rb_zoom, T_FLOAT);
   Check_Type(rb_maxsize, T_FIXNUM);
-  Check_Type(rb_format, T_STRING);
+  Check_Type(rb_format, T_FIXNUM);
 
   rb_iv_set(self, "@ppi", rb_ppi);
   rb_iv_set(self, "@zoom", rb_zoom);
@@ -174,13 +174,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
 #endif
 
   VALUE result_hash = rb_hash_new();
-  const char* rb_format = RSTRING_PTR(rb_iv_get(self, "@format"));
+  FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
   // convert the TeX math to MathML
   char * mathml = mtex2MML_parse(latex_code, latex_size);
   if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
 
-  if (strncmp(rb_format, "mathml", 6) == 0) {
+  if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"),    rb_str_new2(mathml));
     mtex2MML_free_string(mathml);
     return result_hash;
@@ -196,7 +196,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
   LsmDomView *view;
-  FileFormat format;
 
   double ppi = NUM2DBL(rb_iv_get(self, "@ppi"));
   double zoom = NUM2DBL(rb_iv_get(self, "@zoom"));
@@ -216,12 +215,10 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   cairo_t *cairo;
   cairo_surface_t *surface;
 
-  if (strncmp(rb_format, "svg", 3) == 0) {
-    format = FORMAT_SVG;
+  if (format == FORMAT_SVG) {
     surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
   }
-  else if (strncmp(rb_format, "png", 3) == 0) {
-    format = FORMAT_PNG;
+  else if (format == FORMAT_PNG) {
     surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
   }
 
