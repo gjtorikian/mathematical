@@ -191,7 +191,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   LsmDomDocument *document;
   document = lsm_dom_document_new_from_memory(mathml, mathml_size, NULL);
 
-  mtex2MML_free_string(mathml);
+  lsm_itex_free_mathml_buffer(mathml);
 
   if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
