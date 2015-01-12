@@ -1,5 +1,4 @@
 *.so
-*.gem
 *.rbc
 *.bundle
 .config
