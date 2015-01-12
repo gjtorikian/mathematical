@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'nokogiri'
 
 class Mathematical::MathJaxTest < Test::Unit::TestCase
 
@@ -10,7 +11,10 @@ class Mathematical::MathJaxTest < Test::Unit::TestCase
   Dir["#{MATHJAX_TEST_TEX_DIR}/**/*.tex"].each do |tex|
     define_method "test_#{tex}" do
       tex_contents = File.read(tex)
-      assert_nothing_raised { render.render(tex_contents) }
+      data = nil
+      assert_nothing_raised { data = render.render(tex_contents) }
+      doc = Nokogiri::HTML(data['svg'])
+      assert_empty doc.search(%(//svg[@width='0pt']))
     end
   end
 end
