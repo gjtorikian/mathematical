@@ -177,7 +177,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   const char* rb_format = RSTRING_PTR(rb_iv_get(self, "@format"));
 
   // convert the TeX math to MathML
-  char * mathml = mtex2MML_parse(latex_code, latex_size);
+  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size);
   if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
 
   if (strncmp(rb_format, "mathml", 6) == 0) {
@@ -191,8 +191,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode) {
   LsmDomDocument *document;
   document = lsm_dom_document_new_from_memory(mathml, mathml_size, NULL);
 
-  if (mathml != NULL)
-    mtex2MML_free_string(mathml);
+  lsm_mtex_free_mathml_buffer(mathml);
 
   if (document == NULL) rb_raise(rb_eDocumentCreationError, "Failed to create document");
 
