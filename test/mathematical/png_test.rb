@@ -1,5 +1,4 @@
 require "test_helper"
-require 'benchmark'
 
 class Mathematical::PNGTest < Test::Unit::TestCase
   def before

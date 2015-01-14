@@ -4,7 +4,7 @@ Quickly convert math equations into beautiful SVGs (or PNGs/MathML).
 
 [![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical)
 
-![](https://i.imgur.com/JC7HT32.gif)
+![Mathematical](https://i.imgur.com/JC7HT32.gif)
 
 ## Installation
 
@@ -47,7 +47,7 @@ The output will be a hash, with keys that depend on the format you want:
 
 ### Options
 
-`Mathematical::Render.new` can take a few options:
+`Mathematical::Render.new` takes an optional hash to define a few options:
 
 * `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
 * `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
@@ -55,7 +55,7 @@ The output will be a hash, with keys that depend on the format you want:
 * `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
 * `:format` - A string indicating whether you want an "svg", "png", or "mathml" output. (default: `svg`).
 
-Pass these in as an options hash:
+Pass these in like this:
 
 ``` ruby
 opts = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
@@ -69,9 +69,9 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 **Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
 
-## Dependencies
+## Building
 
-Before using this gem, you must install the following libraries:
+Before building this gem, you must install the following libraries:
 
 * glib-2.0
 * gdk-pixbuf-2.0
