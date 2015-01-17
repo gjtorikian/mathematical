@@ -14,9 +14,7 @@ class Mathematical::MathJaxTest < Test::Unit::TestCase
       data = nil
       assert_nothing_raised { data = render.render(tex_contents) }
       doc = Nokogiri::HTML(data['svg'])
-      # This assertion is to check for failed renders.
-      # I have no idea why `boxed-1` fails to render in Lasem at the moment.
-      assert_empty doc.search(%(//svg[@width='0pt'])) unless tex =~ /boxed-1.tex$/
+      assert_empty doc.search(%(//svg[@width='0pt']))
     end
   end
 end
