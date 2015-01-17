@@ -8,9 +8,8 @@ echo "==> Initing Git submodules"
 git submodule update --init --recursive
 
 echo "==> Installing gem dependencies…"
-bundle check --path vendor/gems 2>&1 > /dev/null || {
-  bundle install --binstubs bin --path vendor/gems --quiet
-}
+
+bundle install --local --binstubs --path vendor/cache "$@"
 
 echo "==> Installing required libraries…"
 
