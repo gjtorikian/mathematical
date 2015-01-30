@@ -16,7 +16,7 @@ class Mathematical::PNGTest < Test::Unit::TestCase
      \end{pmatrix}
 $$
 '''
-    render = Mathematical::Render.new({:format => "png"})
+    render = Mathematical.new({:format => "png"})
     data_hash = render.render(string)
     header = data_hash["png"].unpack('H*').first.slice(0, 18)
     File.open("#{fixtures_dir}/png/pmatrix.png", "w") { |f| f.write(data_hash["png"])}

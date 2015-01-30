@@ -13,7 +13,7 @@ class Mathematical::MathMLTest < Test::Unit::TestCase
      \end{pmatrix}
 $$
 '''
-    render = Mathematical::Render.new({:format => "mathml"})
+    render = Mathematical.new({:format => "mathml"})
     mathml = render.render(string)["mathml"]
 
     assert_match /<math xmlns='http:\/\/www.w3.org\/1998\/Math\/MathML' display='block'><semantics><mrow><mrow><mo>\(/, mathml

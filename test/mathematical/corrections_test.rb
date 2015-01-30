@@ -3,7 +3,7 @@ require "test_helper"
 class Mathematical::CorrectionsTest < Test::Unit::TestCase
 
   def setup
-    @render = Mathematical::Render.new
+    @render = Mathematical.new
   end
 
   def test_adjust_lt_gt

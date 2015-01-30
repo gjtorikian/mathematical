@@ -27,7 +27,7 @@ The simplest way to do this is
 ``` ruby
 require 'mathematical'
 
-Mathematical::Render.new.render(string_with_math)
+Mathematical.new.render(string_with_math)
 ```
 
 `string_with_math` should just be a string of math TeX inline (`$..$`) or display (`$$..$$`) style math.
@@ -47,7 +47,7 @@ The output will be a hash, with keys that depend on the format you want:
 
 ### Options
 
-`Mathematical::Render.new` takes an optional hash to define a few options:
+`Mathematical.new` takes an optional hash to define a few options:
 
 * `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
 * `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
@@ -59,7 +59,7 @@ Pass these in like this:
 
 ``` ruby
 opts = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
-renderer = Mathematical::Render.new(opts)
+renderer = Mathematical.new(opts)
 renderer.render('$a \ne b$')
 ```
 
@@ -217,7 +217,7 @@ With it, you could do something fun like:
 
 ``` ruby
 MathToItex(string).convert do |eq, type|
-  svg_content = Mathematical::Render.new(:base64 => true).render(eq)
+  svg_content = Mathematical.new(:base64 => true).render(eq)
 
   # create image tags of math with base64-encoded SVGs
   %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|

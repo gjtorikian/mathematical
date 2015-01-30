@@ -3,7 +3,7 @@ require 'nokogiri'
 
 class Mathematical::MathJaxTest < Test::Unit::TestCase
 
-  render_svg = Mathematical::Render.new
+  render_svg = Mathematical.new
 
   MATHJAX_TEST_TEST_DIR = File.join('ext', 'mathematical', 'mtex2MML', 'test', 'fixtures', 'MathJax')
   MATHJAX_TEST_TEX_DIR = File.join(MATHJAX_TEST_TEST_DIR, 'LaTeXToMathML-tex')
@@ -15,7 +15,7 @@ class Mathematical::MathJaxTest < Test::Unit::TestCase
       data = nil
       assert_nothing_raised { data = render_svg.render(tex_contents) }
 
-      render_mathml = Mathematical::Render.new({:format => "mathml"})
+      render_mathml = Mathematical.new({:format => "mathml"})
       mathml = render_mathml.render(tex_contents)['mathml']
 
       # assert the SVG actually rendered

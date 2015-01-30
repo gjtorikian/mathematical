@@ -273,7 +273,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
 
 void Init_mathematical()
 {
-  rb_mMathematical = rb_define_module("Mathematical");
+  rb_mMathematical = rb_define_class("Mathematical", rb_cObject);
 
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
   rb_eMaxsizeError = rb_define_class_under(rb_mMathematical, "MaxsizeError", rb_eStandardError);
