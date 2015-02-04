@@ -1,3 +1,10 @@
+body {
+  background-color: #F0EAD6;
+}
+
+.jumbotron {
+  background-color: #EAF1F1;
+}
 .jumbotron .container {
   text-align: center;
 }
@@ -13,7 +20,7 @@
 }
 
 .jumbotron.samples {
-  background-color: #eaf1f1;
+  background-color: #F9F9F9;
   padding-bottom: 50px;
   margin-bottom: 0px;
 }
