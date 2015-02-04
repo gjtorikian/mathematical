@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Mathematical::VERSION
   spec.authors       = ['Garen Torikian']
   spec.email         = ['gjtorikian@gmail.com']
-  spec.summary       = %q{Quickly convert math equations into beautiful SVGs/PNGs/MathML.}
-  spec.description   = %q{A very fast way to turn itex math equations into beautifully rendered SVGs, to embed on the web. This library is mostly written in C and is a general purpose wrapper to GNOME's Lasem. }
+  spec.summary       = %w(Quickly convert math equations into beautiful SVGs/PNGs/MathML.)
+  spec.description   = %w(A very fast way to turn itex math equations into beautifully rendered SVGs, to embed on the web. This library is mostly written in C and is a general purpose wrapper to GNOME's Lasem.)
   spec.homepage      = 'https://github.com/gjtorikian/mathematical'
   spec.license       = 'MIT'
 
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.files        += Dir.glob('ext/**/*.{c,h}')
   spec.files        += Dir.glob('ext/**/extconf.rb')
   spec.test_files    = Dir.glob('test/**/*')
-  spec.require_paths = ['lib', 'ext']
+  spec.require_paths = %w(lib ext)
   spec.extensions    = ['ext/mathematical/extconf.rb']
 
   spec.add_development_dependency 'rake', '~> 0.9'
