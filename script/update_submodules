@@ -3,13 +3,15 @@
 set -e
 
 cd ext/mathematical/mtex2MML
-git checkout master && git pull
+git fetch origin
+git checkout more-support && git pull
 sha=`git rev-parse HEAD`
 cd ../../..
 git add ext/mathematical/mtex2MML
 git commit -m "Update mtex2MML to ${sha}"
 
 cd ext/mathematical/lasem
+git fetch origin
 git checkout master && git pull
 sha=`git rev-parse HEAD`
 cd ..
