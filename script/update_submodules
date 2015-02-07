@@ -14,6 +14,6 @@ cd ext/mathematical/lasem
 git fetch origin
 git checkout master && git reset --hard origin/master
 sha=`git rev-parse HEAD`
-cd ..
+cd ../../..
 git add ext/mathematical/lasem
 git commit -m "Update Lasem to ${sha}"
