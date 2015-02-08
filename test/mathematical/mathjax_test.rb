@@ -15,9 +15,6 @@ class Mathematical::MathJaxTest < Test::Unit::TestCase
       data = nil
       assert_nothing_raised { data = render_svg.render(tex_contents) }
 
-      render_mathml = Mathematical.new({:format => "mathml"})
-      mathml = render_mathml.render(tex_contents)['mathml']
-
       # assert the SVG actually rendered
       doc = Nokogiri::HTML(data['svg'])
       assert_empty doc.search(%(//svg[@width='0pt']))
