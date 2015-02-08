@@ -63,21 +63,40 @@ class Mathematical
   end
 
   def validate_content(maths)
-    if maths.is_a? String
-      maths = maths.strip
-      fail(ArgumentError, 'input must be in tex format (`$...$` or `$$...$$`)!') unless valid_math_string(maths)
-    elsif maths.is_a? Array
-      unless maths.all? { |m| m.is_a?(String) && valid_math_string(m) }
-        fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
-      end
-    else
+    if !maths.is_a?(String) && !maths.is_a?(Array)
       fail(TypeError, 'input must be a string or an array!')
     end
 
-    apply_corrections(maths)
+    if maths.is_a? String
+      validate_string(maths)
+    else
+      validate_array(maths)
+    end
   end
 
   private
+
+  def validate_string(maths)
+    maths = maths.strip
+    unless valid_math_string(maths)
+      fail(ArgumentError, 'input must be in tex format (`$...$` or `$$...$$`)!')
+    end
+
+    maths
+  end
+
+  def validate_array(maths)
+    unless maths.all? { |m| m.is_a?(String) }
+      fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
+    end
+
+    maths = maths.map(&:strip)
+    unless maths.all? { |m| valid_math_string(m) }
+      fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
+    end
+
+    maths
+  end
 
   def valid_math_string(maths)
     maths =~ /\A\${1,2}/
