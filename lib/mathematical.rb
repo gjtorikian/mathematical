@@ -63,13 +63,25 @@ class Mathematical
   end
 
   def validate_content(maths)
-    fail(TypeError, 'text must be a string!') unless maths.is_a? String
-    maths = maths.strip
-    fail(ArgumentError, 'text must be in tex format (`$...$` or `$$...$$`)!') unless maths =~ /\A\${1,2}/
+    if maths.is_a? String
+      maths = maths.strip
+      fail(ArgumentError, 'input must be in tex format (`$...$` or `$$...$$`)!') unless valid_math_string(maths)
+    elsif maths.is_a? Array
+      unless maths.all? { |m| m.is_a?(String) && valid_math_string(m) }
+        fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
+      end
+    else
+      fail(TypeError, 'input must be a string or an array!')
+    end
+
     apply_corrections(maths)
   end
 
   private
+
+  def valid_math_string(maths)
+    maths =~ /\A\${1,2}/
+  end
 
   def svg_to_base64(contents)
     "data:image/svg+xml;base64,#{Base64.strict_encode64(contents)}"

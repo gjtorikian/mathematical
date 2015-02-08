@@ -63,18 +63,28 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     end
 
     assert_raise RangeError do
-      render = Mathematical.new({:maxsize => 4294967295}) # unsigned long max
+      render = Mathematical.new({ :maxsize => 4_294_967_295 }) # unsigned long max
       render.render('$a \ne b$')
     end
   end
 
   def test_it_does_not_blow_up_on_bad_input
     assert_raise TypeError do
-      render = Mathematical.new.render(23)
+      Mathematical.new.render(23)
     end
 
     assert_raise ArgumentError do
-      render = Mathematical.new.render("No dollars")
+      Mathematical.new.render('No dollars')
+    end
+
+    assert_raise ArgumentError do
+      array = %w(foof poof)
+      Mathematical.new.render(array)
+    end
+
+    assert_raise ArgumentError do
+      array = ['$foof$', nil, '$poof$']
+      Mathematical.new.render(array)
     end
   end
 
