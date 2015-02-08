@@ -20,20 +20,7 @@
 * SOFTWARE.
 ****************************************************************************/
 
-#include "ruby.h"
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <lsm.h>
-#include <lsmmathml.h>
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <glib/gprintf.h>
-#include <gio/gio.h>
-#include <cairo-pdf.h>
-#include <cairo-svg.h>
-#include <cairo-ps.h>
-#include "mtex2MML.h"
+#include <mathematical.h>
 
 #define CSTR2SYM(str) ID2SYM(rb_intern(str))
 
@@ -54,62 +41,6 @@ typedef enum {
   FORMAT_PNG,
   FORMAT_MATHML
 } FileFormat;
-
-/**
- * lsm_mtex_to_mathml:
- * @mtex: (allow-none): an mtex string
- * @size: mtex string length, -1 if NULL terminated
- *
- * Converts an mtex string to a Mathml representation.
- *
- * Return value: a newly allocated string, NULL on parse error. The returned data must be freed using @lsm_mtex_free_mathml_buffer.
- */
-
-char *
-lsm_mtex_to_mathml (const char *mtex, gssize size)
-{
-  gsize usize;
-  char *mathml;
-
-  if (mtex == NULL) {
-    return NULL;
-  }
-
-  if (size < 0) {
-    usize = strlen (mtex);
-  } else {
-    usize = size;
-  }
-
-  mathml = mtex2MML_parse (mtex, usize);
-  if (mathml == NULL) {
-    return NULL;
-  }
-
-  if (mathml[0] == '\0') {
-    mtex2MML_free_string (mathml);
-    return NULL;
-  }
-
-  return mathml;
-}
-
-/**
- * lsm_mtex_free_mathml_buffer:
- * @mathml: (allow-none): a mathml buffer
- *
- * Free the buffer returned by @lsm_mtex_to_mathml.
- */
-
-void
-lsm_mtex_free_mathml_buffer (char *mathml)
-{
-  if (mathml == NULL) {
-    return;
-  }
-
-  mtex2MML_free_string (mathml);
-}
 
 cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length)
 {
@@ -161,13 +92,24 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
 {
-  Check_Type (rb_LatexCode, T_STRING);
-
   unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
 
-  const char *latex_code = StringValueCStr(rb_LatexCode);
+  switch (TYPE(rb_Input)) {
+  case T_STRING:
+    // no op
+    break;
+  case T_ARRAY:
+    rb_raise(rb_eTypeError, "not valid value");
+    break;
+  default:
+    /* should be impossible */
+    rb_raise(rb_eTypeError, "not valid value");
+    break;
+  }
+
+  const char *latex_code = StringValueCStr(rb_Input);
   unsigned long latex_size = (unsigned long) strlen(latex_code);
 
   // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)

@@ -40,9 +40,10 @@ task :copy_samples do
 end
 
 task :destroy_copies do
+  safe_files = %w(extconf.rb mathematical lasem_overrides)
   ext_dir = File.join(File.dirname(__FILE__), 'ext', 'mathematical')
   Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
-    next if f =~ /extconf.rb$/ || f =~ /mathematical.c$/
+    next if safe_files.select { |s| s =~ f }
     File.delete(f)
   end
   Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
