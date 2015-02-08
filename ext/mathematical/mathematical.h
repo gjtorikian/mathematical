@@ -9,9 +9,14 @@
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gio/gio.h>
-#include <cairo-pdf.h>
 #include <cairo-svg.h>
-#include <cairo-ps.h>
 
 #include "mtex2MML.h"
+#include <cairo_callbacks.h>
 #include <lasem_overrides.h>
+
+typedef enum {
+  FORMAT_SVG,
+  FORMAT_PNG,
+  FORMAT_MATHML
+} FileFormat;

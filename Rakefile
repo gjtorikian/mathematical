@@ -40,7 +40,7 @@ task :copy_samples do
 end
 
 task :destroy_copies do
-  safe_files = [/extconf.rb/, /mathematical\.(?:c|h)/, /lasem_overrides/]
+  safe_files = [/extconf.rb/, /mathematical\.(?:c|h)/, /lasem_overrides/, /cairo_callbacks/]
   ext_dir = File.join(File.dirname(__FILE__), 'ext', 'mathematical')
   Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
     next if safe_files.any? { |s| f =~ s }
