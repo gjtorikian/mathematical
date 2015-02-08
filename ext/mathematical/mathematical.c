@@ -110,6 +110,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   }
 
   const char *latex_code = StringValueCStr(rb_Input);
+
   unsigned long latex_size = (unsigned long) strlen(latex_code);
 
   // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)

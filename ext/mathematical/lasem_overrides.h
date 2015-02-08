@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "mtex2MML.h"
 
 /**
  * lsm_mtex_to_mathml:
@@ -10,8 +11,7 @@
  * Return value: a newly allocated string, NULL on parse error. The returned data must be freed using @lsm_mtex_free_mathml_buffer.
  */
 
-char *
-lsm_mtex_to_mathml (const char *mtex, gssize size);
+extern char * lsm_mtex_to_mathml (const char *mtex, gssize size);
 
 /**
  * lsm_mtex_free_mathml_buffer:
@@ -20,5 +20,4 @@ lsm_mtex_to_mathml (const char *mtex, gssize size);
  * Free the buffer returned by @lsm_mtex_to_mathml.
  */
 
-void
-lsm_mtex_free_mathml_buffer (char *mathml);
+extern void lsm_mtex_free_mathml_buffer (char *mathml);
