@@ -36,7 +36,6 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
-
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
 {
   Check_Type (rb_Options, T_HASH);
@@ -63,39 +62,10 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
-{
-  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
-
-  switch (TYPE(rb_Input)) {
-  case T_STRING:
-    // no op
-    break;
-  case T_ARRAY:
-    rb_raise(rb_eTypeError, "not valid value");
-    break;
-  default:
-    /* should be impossible */
-    rb_raise(rb_eTypeError, "not valid value");
-    break;
-  }
-
-  const char *latex_code = StringValueCStr(rb_Input);
-
-  unsigned long latex_size = (unsigned long) strlen(latex_code);
-
-  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
-  if (maxsize == 0) {
-    maxsize = LONG_MAX;
-  }
-
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size) {
   if (latex_size > maxsize) {
     rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
   }
-
-#if !GLIB_CHECK_VERSION(2,36,0)
-  g_type_init ();
-#endif
 
   VALUE result_hash = rb_hash_new();
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
@@ -183,6 +153,40 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   rb_iv_set(self, "@png", Qnil);
 
   return result_hash;
+}
+
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
+{
+  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
+
+  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
+  if (maxsize == 0) {
+    maxsize = LONG_MAX;
+  }
+
+  #if !GLIB_CHECK_VERSION(2,36,0)
+    g_type_init ();
+  #endif
+
+  const char *latex_code;
+  unsigned long latex_size;
+
+  switch (TYPE(rb_Input)) {
+  case T_STRING:
+    latex_code = StringValueCStr(rb_Input);
+    latex_size = (unsigned long) strlen(latex_code);
+    return process(self, maxsize, latex_code, latex_size);
+    break;
+  case T_ARRAY:
+    rb_raise(rb_eTypeError, "not valid value");
+    break;
+  default:
+    /* should be impossible, Ruby code prevents this */
+    rb_raise(rb_eTypeError, "not valid value");
+    break;
+  }
+
+  return NULL;
 }
 
 void Init_mathematical()
