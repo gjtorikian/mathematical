@@ -1,7 +1,7 @@
 #include <lasem_overrides.h>
 
 char *
-lsm_mtex_to_mathml (const char *mtex, gssize size)
+lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
 {
   gsize usize;
   char *mathml;
@@ -16,7 +16,7 @@ lsm_mtex_to_mathml (const char *mtex, gssize size)
     usize = size;
   }
 
-  mathml = mtex2MML_global_parse (mtex, usize, 0);
+  mathml = mtex2MML_global_parse (mtex, usize, global_start);
   if (mathml == NULL) {
     return NULL;
   }

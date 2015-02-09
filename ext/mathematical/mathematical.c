@@ -62,7 +62,7 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size) {
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int global_start) {
   if (latex_size > maxsize) {
     rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
   }
@@ -71,11 +71,11 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
   // convert the TeX math to MathML
-  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size);
+  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
   if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
 
   if (format == FORMAT_MATHML) {
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"),    rb_str_new2(mathml));
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
     mtex2MML_free_string(mathml);
     return result_hash;
   }
@@ -171,22 +171,35 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   const char *latex_code;
   unsigned long latex_size;
 
+  VALUE output;
+
   switch (TYPE(rb_Input)) {
-  case T_STRING:
+  case T_STRING: {
     latex_code = StringValueCStr(rb_Input);
     latex_size = (unsigned long) strlen(latex_code);
-    return process(self, maxsize, latex_code, latex_size);
-    break;
-  case T_ARRAY:
-    rb_raise(rb_eTypeError, "not valid value");
-    break;
-  default:
-    /* should be impossible, Ruby code prevents this */
-    rb_raise(rb_eTypeError, "not valid value");
+    output = process(self, maxsize, latex_code, latex_size, 1);
     break;
   }
+  case T_ARRAY: {
+    int length = RARRAY_LEN(rb_Input), i;
+    output = rb_ary_new2(length);
+    for (i = 0; i < length; i++) {
+      VALUE math = rb_ary_entry(rb_Input, i);
+      latex_code = StringValueCStr(math);
+      latex_size = (unsigned long) strlen(latex_code);
+      rb_ary_store(output, i, process(self, maxsize, latex_code, latex_size, i + 1));
+    }
+    break;
+  }
+  default: {
+    /* should be impossible, Ruby code prevents this */
+    rb_raise(rb_eTypeError, "not valid value");
+    output = NULL;
+    break;
+  }
+  }
 
-  return NULL;
+  return output;
 }
 
 void Init_mathematical()

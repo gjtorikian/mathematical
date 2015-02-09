@@ -43,17 +43,14 @@ class Mathematical
     maths = validate_content(maths)
 
     begin
-      data_hash = @processer.process(maths)
-      fail RuntimeError unless data_hash
+      data = @processer.process(maths)
+      fail RuntimeError unless data
+      fail RuntimeError if !data.is_a?(Hash) && !data.is_a?(Array)
 
-      case @config[:format]
-      when 'svg'
-        # remove starting <?xml...> tag
-        data_hash['svg'] = data_hash['svg'][XML_HEADER.length..-1]
-        data_hash['svg'] = svg_to_base64(data_hash['svg']) if @config[:base64]
-        data_hash
-      when 'png', 'mathml'
-        data_hash
+      if data.is_a? Array
+        data.map { |d| format_data(d) }
+      else
+        format_data(data)
       end
     rescue ParseError, DocumentCreationError, DocumentReadError => e
       # an error in the C code, probably a bad TeX parse
@@ -100,6 +97,19 @@ class Mathematical
 
   def valid_math_string(maths)
     maths =~ /\A\${1,2}/
+  end
+
+  def format_data(data)
+    case @config[:format]
+    when 'svg'
+      # remove starting <?xml...> tag
+      data['svg'] = data['svg'][XML_HEADER.length..-1]
+      data['svg'] = svg_to_base64(data['svg']) if @config[:base64]
+
+      data
+    when 'png', 'mathml' # do nothing with these...for now?
+      data
+    end
   end
 
   def svg_to_base64(contents)
