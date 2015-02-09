@@ -17,7 +17,7 @@ ensure
   $stderr = old
 end
 
-def write_svg_to_test_file(converted)
+def write_base64svg_to_test_file(converted)
 
   text = """
   <html>
@@ -25,6 +25,23 @@ def write_svg_to_test_file(converted)
   <body>
 
   <img class=\"display-math\" data-math-type=\"display-math\" src=\"#{converted}\"/>
+
+  </body>
+
+  </html>
+"""
+
+  File.open('test.html', 'w') { |f| f.write(text) }
+end
+
+def write_svg_to_test_file(converted)
+
+  text = """
+  <html>
+
+  <body>
+
+  #{converted}
 
   </body>
 
