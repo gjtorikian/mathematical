@@ -62,7 +62,8 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int global_start) {
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int global_start)
+{
   if (latex_size > maxsize) {
     rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
   }
@@ -72,7 +73,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   // convert the TeX math to MathML
   char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
-  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
+  if (mathml == NULL) { rb_raise(rb_eParseError, "Failed to parse mtex"); }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
@@ -171,9 +172,9 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
     maxsize = LONG_MAX;
   }
 
-  #if !GLIB_CHECK_VERSION(2,36,0)
-    g_type_init ();
-  #endif
+#if !GLIB_CHECK_VERSION(2,36,0)
+  g_type_init ();
+#endif
 
   const char *latex_code;
   unsigned long latex_size;
