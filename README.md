@@ -45,15 +45,32 @@ The output will be a hash, with keys that depend on the format you want:
 * If you asked for MathML, you'll get:
   * `mathml`: the MathML data
 
+### Array of equations
+
+Rather than just a string, you can also provide an array of math inputs:
+
+``` ruby
+inputs = []
+inputs << '$a$'
+inputs << '$b$'
+inputs << '$c$'
+
+Mathematical.new.render(inputs)
+```
+
+This returns an array of hashes, possessing the same keys as above.
+
 ### Options
 
 `Mathematical.new` takes an optional hash to define a few options:
 
-* `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
-* `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
-* `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
-* `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
-* `:format` - A string indicating whether you want an "svg", "png", or "mathml" output. (default: `svg`).
+| Name | Description | Default
+|------|-------------|--------
+|`:ppi` | A double determining the pixels per inch of the resulting SVG | `72.0`
+| `:zoom` | A double determining the zoom level of the resulting SVG | `1.0`
+| `:base64` | A boolean determining whether Mathematical's output should be a base64-encoded SVG string | `false`
+| `:maxsize` | A numeral indicating the `MAXSIZE` the output string can be. | `unsigned long`
+| `:format` | A symbol indicating whether you want an `:svg`, `:png`, or `:mathml` output. | `:svg`
 
 Pass these in like this:
 
@@ -67,7 +84,7 @@ renderer.render('$a \ne b$')
 
 Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/mtex2MML/blob/master/SUPPORTED.md).
 
-**Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
+**Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math and `$$..$$` is display math.
 
 ## Building
 
