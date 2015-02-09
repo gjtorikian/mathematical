@@ -10,14 +10,14 @@ require 'tempfile'
 class Mathematical
   include Corrections
 
-  FORMAT_TYPES = %w(svg png mathml)
+  FORMAT_TYPES = [:svg, :png, :mathml]
 
   DEFAULT_OPTS = {
-    ppi: 72.0,
-    zoom: 1.0,
-    base64: false,
-    maxsize: 0,
-    format: 'svg'
+    :ppi => 72.0,
+    :zoom => 1.0,
+    :base64 => false,
+    :maxsize => 0,
+    :format => :svg
   }
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -30,13 +30,6 @@ class Mathematical
     @config[:formatInt] = FORMAT_TYPES.index(@config[:format])
 
     @processer = Mathematical::Process.new(@config)
-  end
-
-  def validate_config
-    fail(TypeError, 'maxsize must be an integer!') unless @config[:maxsize].is_a? Fixnum
-    fail(TypeError, 'maxsize cannot be less than 0!') if @config[:maxsize] < 0
-    fail(TypeError, 'format must be a string!') unless @config[:format].is_a? String
-    fail(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(@config[:format])
   end
 
   def render(maths)
@@ -73,6 +66,13 @@ class Mathematical
 
   private
 
+  def validate_config
+    fail(TypeError, 'maxsize must be an integer!') unless @config[:maxsize].is_a? Fixnum
+    fail(TypeError, 'maxsize cannot be less than 0!') if @config[:maxsize] < 0
+    fail(TypeError, 'format must be a symbol!') unless @config[:format].is_a? Symbol
+    fail(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(@config[:format])
+  end
+
   def validate_string(maths)
     maths = maths.strip
     unless valid_math_string(maths)
@@ -101,13 +101,13 @@ class Mathematical
 
   def format_data(data)
     case @config[:format]
-    when 'svg'
+    when :svg
       # remove starting <?xml...> tag
       data['svg'] = data['svg'][XML_HEADER.length..-1]
       data['svg'] = svg_to_base64(data['svg']) if @config[:base64]
 
       data
-    when 'png', 'mathml' # do nothing with these...for now?
+    when :png, :mathml # do nothing with these...for now?
       data
     end
   end

@@ -120,11 +120,13 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   lsm_dom_view_render (view, cairo, 0, 0);
 
   switch (format) {
-  case FORMAT_PNG:
+  case FORMAT_PNG: {
     cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
     break;
-  default:
+  }
+  default: {
     break;
+  }
   }
 
   cairo_destroy (cairo);
@@ -133,16 +135,21 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   g_object_unref (document);
 
   switch (format) {
-  case FORMAT_SVG:
+  case FORMAT_SVG: {
     if (rb_iv_get(self, "@svg") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
     break;
-  case FORMAT_PNG:
+  }
+  case FORMAT_PNG: {
     if (rb_iv_get(self, "@png") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
     break;
-  default:
+  }
+  default: {
+    /* should be impossible, Ruby code prevents this */
+    rb_raise(rb_eTypeError, "not valid format");
     break;
+  }
   }
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
