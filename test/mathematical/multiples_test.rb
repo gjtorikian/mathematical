@@ -42,7 +42,27 @@ $$
     end
   end
 
-      assert_match 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My', data['svg']
+  def test_it_properly_accounts_for_equations
+    inputs = []
+    [1, 2].each do |i|
+      string = """
+  $$
+  \\begin{equation}
+   f(#{i})=(x+a)(x+b)
+  \\end{equation}
+  $$
+  """
+      inputs << string
+    end
+
+    inputs.insert(1, '$test$')
+    render = Mathematical.new({:format => :png})
+    output = render.render(inputs)
+    assert_equal 3, output.length
+    output.each_with_index do |data_hash, i|
+      header = data_hash['png'].unpack('H*').first.slice(0, 18)
+      # File.open("#{fixtures_dir}/png/numeric_test_#{i + 1}.png", 'r') { |f| f.write(data_hash['png'])}
+      assert_equal header, '89504e470d0a1a0a00'
     end
   end
 end

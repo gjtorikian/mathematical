@@ -36,6 +36,9 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
+// defines the numeric equation label
+static int global_start = 1;
+
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
 {
   Check_Type (rb_Options, T_HASH);
@@ -72,7 +75,7 @@ void print_and_raise(VALUE error_type, const char* format, ...) {
   va_end(args);
 }
 
-VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int global_start)
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size)
 {
   if (latex_size > maxsize) {
     print_and_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
@@ -81,9 +84,14 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   VALUE result_hash = rb_hash_new();
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
-  // convert the TeX math to MathML
+  // convert the LaTeX math to MathML
   char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
   if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex: %s", latex_code); }
+
+  // basically, only update the next equation counter if the last math had a numbered equation
+  if (strstr(mathml, "<mlabeledtr>") != NULL) {
+    global_start++;
+  }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
@@ -176,7 +184,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 static VALUE process_helper(VALUE data) {
   VALUE *args = (VALUE *) data;
 
-  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]), NUM2INT(args[4]));
+  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]));
 }
 
 static VALUE process_failed(void) {
@@ -205,19 +213,23 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   case T_STRING: {
     latex_code = StringValueCStr(rb_Input);
     latex_size = (unsigned long) strlen(latex_code);
-    output = process(self, maxsize, latex_code, latex_size, 1);
+    output = process(self, maxsize, latex_code, latex_size);
     break;
   }
   case T_ARRAY: {
     int length = RARRAY_LEN(rb_Input), i;
     VALUE hash;
     output = rb_ary_new2(length);
+    global_start = 1;
+
     for (i = 0; i < length; i++) {
       // grab the ith element
       VALUE math = rb_ary_entry(rb_Input, i);
+
       // get the string and length
       latex_code = StringValueCStr(math);
       latex_size = (unsigned long) strlen(latex_code);
+
       // `process` can potentially raise a bunch of exceptions, so we need to wrap
       // the call in a rescue. And `rb_rescue` only takes one argument, so we need
       // to pack everything in an array, and then unpack it in `process_helper`.
@@ -226,9 +238,9 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
       args[1] = ULONG2NUM(maxsize);
       args[2] = math;
       args[3] = ULONG2NUM(latex_size);
-      args[4] = INT2FIX(i + 1);
       hash = rb_rescue(process_helper, args, process_failed, 0);
-      // the call erred; store the same string
+
+      // the call errored; just store the same string
       if (hash == Qnil)
         rb_ary_store(output, i, math);
       else
