@@ -3,9 +3,7 @@ require 'mathematical/mathematical'
 require 'mathematical/corrections'
 require 'mathematical/version'
 
-require 'fileutils'
 require 'base64'
-require 'tempfile'
 
 class Mathematical
   include Corrections
@@ -37,8 +35,7 @@ class Mathematical
 
     begin
       data = @processer.process(maths)
-      fail RuntimeError unless data
-      fail RuntimeError if !data.is_a?(Hash) && !data.is_a?(Array)
+      fail RuntimeError if data.nil? || (!data.is_a?(Hash) && !data.is_a?(Array))
 
       if data.is_a? Array
         data.map { |d| format_data(d) }
@@ -100,6 +97,9 @@ class Mathematical
   end
 
   def format_data(data)
+    # we passed in an array of math, and found an unprocessable element
+    return data unless data.is_a? Hash
+
     case @config[:format]
     when :svg
       # remove starting <?xml...> tag

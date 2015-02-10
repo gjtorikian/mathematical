@@ -62,10 +62,20 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
+void print_and_raise(VALUE error_type, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+
+  vfprintf(stderr, format, args);
+  rb_raise(error_type, format, args);
+
+  va_end(args);
+}
+
 VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int global_start)
 {
   if (latex_size > maxsize) {
-    rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
+    print_and_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
   }
 
   VALUE result_hash = rb_hash_new();
@@ -73,7 +83,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   // convert the TeX math to MathML
   char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
-  if (mathml == NULL) { rb_raise(rb_eParseError, "Failed to parse mtex"); }
+  if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex: %s", latex_code); }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
@@ -88,7 +98,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   lsm_mtex_free_mathml_buffer(mathml);
 
-  if (document == NULL) { rb_raise(rb_eDocumentCreationError, "Failed to create document"); }
+  if (document == NULL) { print_and_raise(rb_eDocumentCreationError, "Failed to create document"); }
 
   LsmDomView *view;
 
@@ -137,18 +147,18 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   switch (format) {
   case FORMAT_SVG: {
-    if (rb_iv_get(self, "@svg") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
+    if (rb_iv_get(self, "@svg") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
     break;
   }
   case FORMAT_PNG: {
-    if (rb_iv_get(self, "@png") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
+    if (rb_iv_get(self, "@png") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
     break;
   }
   default: {
     /* should be impossible, Ruby code prevents this */
-    rb_raise(rb_eTypeError, "not valid format");
+    print_and_raise(rb_eTypeError, "not valid format");
     break;
   }
   }
@@ -161,6 +171,16 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   rb_iv_set(self, "@png", Qnil);
 
   return result_hash;
+}
+
+static VALUE process_helper(VALUE data) {
+  VALUE *args = (VALUE *) data;
+
+  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]), NUM2INT(args[4]));
+}
+
+static VALUE process_failed(void) {
+  return Qnil;
 }
 
 static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
@@ -190,18 +210,35 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   }
   case T_ARRAY: {
     int length = RARRAY_LEN(rb_Input), i;
+    VALUE hash;
     output = rb_ary_new2(length);
     for (i = 0; i < length; i++) {
+      // grab the ith element
       VALUE math = rb_ary_entry(rb_Input, i);
+      // get the string and length
       latex_code = StringValueCStr(math);
       latex_size = (unsigned long) strlen(latex_code);
-      rb_ary_store(output, i, process(self, maxsize, latex_code, latex_size, i + 1));
+      // `process` can potentially raise a bunch of exceptions, so we need to wrap
+      // the call in a rescue. And `rb_rescue` only takes one argument, so we need
+      // to pack everything in an array, and then unpack it in `process_helper`.
+      VALUE args[5];
+      args[0] = self;
+      args[1] = ULONG2NUM(maxsize);
+      args[2] = math;
+      args[3] = ULONG2NUM(latex_size);
+      args[4] = INT2FIX(i + 1);
+      hash = rb_rescue(process_helper, args, process_failed, 0);
+      // the call erred; store the same string
+      if (hash == Qnil)
+        rb_ary_store(output, i, math);
+      else
+        rb_ary_store(output, i, hash);
     }
     break;
   }
   default: {
     /* should be impossible, Ruby code prevents this */
-    rb_raise(rb_eTypeError, "not valid value");
+    print_and_raise(rb_eTypeError, "not valid value");
     output = NULL;
     break;
   }

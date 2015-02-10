@@ -45,6 +45,8 @@ The output will be a hash, with keys that depend on the format you want:
 * If you asked for MathML, you'll get:
   * `mathml`: the MathML data
 
+**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR, and the original string is returned (not a hash).
+
 ### Array of equations
 
 Rather than just a string, you can also provide an array of math inputs:
@@ -60,13 +62,28 @@ Mathematical.new.render(inputs)
 
 This returns an array of hashes, possessing the same keys as above.
 
+**Note**: With an array, it is possible to receive elements that are not hashes. For example, given the following input:
+
+```
+array = ['$foof$', '$not__thisisnotreal$', '$poof$']
+```
+
+You will receive the following output:
+
+```
+Mathematical.new.render(array)
+[ {:svg => "...", :width => ... }, '$not__thisisnotreal$', {:svg => "...", :width => ... }]
+```
+
+That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with a single string, a message is also printed to STDERR.
+
 ### Options
 
 `Mathematical.new` takes an optional hash to define a few options:
 
 | Name | Description | Default
 |------|-------------|--------
-|`:ppi` | A double determining the pixels per inch of the resulting SVG | `72.0`
+| `:ppi` | A double determining the pixels per inch of the resulting SVG | `72.0`
 | `:zoom` | A double determining the zoom level of the resulting SVG | `1.0`
 | `:base64` | A boolean determining whether Mathematical's output should be a base64-encoded SVG string | `false`
 | `:maxsize` | A numeral indicating the `MAXSIZE` the output string can be. | `unsigned long`

@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 require 'benchmark'
 
 class Mathematical::BasicTest < Test::Unit::TestCase

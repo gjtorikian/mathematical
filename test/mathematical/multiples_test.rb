@@ -38,7 +38,10 @@ $$
     output = @render.render(inputs)
     assert_equal 1000, output.length
     output.each do |data|
-      write_base64svg_to_test_file data['svg']
+      assert_match 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My', data['svg']
+    end
+  end
+
       assert_match 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My', data['svg']
     end
   end

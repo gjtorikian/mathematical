@@ -96,4 +96,21 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     assert_nothing_raised { output = render.render(text) }
     assert output == text
   end
+
+  def test_it_parses_all_possible_array_elements
+    render = Mathematical.new
+    array = ['$foof$', '$/this___istotallyfake$', '$poof$']
+    output = nil
+
+    _, err = capture_subprocess_io do
+      output = render.render(array)
+    end
+
+    assert_equal 3, output.length
+    assert_equal Hash, output.first.class
+    assert_equal Hash, output.last.class
+    assert_equal '$/this___istotallyfake$', output[1]
+    # array errors output to STDERR
+    assert_match /Failed to parse mtex: \$\/this___istotallyfake\$/, err
+  end
 end
