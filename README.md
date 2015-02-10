@@ -156,10 +156,12 @@ On a Windows machine, I have no idea. Pull requests welcome!
 
 ```
 Benchmarking....
-Size: 1175 kilobytes
+Size: 1164 kilobytes
 Iterations: 10
                                                user     system      total        real
-Rendering...                               9.470000   0.750000  10.220000 ( 13.909420)
+Rendering...                             18.070000   0.290000  18.360000 ( 23.003883)
+
+19340 items converted!
 ```
 
 ## Hacking
