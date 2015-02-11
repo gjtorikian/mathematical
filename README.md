@@ -48,7 +48,7 @@ The output will be a hash, with keys that depend on the format you want:
   * `:data`: the original invalid LaTeX
   * `:error`: the error class (with message)
 
-**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR, and the original string is returned (not a hash).
+**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR. It is the caller's responsibility to check for `:error` and act on it.
 
 ### Array of equations
 
@@ -75,7 +75,7 @@ Mathematical.new.render(array)
 [ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :error => "...", {:data => "...", :width => ... }]
 ```
 
-That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with single strings, a message is also printed to STDERR.
+That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with single strings, the error message is printed to STDERR, but not raised.
 
 ### Options
 
