@@ -2,7 +2,7 @@
 
 Quickly convert math equations into beautiful SVGs (or PNGs/MathML).
 
-[![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical)
+[![Build Status](https://travis-ci.org/gjtorikian/mathematical.svg?branch=master)](https://travis-ci.org/gjtorikian/mathematical) [![Gem Version](https://badge.fury.io/rb/mathematical.svg)](http://badge.fury.io/rb/mathematical)
 
 ![Mathematical](https://i.imgur.com/JC7HT32.gif)
 
