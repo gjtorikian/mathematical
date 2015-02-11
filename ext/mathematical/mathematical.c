@@ -76,10 +76,20 @@ void print_and_raise(VALUE error_type, const char* format, ...)
   va_end(args);
 }
 
+static VALUE process_rescue(VALUE args, VALUE exception_object)
+{
+  VALUE rescue_hash = rb_hash_new();
+
+  rb_hash_aset (rescue_hash, CSTR2SYM ("data"), args);
+  rb_hash_aset (rescue_hash, CSTR2SYM ("exception"), exception_object);
+
+  return rescue_hash;
+}
+
 VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size)
 {
   if (latex_size > maxsize) {
-    print_and_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
+    print_and_raise(rb_eMaxsizeError, "Size of latex string is greater than the maxsize");
   }
 
   VALUE result_hash = rb_hash_new();
@@ -87,7 +97,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   // convert the LaTeX math to MathML
   char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
-  if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex: %s", latex_code); }
+  if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex"); }
 
   // basically, only update the next equation counter if the last math had a numbered equation
   if (strstr(mathml, "<mlabeledtr>") != NULL) {
@@ -95,7 +105,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   }
 
   if (format == FORMAT_MATHML) {
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
+    rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_str_new2(mathml));
     mtex2MML_free_string(mathml);
     return result_hash;
   }
@@ -157,12 +167,12 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   switch (format) {
   case FORMAT_SVG: {
     if (rb_iv_get(self, "@svg") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
+    rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_iv_get(self, "@svg"));
     break;
   }
   case FORMAT_PNG: {
     if (rb_iv_get(self, "@png") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
+    rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_iv_get(self, "@png"));
     break;
   }
   default: {
@@ -172,8 +182,8 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   }
   }
 
-  rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
-  rb_hash_aset (result_hash, rb_tainted_str_new2 ("height"), INT2FIX(height_pt));
+  rb_hash_aset (result_hash, CSTR2SYM ("width"),  INT2FIX(width_pt));
+  rb_hash_aset (result_hash, CSTR2SYM ("height"), INT2FIX(height_pt));
 
   // we need to clear out this key when attempting multiple calls. See http://git.io/i1hblQ
   rb_iv_set(self, "@svg", Qnil);
@@ -187,11 +197,6 @@ static VALUE process_helper(VALUE data)
   VALUE *args = (VALUE *) data;
 
   return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]));
-}
-
-static VALUE process_failed(void)
-{
-  return Qnil;
 }
 
 static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
@@ -241,14 +246,10 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
       args[1] = ULONG2NUM(maxsize);
       args[2] = math;
       args[3] = ULONG2NUM(latex_size);
-      hash = rb_rescue(process_helper, args, process_failed, 0);
+      hash = rb_rescue(process_helper, args, process_rescue, math);
 
       // the call errored; just store the same string
-      if (hash == Qnil) {
-        rb_ary_store(output, i, math);
-      } else {
-        rb_ary_store(output, i, hash);
-      }
+      rb_ary_store(output, i, hash);
     }
     break;
   }

@@ -109,8 +109,30 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     assert_equal 3, output.length
     assert_equal Hash, output.first.class
     assert_equal Hash, output.last.class
-    assert_equal '$/this___istotallyfake$', output[1]
-    # array errors output to STDERR
-    assert_match /Failed to parse mtex: \$\/this___istotallyfake\$/, err
+
+    assert_equal '$/this___istotallyfake$', output[1][:data]
+    assert_equal Mathematical::ParseError, output[1][:exception].class
+    assert_match 'Failed to parse mtex', output[1][:exception].message
+
+    # array errors also output to STDERR
+    assert_match /Failed to parse mtex/, err
+  end
+
+  def test_it_passes_a_legible_error_for_maxsize
+    output = nil
+    render = Mathematical.new({:maxsize => 2})
+
+    _, err = capture_subprocess_io do
+      output = render.render(['$a \ne b$'])
+    end
+
+    assert_equal 1, output.length
+
+    assert_equal '$a \ne b$', output[0][:data]
+    assert_equal Mathematical::MaxsizeError, output[0][:exception].class
+    assert_match 'Size of latex string is greater than the maxsize', output[0][:exception].message
+
+    # array errors also output to STDERR
+    assert_match /Size of latex string is greater than the maxsize/, err
   end
 end

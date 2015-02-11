@@ -18,14 +18,14 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
           svg_content = Mathematical.new(:base64 => false).render(eq)
           # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
           filename = eq.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '')
-          File.open("samples/fixtures/#{filename}.svg", 'w') { |file| file.write svg_content['svg'] }
+          File.open("samples/fixtures/#{filename}.svg", 'w') { |file| file.write svg_content[:data] }
         end
       end
 
       actual = MathToItex(source).convert do |eq, type|
         svg_content = Mathematical.new(:base64 => true).render(eq)
 
-        %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content['svg']}"/>|
+        %(<img class="#{type}-math" data-math-type="#{type}-math" src="#{svg_content[:data]}"/>)
       end.rstrip
 
       expected_file = before.sub(/before/, 'after').sub(/text/, 'html')
@@ -34,7 +34,7 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
 
       expected = File.read(expected_file)
 
-      expected = (MathToItex(expected).convert {|string| Mathematical.new.render(string)}).rstrip
+      expected = (MathToItex(expected).convert { |string| Mathematical.new.render(string) }).rstrip
 
       # Travis and OS X each render SVGs differently. For now, let's just be happy
       # that something renders at all.
