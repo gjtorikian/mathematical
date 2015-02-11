@@ -46,7 +46,7 @@ The output will be a hash, with keys that depend on the format you want:
   * `:data`: the MathML data
 * If you pass in invalid LaTeX, you'll get:
   * `:data`: the original invalid LaTeX
-  * `:error`: an error class, and message.
+  * `:error`: the error class (with message)
 
 **Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR, and the original string is returned (not a hash).
 
