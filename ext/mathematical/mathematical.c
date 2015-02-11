@@ -20,20 +20,7 @@
 * SOFTWARE.
 ****************************************************************************/
 
-#include "ruby.h"
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <lsm.h>
-#include <lsmmathml.h>
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <glib/gprintf.h>
-#include <gio/gio.h>
-#include <cairo-pdf.h>
-#include <cairo-svg.h>
-#include <cairo-ps.h>
-#include "mtex2MML.h"
+#include <mathematical.h>
 
 #define CSTR2SYM(str) ID2SYM(rb_intern(str))
 
@@ -49,91 +36,8 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
-typedef enum {
-  FORMAT_SVG,
-  FORMAT_PNG,
-  FORMAT_MATHML
-} FileFormat;
-
-/**
- * lsm_mtex_to_mathml:
- * @mtex: (allow-none): an mtex string
- * @size: mtex string length, -1 if NULL terminated
- *
- * Converts an mtex string to a Mathml representation.
- *
- * Return value: a newly allocated string, NULL on parse error. The returned data must be freed using @lsm_mtex_free_mathml_buffer.
- */
-
-char *
-lsm_mtex_to_mathml (const char *mtex, gssize size)
-{
-  gsize usize;
-  char *mathml;
-
-  if (mtex == NULL) {
-    return NULL;
-  }
-
-  if (size < 0) {
-    usize = strlen (mtex);
-  } else {
-    usize = size;
-  }
-
-  mathml = mtex2MML_parse (mtex, usize);
-  if (mathml == NULL) {
-    return NULL;
-  }
-
-  if (mathml[0] == '\0') {
-    mtex2MML_free_string (mathml);
-    return NULL;
-  }
-
-  return mathml;
-}
-
-/**
- * lsm_mtex_free_mathml_buffer:
- * @mathml: (allow-none): a mathml buffer
- *
- * Free the buffer returned by @lsm_mtex_to_mathml.
- */
-
-void
-lsm_mtex_free_mathml_buffer (char *mathml)
-{
-  if (mathml == NULL) {
-    return;
-  }
-
-  mtex2MML_free_string (mathml);
-}
-
-cairo_status_t cairoSvgSurfaceCallback (void *closure, const unsigned char *data, unsigned int length)
-{
-  VALUE self = (VALUE) closure;
-  if (rb_iv_get(self, "@svg") == Qnil) {
-    rb_iv_set(self, "@svg", rb_str_new2(""));
-  }
-
-  rb_str_cat(rb_iv_get(self, "@svg"), data, length);
-
-  return CAIRO_STATUS_SUCCESS;
-}
-
-cairo_status_t cairoPngSurfaceCallback (void *closure, const unsigned char *data, unsigned int length)
-{
-  VALUE self = (VALUE) closure;
-  if (rb_iv_get(self, "@png") == Qnil) {
-    rb_iv_set(self, "@png", rb_str_new2(""));
-  }
-
-  rb_str_cat(rb_iv_get(self, "@png"), data, length);
-
-  return CAIRO_STATUS_SUCCESS;
-}
+// defines the numeric equation label
+static int global_start = 1;
 
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
 {
@@ -161,37 +65,37 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
+void print_and_raise(VALUE error_type, const char* format, ...)
 {
-  Check_Type (rb_LatexCode, T_STRING);
+  va_list args;
+  va_start(args, format);
 
-  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
+  vfprintf(stderr, format, args);
+  rb_raise(error_type, format, args);
 
-  const char *latex_code = StringValueCStr(rb_LatexCode);
-  unsigned long latex_size = (unsigned long) strlen(latex_code);
+  va_end(args);
+}
 
-  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
-  if (maxsize == 0) {
-    maxsize = LONG_MAX;
-  }
-
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size)
+{
   if (latex_size > maxsize) {
-    rb_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
+    print_and_raise(rb_eMaxsizeError, "Size of latex string (%lu) is greater than the maxsize (%lu)!", latex_size, maxsize);
   }
-
-#if !GLIB_CHECK_VERSION(2,36,0)
-  g_type_init ();
-#endif
 
   VALUE result_hash = rb_hash_new();
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
-  // convert the TeX math to MathML
-  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size);
-  if (mathml == NULL) rb_raise(rb_eParseError, "Failed to parse mtex");
+  // convert the LaTeX math to MathML
+  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
+  if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex: %s", latex_code); }
+
+  // basically, only update the next equation counter if the last math had a numbered equation
+  if (strstr(mathml, "<mlabeledtr>") != NULL) {
+    global_start++;
+  }
 
   if (format == FORMAT_MATHML) {
-    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"),    rb_str_new2(mathml));
+    rb_hash_aset (result_hash, rb_tainted_str_new2 ("mathml"), rb_str_new2(mathml));
     mtex2MML_free_string(mathml);
     return result_hash;
   }
@@ -203,7 +107,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
 
   lsm_mtex_free_mathml_buffer(mathml);
 
-  if (document == NULL) { rb_raise(rb_eDocumentCreationError, "Failed to create document"); }
+  if (document == NULL) { print_and_raise(rb_eDocumentCreationError, "Failed to create document"); }
 
   LsmDomView *view;
 
@@ -236,11 +140,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
   lsm_dom_view_render (view, cairo, 0, 0);
 
   switch (format) {
-  case FORMAT_PNG:
+  case FORMAT_PNG: {
     cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
     break;
-  default:
+  }
+  default: {
     break;
+  }
   }
 
   cairo_destroy (cairo);
@@ -249,16 +155,21 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
   g_object_unref (document);
 
   switch (format) {
-  case FORMAT_SVG:
-    if (rb_iv_get(self, "@svg") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
+  case FORMAT_SVG: {
+    if (rb_iv_get(self, "@svg") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read SVG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("svg"),    rb_iv_get(self, "@svg"));
     break;
-  case FORMAT_PNG:
-    if (rb_iv_get(self, "@png") == Qnil) { rb_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
+  }
+  case FORMAT_PNG: {
+    if (rb_iv_get(self, "@png") == Qnil) { print_and_raise(rb_eDocumentReadError, "Failed to read PNG contents"); }
     rb_hash_aset (result_hash, rb_tainted_str_new2 ("png"),    rb_iv_get(self, "@png"));
     break;
-  default:
+  }
+  default: {
+    /* should be impossible, Ruby code prevents this */
+    print_and_raise(rb_eTypeError, "not valid format");
     break;
+  }
   }
 
   rb_hash_aset (result_hash, rb_tainted_str_new2 ("width"),  INT2FIX(width_pt));
@@ -271,9 +182,90 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_LatexCode)
   return result_hash;
 }
 
+static VALUE process_helper(VALUE data)
+{
+  VALUE *args = (VALUE *) data;
+
+  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]));
+}
+
+static VALUE process_failed(void)
+{
+  return Qnil;
+}
+
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
+{
+  unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
+
+  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
+  if (maxsize == 0) {
+    maxsize = LONG_MAX;
+  }
+
+#if !GLIB_CHECK_VERSION(2,36,0)
+  g_type_init ();
+#endif
+
+  const char *latex_code;
+  unsigned long latex_size;
+
+  VALUE output;
+
+  switch (TYPE(rb_Input)) {
+  case T_STRING: {
+    latex_code = StringValueCStr(rb_Input);
+    latex_size = (unsigned long) strlen(latex_code);
+    output = process(self, maxsize, latex_code, latex_size);
+    break;
+  }
+  case T_ARRAY: {
+    int length = RARRAY_LEN(rb_Input), i;
+    VALUE hash;
+    output = rb_ary_new2(length);
+    global_start = 1;
+
+    for (i = 0; i < length; i++) {
+      // grab the ith element
+      VALUE math = rb_ary_entry(rb_Input, i);
+
+      // get the string and length
+      latex_code = StringValueCStr(math);
+      latex_size = (unsigned long) strlen(latex_code);
+
+      // `process` can potentially raise a bunch of exceptions, so we need to wrap
+      // the call in a rescue. And `rb_rescue` only takes one argument, so we need
+      // to pack everything in an array, and then unpack it in `process_helper`.
+      VALUE args[5];
+      args[0] = self;
+      args[1] = ULONG2NUM(maxsize);
+      args[2] = math;
+      args[3] = ULONG2NUM(latex_size);
+      hash = rb_rescue(process_helper, args, process_failed, 0);
+
+      // the call errored; just store the same string
+      if (hash == Qnil) {
+        rb_ary_store(output, i, math);
+      } else {
+        rb_ary_store(output, i, hash);
+      }
+    }
+    break;
+  }
+  default: {
+    /* should be impossible, Ruby code prevents this */
+    print_and_raise(rb_eTypeError, "not valid value");
+    output = NULL;
+    break;
+  }
+  }
+
+  return output;
+}
+
 void Init_mathematical()
 {
-  rb_mMathematical = rb_define_module("Mathematical");
+  rb_mMathematical = rb_define_class("Mathematical", rb_cObject);
 
   rb_cMathematicalProcess = rb_define_class_under(rb_mMathematical, "Process", rb_cObject);
   rb_eMaxsizeError = rb_define_class_under(rb_mMathematical, "MaxsizeError", rb_eStandardError);

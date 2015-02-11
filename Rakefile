@@ -40,9 +40,10 @@ task :copy_samples do
 end
 
 task :destroy_copies do
+  safe_files = [/extconf.rb/, /mathematical\.(?:c|h)/, /lasem_overrides/, /cairo_callbacks/]
   ext_dir = File.join(File.dirname(__FILE__), 'ext', 'mathematical')
   Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
-    next if f =~ /extconf.rb$/ || f =~ /mathematical.c$/
+    next if safe_files.any? { |s| f =~ s }
     File.delete(f)
   end
   Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
@@ -51,5 +52,5 @@ end
 desc 'Pretty format C code'
 task :format do
   puts `astyle --indent=spaces=2 --style=1tbs --keep-one-line-blocks \
-        $(ack -f --type=cpp --type=cc ext/mathematical/mathematical.c)`
+        $(ack -n -f --type=cpp --type=cc ext/mathematical/)`
 end

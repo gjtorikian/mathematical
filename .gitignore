@@ -22,6 +22,7 @@ bin/
 *.gif
 lib/mathematical.bundle
 text.html
+test.html
 script/single_text
 file.svg
 .DS_Store

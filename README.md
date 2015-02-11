@@ -27,7 +27,7 @@ The simplest way to do this is
 ``` ruby
 require 'mathematical'
 
-Mathematical::Render.new.render(string_with_math)
+Mathematical.new.render(string_with_math)
 ```
 
 `string_with_math` should just be a string of math TeX inline (`$..$`) or display (`$$..$$`) style math.
@@ -45,21 +45,55 @@ The output will be a hash, with keys that depend on the format you want:
 * If you asked for MathML, you'll get:
   * `mathml`: the MathML data
 
+**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR, and the original string is returned (not a hash).
+
+### Array of equations
+
+Rather than just a string, you can also provide an array of math inputs:
+
+``` ruby
+inputs = []
+inputs << '$a$'
+inputs << '$b$'
+inputs << '$c$'
+
+Mathematical.new.render(inputs)
+```
+
+This returns an array of hashes, possessing the same keys as above.
+
+**Note**: With an array, it is possible to receive elements that are not hashes. For example, given the following input:
+
+```
+array = ['$foof$', '$not__thisisnotreal$', '$poof$']
+```
+
+You will receive the following output:
+
+```
+Mathematical.new.render(array)
+[ {:svg => "...", :width => ... }, '$not__thisisnotreal$', {:svg => "...", :width => ... }]
+```
+
+That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with a single string, a message is also printed to STDERR.
+
 ### Options
 
-`Mathematical::Render.new` takes an optional hash to define a few options:
+`Mathematical.new` takes an optional hash to define a few options:
 
-* `:ppi` - A double determining the pixels per inch of the resulting SVG (default: `72.0`).
-* `:zoom` - A double determining the zoom level of the resulting SVG (default: `1.0`).
-* `:base64` - A boolean determining whether Mathematical's output should be a base64-encoded SVG string (default: `false`).
-* `:maxsize` - A numeral indicating the `MAXSIZE` the output string can be. (default: `unsigned long`).
-* `:format` - A string indicating whether you want an "svg", "png", or "mathml" output. (default: `svg`).
+| Name | Description | Default
+|------|-------------|--------
+| `:ppi` | A double determining the pixels per inch of the resulting SVG | `72.0`
+| `:zoom` | A double determining the zoom level of the resulting SVG | `1.0`
+| `:base64` | A boolean determining whether Mathematical's output should be a base64-encoded SVG string | `false`
+| `:maxsize` | A numeral indicating the `MAXSIZE` the output string can be. | `unsigned long`
+| `:format` | A symbol indicating whether you want an `:svg`, `:png`, or `:mathml` output. | `:svg`
 
 Pass these in like this:
 
 ``` ruby
 opts = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
-renderer = Mathematical::Render.new(opts)
+renderer = Mathematical.new(opts)
 renderer.render('$a \ne b$')
 ```
 
@@ -67,7 +101,7 @@ renderer.render('$a \ne b$')
 
 Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/mtex2MML/blob/master/SUPPORTED.md).
 
-**Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math, `$$..$$` is display math, and that your double-slashes (like `\\`) are escaped (`\\\\`).
+**Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math and `$$..$$` is display math.
 
 ## Building
 
@@ -122,10 +156,12 @@ On a Windows machine, I have no idea. Pull requests welcome!
 
 ```
 Benchmarking....
-Size: 1175 kilobytes
+Size: 1164 kilobytes
 Iterations: 10
                                                user     system      total        real
-Rendering...                               9.470000   0.750000  10.220000 ( 13.909420)
+Rendering...                             18.070000   0.290000  18.360000 ( 23.003883)
+
+19340 items converted!
 ```
 
 ## Hacking
@@ -217,7 +253,7 @@ With it, you could do something fun like:
 
 ``` ruby
 MathToItex(string).convert do |eq, type|
-  svg_content = Mathematical::Render.new(:base64 => true).render(eq)
+  svg_content = Mathematical.new(:base64 => true).render(eq)
 
   # create image tags of math with base64-encoded SVGs
   %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|

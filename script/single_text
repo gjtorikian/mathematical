@@ -17,12 +17,11 @@ text = """
 
 </body>
 
-
 </html>
 """
 
-File.open("text.svg", 'w') { |file| file.write(svg) }
+File.open('test.html', 'w') { |file| file.write(text) }
 
-unless ARGV[0] == "-s"
+unless ARGV[0] == '-s'
   `open text.html`
 end

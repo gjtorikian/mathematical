@@ -15,30 +15,30 @@ class Mathematical::FixturesTest < Test::Unit::TestCase
       if ENV['MATHEMATICAL_GENERATE_SAMPLE']
         next unless name.match /compliance/
         actual = MathToItex(source).convert do |eq, type|
-          svg_content = Mathematical::Render.new(:base64 => false).render(eq)
+          svg_content = Mathematical.new(:base64 => false).render(eq)
           # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
           filename = eq.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '')
-          File.open("samples/fixtures/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
+          File.open("samples/fixtures/#{filename}.svg", 'w') { |file| file.write svg_content['svg'] }
         end
       end
 
       actual = MathToItex(source).convert do |eq, type|
-        svg_content = Mathematical::Render.new(:base64 => true).render(eq)
+        svg_content = Mathematical.new(:base64 => true).render(eq)
 
         %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content['svg']}"/>|
       end.rstrip
 
-      expected_file = before.sub(/before/, "after").sub(/text/, "html")
+      expected_file = before.sub(/before/, 'after').sub(/text/, 'html')
 
-      File.open(expected_file, "w") { |file| file.write(actual) } unless ENV['DEBUG_MATHEMATICAL'].nil?
+      File.open(expected_file, 'w') { |file| file.write(actual) } unless ENV['DEBUG_MATHEMATICAL'].nil?
 
       expected = File.read(expected_file)
 
-      expected = (MathToItex(expected).convert {|string| Mathematical::Render.new.render(string)}).rstrip
+      expected = (MathToItex(expected).convert {|string| Mathematical.new.render(string)}).rstrip
 
       # Travis and OS X each render SVGs differently. For now, let's just be happy
       # that something renders at all.
-      unless actual.match("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My")
+      unless actual.match('PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My')
         diff = IO.popen("diff -u - #{expected_file}", 'r+') do |f|
           f.write actual
           f.close_write

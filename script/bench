@@ -1,11 +1,15 @@
 #!/usr/bin/ruby
 
+require 'benchmark'
+require 'bundler/setup'
+require 'math-to-itex'
+
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
-require 'benchmark'
 
 include Benchmark
+
 # number of iterations
 num = ARGV[0] ? ARGV[0].to_i : 10
 
@@ -15,9 +19,13 @@ repeats = ARGV[1] ? ARGV[1].to_i : 1
 file = File.open('test/mathematical/fixtures/performance/big_file.text').read.to_s * repeats
 
 puts "Benchmarking....\n"
-puts "Size: " + ((file.bytesize * num) / 1000).to_s + " kilobytes\n"
-puts "Iterations: " + num.to_s + "\n"
+puts 'Size: ' + ((file.bytesize * num) / 1000).to_s + " kilobytes\n"
+puts 'Iterations: ' + num.to_s + "\n"
+
+i = 0;
 
 Benchmark.bm(40) do |x|
-  x.report("Rendering...                             ")  { for i in 1..num; Mathematical::Render.new.render(file); end }
+  x.report('Rendering...                             ')  { (1..num).each { MathToItex(file).convert { |equation| i += 1; Mathematical.new.render(equation) } } }
 end
+
+puts "\n#{i} items converted!"
