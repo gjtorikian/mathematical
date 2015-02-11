@@ -248,7 +248,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
       args[3] = ULONG2NUM(latex_size);
       hash = rb_rescue(process_helper, args, process_rescue, math);
 
-      // the call errored; just store the same string
       rb_ary_store(output, i, hash);
     }
     break;
