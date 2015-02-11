@@ -2,9 +2,15 @@
 
 set -e
 
+if [ -z "$1" ]; then
+  BRANCH="master"
+else
+  BRANCH=$1
+fi
+
 cd ext/mathematical/mtex2MML
 git fetch origin
-git checkout more-support && git pull
+git checkout $BRANCH && git pull
 sha=`git rev-parse HEAD`
 cd ../../..
 git add ext/mathematical/mtex2MML
