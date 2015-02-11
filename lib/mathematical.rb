@@ -33,19 +33,13 @@ class Mathematical
   def render(maths)
     maths = validate_content(maths)
 
-    begin
-      result_data = @processer.process(maths)
-      fail RuntimeError if result_data.nil? || (!result_data.is_a?(Hash) && !result_data.is_a?(Array))
+    result_data = @processer.process(maths)
+    fail RuntimeError if !result_data.is_a?(Hash) && !result_data.is_a?(Array)
 
-      if result_data.is_a? Array
-        result_data.map { |d| format_data(d) }
-      else
-        format_data(result_data)
-      end
-    rescue ParseError, DocumentCreationError, DocumentReadError => e
-      # an error in the C code, probably a bad TeX parse
-      $stderr.puts "#{e.message}: #{maths}"
-      maths
+    if result_data.is_a? Array
+      result_data.map { |d| format_data(d) }
+    else
+      format_data(result_data)
     end
   end
 
