@@ -7,7 +7,8 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     output = nil
     # In mtex2MML, we raise a ParseError, but Mathematical suppresses it and returns the string.
     assert_nothing_raised { output = render.render('$not__thisisnotreal$') }
-    assert output == '$not__thisisnotreal$'
+    assert_equal output[:data], '$not__thisisnotreal$'
+    assert_equal output[:exception].class, Mathematical::ParseError
   end
 
   def test_it_does_not_blow_up_on_bad_arguments
@@ -25,42 +26,37 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
 
   def test_it_does_not_blow_up_on_bad_options
     assert_raise TypeError do
-      render = Mathematical.new({:ppi => "not a number"})
+      Mathematical.new({:ppi => 'not a number'})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:zoom => "not a number"})
+      render = Mathematical.new({:zoom => 'not a number'})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:maxsize => "not a number"})
+      Mathematical.new({:maxsize => 'not a number'})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:maxsize => -23})
+      Mathematical.new({:maxsize => -23})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:maxsize => 5.3})
+      Mathematical.new({:maxsize => 5.3})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:format => 123})
+      Mathematical.new({:format => 123})
     end
 
     assert_raise TypeError do
-      render = Mathematical.new({:format => "something amazing"})
+      Mathematical.new({:format => 'something amazing'})
     end
 
-    assert_raise Mathematical::MaxsizeError do
-      render = Mathematical.new({:maxsize => 2})
-      render.render('$a \ne b$')
-    end
-
-    assert_nothing_raised RangeError do
-      render = Mathematical.new({:maxsize => 2147483647}) # signed long max
-      render.render('$a \ne b$')
-    end
+    render = Mathematical.new({:maxsize => 2})
+    output = render.render '$a \ne b$'
+    assert_equal output[:data], '$a \ne b$'
+    assert_equal output[:exception].class, Mathematical::MaxsizeError
 
     assert_raise RangeError do
       render = Mathematical.new({ :maxsize => 4_294_967_295 }) # unsigned long max
@@ -94,7 +90,8 @@ class Mathematical::MaliciousnessTest < Test::Unit::TestCase
     # Much like above, this fails in mtx2MML, but should do nothing here
     text = '$\Huge \sqrt\sqrt\sqrt\sqrt\sqrt\sqrt\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{\sqrt{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}'
     assert_nothing_raised { output = render.render(text) }
-    assert output == text
+    assert_equal output[:data], text
+    assert_equal output[:exception].class, Mathematical::ParseError
   end
 
   def test_it_parses_all_possible_array_elements

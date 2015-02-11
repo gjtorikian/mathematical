@@ -192,6 +192,9 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   return result_hash;
 }
 
+// `process` can potentially raise a bunch of exceptions, so we need to wrap
+// the call in a rescue. And `rb_rescue` only takes one argument, so we need
+// to pack everything in an array, and then unpack it in `process_helper`.
 static VALUE process_helper(VALUE data)
 {
   VALUE *args = (VALUE *) data;
@@ -221,7 +224,14 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
   case T_STRING: {
     latex_code = StringValueCStr(rb_Input);
     latex_size = (unsigned long) strlen(latex_code);
-    output = process(self, maxsize, latex_code, latex_size);
+
+    VALUE args[4];
+    args[0] = self;
+    args[1] = ULONG2NUM(maxsize);
+    args[2] = rb_Input;
+    args[3] = ULONG2NUM(latex_size);
+
+    output = rb_rescue(process_helper, args, process_rescue, rb_Input);
     break;
   }
   case T_ARRAY: {
@@ -238,14 +248,12 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
       latex_code = StringValueCStr(math);
       latex_size = (unsigned long) strlen(latex_code);
 
-      // `process` can potentially raise a bunch of exceptions, so we need to wrap
-      // the call in a rescue. And `rb_rescue` only takes one argument, so we need
-      // to pack everything in an array, and then unpack it in `process_helper`.
-      VALUE args[5];
+      VALUE args[4];
       args[0] = self;
       args[1] = ULONG2NUM(maxsize);
       args[2] = math;
       args[3] = ULONG2NUM(latex_size);
+
       hash = rb_rescue(process_helper, args, process_rescue, math);
 
       rb_ary_store(output, i, hash);
