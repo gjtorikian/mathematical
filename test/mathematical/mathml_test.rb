@@ -14,7 +14,7 @@ class Mathematical::MathMLTest < Test::Unit::TestCase
 $$
 '''
     render = Mathematical.new({:format => :mathml})
-    mathml = render.render(string)['mathml']
+    mathml = render.render(string)[:data]
 
     assert_match %r{<math xmlns='http://www.w3.org/1998/Math/MathML' display='block'><semantics><mrow><mrow><mo>\(}, mathml
   end

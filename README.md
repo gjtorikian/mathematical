@@ -35,15 +35,18 @@ Mathematical.new.render(string_with_math)
 The output will be a hash, with keys that depend on the format you want:
 
 * If you asked for an SVG, you'll get:
-  * `width`: the width of the resulting image
-  * `height`: the height of the resulting image
-  * `svg`: the actual string of SVG
+  * `:width`: the width of the resulting image
+  * `:height`: the height of the resulting image
+  * `:data`: the actual string of SVG
 * If you asked for a PNG, you'll get:
-  * `width`: the width of the resulting image
-  * `height`: the height of the resulting image
-  * `png`: the PNG data
+  * `:width`: the width of the resulting image
+  * `:height`: the height of the resulting image
+  * `:data`: the PNG data
 * If you asked for MathML, you'll get:
-  * `mathml`: the MathML data
+  * `:data`: the MathML data
+* If you pass in invalid LaTeX, you'll get:
+  * `:data`: the original invalid LaTeX
+  * `:error`: the error class (with message)
 
 **Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR, and the original string is returned (not a hash).
 
@@ -60,10 +63,7 @@ inputs << '$c$'
 Mathematical.new.render(inputs)
 ```
 
-This returns an array of hashes, possessing the same keys as above.
-
-**Note**: With an array, it is possible to receive elements that are not hashes. For example, given the following input:
-
+This returns an array of hashes, possessing the same keys as above. For example:
 ```
 array = ['$foof$', '$not__thisisnotreal$', '$poof$']
 ```
@@ -72,10 +72,10 @@ You will receive the following output:
 
 ```
 Mathematical.new.render(array)
-[ {:svg => "...", :width => ... }, '$not__thisisnotreal$', {:svg => "...", :width => ... }]
+[ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :error => "...", {:data => "...", :width => ... }]
 ```
 
-That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with a single string, a message is also printed to STDERR.
+That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with single strings, a message is also printed to STDERR.
 
 ### Options
 
