@@ -61,7 +61,7 @@ $$
     assert_equal 3, output.length
     output.each_with_index do |data_hash, i|
       header = data_hash['png'].unpack('H*').first.slice(0, 18)
-      # File.open("#{fixtures_dir}/png/numeric_test_#{i + 1}.png", 'r') { |f| f.write(data_hash['png'])}
+      File.open("#{fixtures_dir}/png/numeric_test_#{i + 1}.png", 'w') { |f| f.write(data_hash['png'])}
       assert_equal header, '89504e470d0a1a0a00'
     end
   end
