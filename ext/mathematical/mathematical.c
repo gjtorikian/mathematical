@@ -65,7 +65,8 @@ static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
   return self;
 }
 
-void print_and_raise(VALUE error_type, const char* format, ...) {
+void print_and_raise(VALUE error_type, const char* format, ...)
+{
   va_list args;
   va_start(args, format);
 
@@ -181,13 +182,15 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   return result_hash;
 }
 
-static VALUE process_helper(VALUE data) {
+static VALUE process_helper(VALUE data)
+{
   VALUE *args = (VALUE *) data;
 
   return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]));
 }
 
-static VALUE process_failed(void) {
+static VALUE process_failed(void)
+{
   return Qnil;
 }
 
@@ -241,10 +244,11 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
       hash = rb_rescue(process_helper, args, process_failed, 0);
 
       // the call errored; just store the same string
-      if (hash == Qnil)
+      if (hash == Qnil) {
         rb_ary_store(output, i, math);
-      else
+      } else {
         rb_ary_store(output, i, hash);
+      }
     }
     break;
   }
