@@ -20,12 +20,17 @@ find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2
 FileUtils.cp_r(Dir.glob("#{LASEM_DIR}/*"), File.dirname(__FILE__))
 File.delete(File.join(File.dirname(__FILE__), 'lasemrender.c'))
 
+debug_file = File.join(File.dirname(__FILE__), 'mtex2MML_debug.cc')
+if File.exists?(debug_file)
+  File.delete(File.join(File.dirname(__FILE__), 'mtex2MML_debug.cc'))
+end
+
 # build mtex2MML Bison files
 Dir.chdir(MTEX_DIR) do
   system 'make'
 end
 
-FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/*.{c,h,cc}"), File.dirname(__FILE__))
+FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/*.{c,h}"), File.dirname(__FILE__))
 FileUtils.cp_r("#{MTEX_DIR}/deps/.", File.dirname(__FILE__))
 FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/deps/**/*"), File.dirname(__FILE__))
 
