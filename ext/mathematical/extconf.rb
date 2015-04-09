@@ -19,7 +19,11 @@ find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2
 # the `destroy_copies` task, immediately after `compile`, will destroy these files
 FileUtils.cp_r(Dir.glob("#{LASEM_DIR}/*"), File.dirname(__FILE__))
 File.delete(File.join(File.dirname(__FILE__), 'lasemrender.c'))
-File.delete(File.join(File.dirname(__FILE__), 'mtex2MML_debug.cc'))
+
+debug_file = File.join(File.dirname(__FILE__), 'mtex2MML_debug.cc')
+if File.exists?(debug_file)
+  File.delete(File.join(File.dirname(__FILE__), 'mtex2MML_debug.cc'))
+end
 
 # build mtex2MML Bison files
 Dir.chdir(MTEX_DIR) do
