@@ -23,7 +23,7 @@ $( document ).ready(function() {
     tex = encodeURIComponent(tex);
 
     $.ajax({
-      url: "https://104.131.112.89:9393/render?math=" + tex,
+      url: "https://branta.io:9393/render?math=" + tex,
       type: "GET",
       dataType: "text",
       crossDomain: true
