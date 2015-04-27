@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'nokogiri'
 
-class Mathematical::MathJaxTest < Test::Unit::TestCase
+class Mathematical::MathJaxTest < MiniTest::Test
 
   render_svg = Mathematical.new
 
@@ -12,8 +12,7 @@ class Mathematical::MathJaxTest < Test::Unit::TestCase
   Dir["#{MATHJAX_TEST_TEX_DIR}/**/*.tex"].each do |tex|
     define_method "test_#{tex}" do
       tex_contents = File.read(tex)
-      data = nil
-      assert_nothing_raised { data = render_svg.render(tex_contents) }
+      data = render_svg.render(tex_contents)
 
       # assert the SVG actually rendered
       doc = Nokogiri::HTML(data[:data])

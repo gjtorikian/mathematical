@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Mathematical::FixturesTest < Test::Unit::TestCase
+class Mathematical::FixturesTest < MiniTest::Test
   # the same SVGs sometimes get random id values, throwing off the tests
   def strip_id(blob)
     blob.gsub(/id="surface.+?"/, '')

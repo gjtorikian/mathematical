@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Mathematical::MultiplesTest < Test::Unit::TestCase
+class Mathematical::MultiplesTest < MiniTest::Test
 
   def setup
     @render = Mathematical.new(:base64 => true)

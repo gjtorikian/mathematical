@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Mathematical::CorrectionsTest < Test::Unit::TestCase
+class Mathematical::CorrectionsTest < MiniTest::Test
 
   def setup
     @render = Mathematical.new

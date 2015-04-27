@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Mathematical::PNGTest < Test::Unit::TestCase
+class Mathematical::PNGTest < MiniTest::Test
   def before
     File.delete("#{fixtures_dir}/png/pmatrix.png") if File.exist?("#{fixtures_dir}/png/pmatrix.png")
   end
