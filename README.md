@@ -46,9 +46,9 @@ The output will be a hash, with keys that depend on the format you want:
   * `:data`: the MathML data
 * If you pass in invalid LaTeX, you'll get:
   * `:data`: the original invalid LaTeX
-  * `:error`: the error class (with message)
+  * `:exception`: the error class (with message)
 
-**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR. It is the caller's responsibility to check for `:error` and act on it.
+**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR. It is the caller's responsibility to check for `:exception` and act on it.
 
 ### Array of equations
 
@@ -72,7 +72,7 @@ You will receive the following output:
 
 ```
 Mathematical.new.render(array)
-[ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :error => "...", {:data => "...", :width => ... }]
+[ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :exception => "...", {:data => "...", :width => ... }]
 ```
 
 That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with single strings, the error message is printed to STDERR, but not raised.
