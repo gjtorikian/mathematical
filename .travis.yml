@@ -1,6 +1,8 @@
 language: ruby
 rvm:
   - 2.0
+  - 2.1
+  - 2.2
 
 before_install:
   - sudo apt-get update -qq
@@ -8,3 +10,8 @@ before_install:
 
 install:
   - bundle install
+
+cache: bundler
+
+git:
+  depth: 10

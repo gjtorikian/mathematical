@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Mathematical::MathMLTest < Test::Unit::TestCase
+class Mathematical::MathMLTest < MiniTest::Test
 
   def test_it_returns_mathml
     string = '''

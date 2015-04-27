@@ -8,6 +8,8 @@ else
   BRANCH=$1
 fi
 
+echo "Checking out mtex2MML"
+echo "---------------------"
 cd ext/mathematical/mtex2MML
 git fetch origin
 git checkout $BRANCH && git pull
@@ -16,6 +18,8 @@ cd ../../..
 git add ext/mathematical/mtex2MML
 git commit -m "Update mtex2MML to ${sha}"
 
+echo "Checking out Lasem"
+echo "------------------"
 cd ext/mathematical/lasem
 git fetch origin
 git checkout master && git reset --hard origin/master

@@ -1,7 +1,7 @@
 require 'bundler/setup'
 require 'mathematical'
-require 'test/unit'
-require 'mocha/test_unit'
+require 'minitest/autorun'
+require 'minitest/pride'
 require 'math-to-itex'
 require 'pp'
 
