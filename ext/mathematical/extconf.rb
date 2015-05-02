@@ -36,7 +36,7 @@ FileUtils.cp_r(Dir.glob("#{MTEX_DIR}/deps/**/*"), File.dirname(__FILE__))
 
 have_library('pangocairo-1.0')
 
-$LDFLAGS += " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS += " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR} -I#{MTEX_DIR}"
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
+$CFLAGS << "  -g -O2 -std=c99 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR} -I#{MTEX_DIR}"
 
 create_makefile('mathematical/mathematical')
