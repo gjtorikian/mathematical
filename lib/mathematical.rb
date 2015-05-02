@@ -1,14 +1,14 @@
 require 'mathematical/mathematical'
 
 require 'mathematical/corrections'
+require 'mathematical/validator'
 require 'mathematical/version'
 
 require 'base64'
 
 class Mathematical
   include Corrections
-
-  FORMAT_TYPES = [:svg, :png, :mathml]
+  include Validator
 
   DEFAULT_OPTS = {
     :ppi => 72.0,
@@ -23,7 +23,7 @@ class Mathematical
   def initialize(opts = {})
     @config = DEFAULT_OPTS.merge(opts)
 
-    validate_config
+    validate_config(@config)
 
     @config[:formatInt] = FORMAT_TYPES.index(@config[:format])
 
@@ -43,52 +43,7 @@ class Mathematical
     end
   end
 
-  def validate_content(maths)
-    if !maths.is_a?(String) && !maths.is_a?(Array)
-      fail(TypeError, 'input must be a string or an array!')
-    end
-
-    if maths.is_a? String
-      validate_string(maths)
-    else
-      validate_array(maths)
-    end
-  end
-
   private
-
-  def validate_config
-    fail(TypeError, 'maxsize must be an integer!') unless @config[:maxsize].is_a? Fixnum
-    fail(TypeError, 'maxsize cannot be less than 0!') if @config[:maxsize] < 0
-    fail(TypeError, 'format must be a symbol!') unless @config[:format].is_a? Symbol
-    fail(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(@config[:format])
-  end
-
-  def validate_string(maths)
-    maths = maths.strip
-    unless valid_math_string(maths)
-      fail(ArgumentError, 'input must be in tex format (`$...$` or `$$...$$`)!')
-    end
-
-    maths
-  end
-
-  def validate_array(maths)
-    unless maths.all? { |m| m.is_a?(String) }
-      fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
-    end
-
-    maths = maths.map(&:strip)
-    unless maths.all? { |m| valid_math_string(m) }
-      fail(ArgumentError, 'every element in array must be a string in tex format (`$...$` or `$$...$$`)!')
-    end
-
-    maths
-  end
-
-  def valid_math_string(maths)
-    maths =~ /\A\${1,2}/
-  end
 
   def format_data(result_hash)
     # we passed in an array of math, and found an unprocessable element
