@@ -13,4 +13,11 @@ class Mathematical::BasicTest < MiniTest::Test
     assert_equal 1, output.scan(/<svg/).size, 'should only contain one svg'
   end
 
+  def test_handles_line_breaks
+    s = "$$x\ny$$"
+    render = Mathematical.new
+    output = render.render(s)[:data]
+    assert_equal 1, output.scan(/<svg/).size, 'should only contain one svg'
+  end
+
 end

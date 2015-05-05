@@ -90,6 +90,10 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
     end
 
     assert_raises ArgumentError do
+      Mathematical.new.render('blah blah $x$ blah')
+    end
+
+    assert_raises ArgumentError do
       array = %w(foof poof)
       Mathematical.new.render(array)
     end
