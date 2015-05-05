@@ -8,6 +8,8 @@ else
   BRANCH=$1
 fi
 
+echo "Using $BRANCH..."
+
 echo "Checking out mtex2MML"
 echo "---------------------"
 cd ext/mathematical/mtex2MML
