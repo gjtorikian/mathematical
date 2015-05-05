@@ -27,10 +27,10 @@ Dir.chdir(MTEX2MML_DIR) do
   system 'make'
 end
 
-FileUtils.cp_r(Dir.glob("#{MTEX2MML_DIR}/dist/*.{h}"), File.dirname(__FILE__))
+FileUtils.cp_r(Dir.glob("#{MTEX2MML_DIR}/build/*.{h}"), File.dirname(__FILE__))
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " -g -O2 -std=c99 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
-$LOCAL_LIBS << "#{MTEX2MML_DIR}/dist/libmtex2MML.a"
+$LOCAL_LIBS << "#{MTEX2MML_DIR}/build/libmtex2MML.a"
 
 create_makefile('mathematical/mathematical')
