@@ -1,7 +1,7 @@
 class Mathematical
   module Validator
     # explanation can be found at http://git.io/vJRBj
-    DOLLAR_MATCHER = /(?<!\\)(?:((?<!\$)\${1,2}(?!\$))(.*?(\g<1>)?.*?)(?<!\\)(?(1)(?<!\$)\1(?!\$)))/xm
+    DOLLAR_MATCHER = /\A(?<!\\)(?:((?<!\$)\${1,2}(?!\$))(.*?(\g<1>)?.*?)(?<!\\)(?(1)(?<!\$)\1(?!\$)))\z/xm
 
     FORMAT_TYPES = [:svg, :png, :mathml].freeze
 
