@@ -2,8 +2,8 @@ require 'mkmf'
 require 'rbconfig'
 host_os = RbConfig::CONFIG['host_os']
 
-LASEM_DIR = File.join(File.dirname(__FILE__), 'lasem', 'src')
-MTEX2MML_DIR = File.join(File.dirname(__FILE__), 'mtex2MML')
+LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem', 'src'))
+MTEX2MML_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'mtex2MML'))
 
 if host_os =~ /darwin|mac os/
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
@@ -27,7 +27,7 @@ Dir.chdir(MTEX2MML_DIR) do
   system 'make'
 end
 
-FileUtils.cp_r(Dir.glob("#{MTEX2MML_DIR}/build/*.{h}"), File.dirname(__FILE__))
+FileUtils.cp_r(Dir.glob(File.join(MTEX2MML_DIR, 'build', '*.{a,h}')), File.dirname(__FILE__))
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " -g -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
