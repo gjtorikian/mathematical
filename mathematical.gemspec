@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Mathematical::VERSION
   spec.authors       = ['Garen Torikian']
   spec.email         = ['gjtorikian@gmail.com']
-  spec.summary       = %w(Quickly convert math equations into beautiful SVGs/PNGs/MathML.)
-  spec.description   = %w(A very fast way to turn LaTeX math equations into beautifully rendered SVGs, to embed on the web. This library is mostly written in C and is a general purpose wrapper to GNOME's Lasem.)
+  spec.summary       = 'Quickly convert math equations into beautiful SVGs/PNGs/MathML.'
+  spec.description   = 'A very fast way to turn LaTeX math equations into beautifully rendered SVGs, to embed on the web. This library is mostly written in C and is a general purpose wrapper to GNOME\'s Lasem.'
   spec.homepage      = 'https://github.com/gjtorikian/mathematical'
   spec.license       = 'MIT'
 
