@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-system "bundle exec rake clean && bundle exec rake compile"
-
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
@@ -165,11 +163,12 @@ $$
     +q_{45} = 0
 \end{aligned}
 $$
-'''
+''',
+'skew' => '$$x \skew{30}\hat A x$$'
 }
 
 quality.each_pair do |filename, eq|
   filename = filename.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '').downcase
-  svg_content = Mathematical.new(:base64 => false).render(eq)
-  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write svg_content["svg"] }
+  svg_content = Mathematical.new.render(eq)
+  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write svg_content[:data] }
 end
