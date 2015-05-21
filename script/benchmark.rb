@@ -19,7 +19,7 @@ MathToItex(file).convert { |equation| equations << equation }
 end
 
 puts "Count: #{equations.length} equations\n"
-puts 'Iterations: ' + ITERATIONS.to_s + "\n"
+puts "Iterations: #{ITERATIONS}\n"
 
 Benchmark.bm(40) do |x|
   x.report('Rendering...                             ')  { Mathematical.new.render(equations) }

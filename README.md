@@ -236,9 +236,9 @@ composition of 880 equations, it took about eight seconds to complete. Could I
 do better?
 
 * I came across [Lasem](https://wiki.gnome.org/action/show/Projects/Lasem?action=show&redirect=Lasem),
-which meet every need. It has no external binary dependencies (only library packages),
+which met every need. It has no external binary dependencies (only library packages),
 can convert directly to SVG, and it's fast. The same arbitrary 880 equations were
-rendered in less than three seconds.
+rendered in moments.
 
 And thus a wrapper was born.
 
