@@ -30,7 +30,7 @@ end
 FileUtils.cp_r(Dir.glob(File.join(MTEX2MML_DIR, 'build', '*.{a,h}')), File.dirname(__FILE__))
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS << " -g -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
+$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
 $LOCAL_LIBS << "#{MTEX2MML_DIR}/build/libmtex2MML.a"
 
 create_makefile('mathematical/mathematical')
