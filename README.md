@@ -156,12 +156,10 @@ On a Windows machine, I have no idea. Pull requests welcome!
 
 ```
 Benchmarking....
-Size: 1164 kilobytes
-Iterations: 10
+Count: 3868 equations
+Iterations: 1
                                                user     system      total        real
-Rendering...                             18.070000   0.290000  18.360000 ( 23.003883)
-
-19340 items converted!
+Rendering...                               3.280000   0.070000   3.350000 (  4.324458)
 ```
 
 ## Hacking
