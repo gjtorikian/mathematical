@@ -107,21 +107,24 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 Before building this gem, you must install the following libraries:
 
+* GNU make
 * glib-2.0
 * gdk-pixbuf-2.0
 * xml2
 * cairo
 * pango
+* [Dependencies for mtex2MML](https://github.com/gjtorikian/mtex2MML#building)
 
-You will also need fonts for cmr10, cmmi10, cmex10, and cmsy10.
-
-### Mac install
-
-To install these dependencies on a Mac, everything can be installed via Homebrew:
+After cloning the repo, you can fetch dependencies and run the library by typing:
 
 ```
-brew install glib gdk-pixbuf cairo pango
+script/bootstrap
+bundle exec rake compile
 ```
+
+If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
+
+### Installing fonts for Mac OS X
 
 Install the fonts with:
 
@@ -138,20 +141,6 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmmi10.ttf
 ```
 
-`xml2` should already be on your machine.
-
-### *nix install
-
-To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
-
-```
-sudo apt-get -qq -y install libglib2.0-dev libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx libgdk-pixbuf2.0-dev
-```
-
-### Windows install
-
-On a Windows machine, I have no idea. Pull requests welcome!
-
 ## Benchmarks
 
 ```
@@ -161,17 +150,6 @@ Iterations: 1
                                                user     system      total        real
 Rendering...                               3.280000   0.070000   3.350000 (  4.324458)
 ```
-
-## Hacking
-
-After cloning the repo:
-
-```
-script/bootstrap
-bundle exec rake compile
-```
-
-If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
 ## History
 
