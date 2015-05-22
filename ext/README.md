@@ -10,6 +10,12 @@ Some documentation can be found here:
 * http://blogs.gnome.org/emmanuel/category/lasem/
 * https://git.gnome.org/browse/lasem/
 
+### Notes
+
+* In *autogen.sh*, rename `libtoolize` to `glibtoolize` for OS X
+* In *configure.ac*, remove `GTK_DOC_CHECK`
+* Debug with `-d dom,measure,update,render,viewport`
+
 * * *
 
 mtex2MML transforms itex (a dialect of LaTeX) into MathML. mtex2MML is developed by
