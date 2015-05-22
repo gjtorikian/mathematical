@@ -4,7 +4,9 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
 
-system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb MATHEMATICAL_GENERATE_SAMPLE=1"
+if ENV['MATHEMATICAL_GENERATE_SAMPLE']
+  system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
+end
 
 quality = {
   'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
