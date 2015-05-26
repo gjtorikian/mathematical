@@ -6,6 +6,7 @@ require 'mathematical'
 
 if ENV['MATHEMATICAL_GENERATE_SAMPLE']
   system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
+  system "bundle exec rake test TEST=test/mathematical/mathjax_test.rb"
 end
 
 quality = {
