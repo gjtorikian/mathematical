@@ -124,7 +124,7 @@ bundle exec rake compile
 
 If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
-### Installing fonts for Mac OS X
+### Fonts and special notices for Mac OS X
 
 Install the fonts with:
 
@@ -145,6 +145,8 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
 ```
 brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535820c48442c23af44f72974880/Library/Formula/cairo.rb
 ```
+
+You may also need to install the [XQuartz](http://xquartz.macosforge.org/landing/) tooling, as this is [required by Cairo](https://github.com/Homebrew/homebrew/issues/14123).
 
 ## Benchmarks
 
