@@ -56,22 +56,16 @@ Rather than just a string, you can also provide an array of math inputs:
 
 ``` ruby
 inputs = []
-inputs << '$a$'
-inputs << '$b$'
-inputs << '$c$'
+inputs << '$\pi$'
+inputs << '$not__thisisnotreal$'
+inputs << '$\alpha$'
 
 Mathematical.new.render(inputs)
 ```
 
-This returns an array of hashes, possessing the same keys as above. For example:
-```
-array = ['$foof$', '$not__thisisnotreal$', '$poof$']
-```
-
-You will receive the following output:
+This returns an array of hashes, rendering the indices. For example, for the above, you will receive the following output:
 
 ```
-Mathematical.new.render(array)
 [ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :exception => "...", {:data => "...", :width => ... }]
 ```
 
@@ -148,7 +142,9 @@ brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535
 
 You may also need to install the [XQuartz](http://xquartz.macosforge.org/landing/) tooling, as this is [required by Cairo](https://github.com/Homebrew/homebrew/issues/14123).
 
-## Benchmarks
+## Benchmark
+
+Run benchmarks with `bundle exec rake benchmark`:
 
 ```
 Benchmarking....
