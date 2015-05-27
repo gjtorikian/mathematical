@@ -140,6 +140,12 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/msbm10.ttf
 ```
 
+**Note**: There's [a severe issue](http://lists.cairographics.org/archives/cairo/2015-May/026257.html) with Cairo@1.14.2 and Yosemite. Don't use this version of Cairo. Instead, use the older 1.12.16 version, which you can install with:
+
+```
+brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535820c48442c23af44f72974880/Library/Formula/cairo.rb
+```
+
 ## Benchmarks
 
 ```
