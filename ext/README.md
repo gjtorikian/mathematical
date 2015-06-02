@@ -13,7 +13,6 @@ Some documentation can be found here:
 ### Notes on building for OS X
 
 * In *autogen.sh*, rename `libtoolize` to `glibtoolize`
-* In *configure.ac*, remove `GTK_DOC_CHECK`
 * Debug with `-d dom,measure,update,render,viewport`
 
 * * *
