@@ -51,3 +51,13 @@ def write_svg_to_test_file(converted)
 
   File.open('test.html', 'w') { |f| f.write(text) }
 end
+
+def write_sample(source, name = nil)
+  return unless ENV['MATHEMATICAL_GENERATE_SAMPLE']
+  MathToItex(source).convert do |eq, type|
+    svg_content = Mathematical.new(:base64 => false).render(eq)
+    # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
+    filename = name || eq.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '')
+    File.open("samples/fixtures/#{filename}.svg", 'w') { |file| file.write svg_content[:data] }
+  end
+end

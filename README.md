@@ -56,22 +56,16 @@ Rather than just a string, you can also provide an array of math inputs:
 
 ``` ruby
 inputs = []
-inputs << '$a$'
-inputs << '$b$'
-inputs << '$c$'
+inputs << '$\pi$'
+inputs << '$not__thisisnotreal$'
+inputs << '$\alpha$'
 
 Mathematical.new.render(inputs)
 ```
 
-This returns an array of hashes, possessing the same keys as above. For example:
-```
-array = ['$foof$', '$not__thisisnotreal$', '$poof$']
-```
-
-You will receive the following output:
+This returns an array of hashes, rendering the indices. For example, for the above, you will receive the following output:
 
 ```
-Mathematical.new.render(array)
 [ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :exception => "...", {:data => "...", :width => ... }]
 ```
 
@@ -107,21 +101,24 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 Before building this gem, you must install the following libraries:
 
+* GNU make
 * glib-2.0
 * gdk-pixbuf-2.0
 * xml2
 * cairo
 * pango
+* [Dependencies for mtex2MML](https://github.com/gjtorikian/mtex2MML#building)
 
-You will also need fonts for cmr10, cmmi10, cmex10, and cmsy10.
-
-### Mac install
-
-To install these dependencies on a Mac, everything can be installed via Homebrew:
+After cloning the repo, you can fetch dependencies and run the library by typing:
 
 ```
-brew install glib gdk-pixbuf cairo pango
+script/bootstrap
+bundle exec rake compile
 ```
+
+If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
+
+### Fonts and special notices for Mac OS X
 
 Install the fonts with:
 
@@ -134,46 +131,28 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/esint10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/eufm10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/msam10.ttf \
-     -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/msbm10.ttf \
-     -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmmi10.ttf
+     -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/msbm10.ttf
 ```
 
-`xml2` should already be on your machine.
-
-### *nix install
-
-To install these dependencies on a *nix machine, fetch the packages through your package manager. For example:
+**Note**: There's [a severe issue](http://lists.cairographics.org/archives/cairo/2015-May/026257.html) with Cairo@1.14.2 and Yosemite. Don't use this version of Cairo. Instead, use the older 1.12.16 version, which you can install with:
 
 ```
-sudo apt-get -qq -y install libglib2.0-dev libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx libgdk-pixbuf2.0-dev
+brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535820c48442c23af44f72974880/Library/Formula/cairo.rb
 ```
 
-### Windows install
+You may also need to install the [XQuartz](http://xquartz.macosforge.org/landing/) tooling, as this is [required by Cairo](https://github.com/Homebrew/homebrew/issues/14123).
 
-On a Windows machine, I have no idea. Pull requests welcome!
+## Benchmark
 
-## Benchmarks
+Run benchmarks with `bundle exec rake benchmark`:
 
 ```
 Benchmarking....
-Size: 1164 kilobytes
-Iterations: 10
+Count: 3868 equations
+Iterations: 1
                                                user     system      total        real
-Rendering...                             18.070000   0.290000  18.360000 ( 23.003883)
-
-19340 items converted!
+Rendering...                               3.280000   0.070000   3.350000 (  4.324458)
 ```
-
-## Hacking
-
-After cloning the repo:
-
-```
-script/bootstrap
-bundle exec rake compile
-```
-
-If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
 ## History
 
@@ -238,9 +217,9 @@ composition of 880 equations, it took about eight seconds to complete. Could I
 do better?
 
 * I came across [Lasem](https://wiki.gnome.org/action/show/Projects/Lasem?action=show&redirect=Lasem),
-which meet every need. It has no external binary dependencies (only library packages),
+which met every need. It has no external binary dependencies (only library packages),
 can convert directly to SVG, and it's fast. The same arbitrary 880 equations were
-rendered in less than three seconds.
+rendered in moments.
 
 And thus a wrapper was born.
 

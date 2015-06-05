@@ -14,12 +14,7 @@ class Mathematical::FixturesTest < MiniTest::Test
 
       if ENV['MATHEMATICAL_GENERATE_SAMPLE']
         next unless name.match /compliance/
-        actual = MathToItex(source).convert do |eq, type|
-          svg_content = Mathematical.new(:base64 => false).render(eq)
-          # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
-          filename = eq.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '')
-          File.open("samples/fixtures/#{filename}.svg", 'w') { |file| file.write svg_content[:data] }
-        end
+        write_sample(source)
       end
 
       actual = MathToItex(source).convert do |eq, type|

@@ -58,3 +58,9 @@ task :format do
   puts `astyle --indent=spaces=2 --style=1tbs --keep-one-line-blocks \
         $(ack -n -f --type=cpp --type=cc ext/mathematical/)`
 end
+
+desc 'Run a benchmark'
+task :benchmark do
+  $:.unshift 'lib'
+  load 'script/benchmark.rb'
+end

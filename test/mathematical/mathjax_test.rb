@@ -14,6 +14,8 @@ class Mathematical::MathJaxTest < MiniTest::Test
       tex_contents = File.read(tex)
       data = render_svg.render(tex_contents)
 
+      write_sample(tex_contents, File.basename(tex, '.txt')) if ENV['MATHEMATICAL_GENERATE_SAMPLE']
+
       # assert the SVG actually rendered
       doc = Nokogiri::HTML(data[:data])
       assert_empty doc.search(%(//svg[@width='0pt']))
