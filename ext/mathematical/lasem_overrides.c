@@ -1,4 +1,5 @@
 #include <lasem_overrides.h>
+#include <string.h>
 
 char *
 lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
