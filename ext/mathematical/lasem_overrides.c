@@ -17,7 +17,7 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
     usize = size;
   }
 
-  mathml = mtex2MML_global_parse (mtex, usize, global_start);
+  mathml = mtex2MML_global_parse (mtex, usize, 0, global_start);
   if (mathml == NULL) {
     return NULL;
   }

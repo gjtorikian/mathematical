@@ -51,6 +51,9 @@ task :destroy_copies do
     File.delete(f)
   end
   Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
+  FileUtils.rm_rf(File.join(ext_dir, 'mtex2MML', 'build'))
+  FileUtils.rm_rf(File.join(ext_dir, 'lib'))
+  FileUtils.rm_rf(File.join(ext_dir, 'Testing'))
 end
 
 desc 'Pretty format C code'

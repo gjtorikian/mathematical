@@ -1,5 +1,4 @@
 #include <glib.h>
-#include "mtex2MML.h"
 
 /**
  * lsm_mtex_to_mathml:
