@@ -1,11 +1,13 @@
 #include <lasem_overrides.h>
 #include <string.h>
+#include "mtex2mml.h"
 
 char *
 lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
 {
   gsize usize;
   char *mathml;
+  int status = 0;
 
   if (mtex == NULL) {
     return NULL;
@@ -17,8 +19,10 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
     usize = size;
   }
 
-  mathml = mtex2MML_global_parse (mtex, usize, 0, global_start);
-  if (mathml == NULL) {
+  status = mtex2MML_text_filter(mtex, usize, 0);
+  mathml = mtex2MML_output();
+
+  if (status) {
     return NULL;
   }
 

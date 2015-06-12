@@ -16,6 +16,7 @@ LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem', 'src'))
 MTEX2MML_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'mtex2MML'))
 MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, 'build')
 MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, 'src'))
 
 if HOST_OS =~ /darwin|mac os/
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
@@ -28,8 +29,6 @@ find_header('libxml/tree.h', '/include/libxml2', '/usr/include/libxml2', '/usr/l
 find_header('libxml/parser.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
 find_header('libxml/xpath.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
 find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-
-LIB_DIRS = [LIBDIR, MTEX2MML_LIB_DIR]
 
 # TODO: this is so frakkin' stupid. but I can't seem to get subdirs to compile any other way
 # the `destroy_copies` task, immediately after `compile`, will destroy these files
@@ -51,11 +50,13 @@ end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
+FileUtils.cp_r(File.join(MTEX2MML_SRC_DIR, 'mtex2MML.h'), File.dirname(__FILE__))
 
-$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
-$LOCAL_LIBS << '-lmtex2MML'
-
+LIB_DIRS = [LIBDIR, MTEX2MML_LIB_DIR]
+HEADER_DIRS << MTEX2MML_BUILD_DIR
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
+
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML"
+$CFLAGS << " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
 
 create_makefile('mathematical/mathematical')

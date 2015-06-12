@@ -28,7 +28,7 @@ Rake::Task['clean'].enhance do
   Rake::Task['destroy_copies'].invoke
 end
 
-Rake::Task[:test].prerequisites << :compile
+Rake::Task[:test].prerequisites
 
 task default: [:test]
 
