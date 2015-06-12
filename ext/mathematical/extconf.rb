@@ -39,7 +39,7 @@ FileUtils.mkdir_p(MTEX2MML_BUILD_DIR)
 # build mtex2MML library
 Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'cmake ..'
-  system 'make mtex2MML_static'
+  system 'make libmtex2MML_static'
 end
 
 FileUtils.cp_r(Dir.glob(File.join(MTEX2MML_DIR, 'build', '*.{a,h}')), File.dirname(__FILE__))
