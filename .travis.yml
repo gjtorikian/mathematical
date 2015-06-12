@@ -5,11 +5,10 @@ rvm:
   - 2.2
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get -qq -y install libxml2-dev libcairo2-dev libpango1.0-dev ttf-lyx
+  - script/bootstrap
 
-install:
-  - bundle install
+script:
+  - script/cibuild
 
 cache: bundler
 
