@@ -12,7 +12,7 @@ class Configuration
 
     def self.option_exists?(option)
       unless Delimiters.keys.include?(option)
-        fail StandardError, "delimiter type does not exist: #{option}"
+        fail TypeError, "delimiter type does not exist: #{option}"
       end
     end
   end

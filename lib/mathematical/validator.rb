@@ -11,8 +11,14 @@ class Mathematical
       fail(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(config[:format])
       if config[:delimiter].is_a?(Symbol)
         Configuration::Delimiters.option_exists?(config[:delimiter])
-      elsif !config[:delimiter].is_a?(Numeric)
-        fail(TypeError, 'delimiter type must be a valid symbol or integer')
+      elsif config[:delimiter].is_a?(Array)
+        config[:delimiter] = [nil] if config[:delimiter].empty?
+
+        config[:delimiter].each do |delim|
+          Configuration::Delimiters.option_exists?(delim)
+        end
+      else
+        fail(TypeError, 'delimiter type must be a valid symbol or array of symbols')
       end
     end
 

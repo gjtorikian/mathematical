@@ -88,8 +88,16 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
       Mathematical.new({ :delimiter => 'nope' }).render('$P$')
     end
 
-    assert_raises StandardError do
+    assert_raises TypeError do
       Mathematical.new({ :delimiter => :nope }).render('$P$',)
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => [:dollar, 23] }).render('$P$',)
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => [] }).render('$P$',)
     end
   end
 

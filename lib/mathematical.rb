@@ -17,7 +17,7 @@ class Mathematical
     :base64 => false,
     :maxsize => 0,
     :format => :svg,
-    :delimiter => 0
+    :delimiter => [:dollar, :double]
   }
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -31,6 +31,10 @@ class Mathematical
 
     if @config[:delimiter].is_a?(Symbol)
       @config[:delimiter] = Configuration::Delimiters.to_h[@config[:delimiter]]
+    else
+      @config[:delimiter] = @config[:delimiter].map do |delim|
+        Configuration::Delimiters.to_h[delim]
+      end.inject(0, :|)
     end
 
     @processer = Mathematical::Process.new(@config)

@@ -46,7 +46,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_mixed
-    render = Mathematical.new(:delimiter => (8 | 2), :format => :mathml)
+    render = Mathematical.new(:delimiter => [:brackets, :double], :format => :mathml)
 
     fixture_tex = "\\[\\alpha\\] $$\\beta$$"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'mixed.html')).strip
