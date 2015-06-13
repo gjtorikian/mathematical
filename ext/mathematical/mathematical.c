@@ -36,9 +36,6 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
-// defines the numeric equation label
-static int global_start = 1;
-
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
 {
   Check_Type (rb_Options, T_HASH);
@@ -99,13 +96,8 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
   /* convert the TeX math to MathML */
-  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start, delimiter, parse_type);
+  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, delimiter, parse_type);
   if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex"); }
-
-  /* basically, only update the next equation counter if the last math had a numbered equation */
-  if (strstr(mathml, "<mlabeledtr>") != NULL) {
-    global_start++;
-  }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_str_new2(mathml));
@@ -246,7 +238,6 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input, VALUE rb_ParseType
     int length = RARRAY_LEN(rb_Input), i;
     VALUE hash;
     output = rb_ary_new2(length);
-    global_start = 1;
 
     for (i = 0; i < length; i++) {
       /* grab the ith element */

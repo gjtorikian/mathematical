@@ -5,7 +5,7 @@
 #include "mtex2MML.h"
 
 char *
-lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start, int delimiter, int render_type)
+lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_type)
 {
   gsize usize;
   char *mathml;
