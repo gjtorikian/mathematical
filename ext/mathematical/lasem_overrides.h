@@ -1,3 +1,6 @@
+#ifndef LASEM_OVERRIDES_H
+#define LASEM_OVERRIDES_H
+
 #include <glib.h>
 
 #define PARSE 0
@@ -25,3 +28,5 @@ extern char * lsm_mtex_to_mathml (const char *mtex, gssize size, int global_star
  */
 
 extern void lsm_mtex_free_mathml_buffer (char *mathml);
+
+#endif

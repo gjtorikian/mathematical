@@ -1,3 +1,6 @@
+#ifndef MATHEMATICAL_H
+#define MATHEMATICAL_H
+
 #include "ruby.h"
 
 #include <string.h>
@@ -21,3 +24,5 @@ typedef enum {
   FORMAT_PNG,
   FORMAT_MATHML
 } FileFormat;
+
+#endif
