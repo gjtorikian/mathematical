@@ -2,7 +2,7 @@
 
 #include <lasem_overrides.h>
 #include <string.h>
-#include "mtex2mml.h"
+#include "mtex2MML.h"
 
 char *
 lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start, int delimiter, int render_type)
