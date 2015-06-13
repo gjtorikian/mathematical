@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w(lib ext)
   spec.extensions    = ['ext/mathematical/extconf.rb']
 
+  spec.add_dependency 'ruby-enum', '~> 0.4'
+
   spec.add_development_dependency 'rake', '~> 0.9'
   spec.add_development_dependency 'rake-compiler', '~> 0.9'
   spec.add_development_dependency 'bundler', '~> 1.5'
