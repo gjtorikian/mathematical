@@ -1,7 +1,7 @@
-require "test_helper"
+require 'test_helper'
+require 'nokogiri'
 
 class Mathematical::BasicTest < MiniTest::Test
-
   def test_it_has_a_version
     assert Mathematical::VERSION
   end
@@ -11,13 +11,66 @@ class Mathematical::BasicTest < MiniTest::Test
     render.render('$\pi$')
     output = render.render('$\pi$')[:data]
     assert_equal 1, output.scan(/<svg/).size, 'should only contain one svg'
+
+    # assert the SVG actually rendered
+    doc = Nokogiri::HTML(output)
+    assert_empty doc.search(%(//svg[@width='0pt']))
+    assert_empty doc.search(%(//svg[@height='0pt']))
   end
 
-  def test_handles_line_breaks
-    s = "$$x\ny$$"
-    render = Mathematical.new
-    output = render.render(s)[:data]
-    assert_equal 1, output.scan(/<svg/).size, 'should only contain one svg'
+  def test_inline
+    render = Mathematical.new(:format => :mathml)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'inline.txt'))
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'inline.html')).strip
+    result = render.parse(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
   end
 
+  def test_block
+    render = Mathematical.new(:format => :mathml)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'block.txt'))
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'block.html')).strip
+    result = render.parse(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
+  end
+
+
+  def test_filter
+    render = Mathematical.new(:format => :mathml)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'filter.txt'))
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'filter.html')).strip
+    result = render.filter(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
+  end
+
+  def test_text_filter
+    render = Mathematical.new(:format => :mathml)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'text_filter.txt'))
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'text_filter.html')).strip
+    result = render.text_filter(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
+  end
+
+  def test_strict_filter
+    render = Mathematical.new(:format => :mathml)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'strict_filter.txt'))
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'strict_filter.html')).strip
+    result = render.strict_filter(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
+  end
 end
