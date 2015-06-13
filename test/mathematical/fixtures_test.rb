@@ -1,4 +1,5 @@
-require "test_helper"
+require 'test_helper'
+require 'math-to-itex'
 
 class Mathematical::FixturesTest < MiniTest::Test
   # the same SVGs sometimes get random id values, throwing off the tests
@@ -13,7 +14,7 @@ class Mathematical::FixturesTest < MiniTest::Test
       source = File.read(before)
 
       if ENV['MATHEMATICAL_GENERATE_SAMPLE']
-        next unless name.match /compliance/
+        next unless name.match(/compliance/)
         write_sample(source)
       end
 

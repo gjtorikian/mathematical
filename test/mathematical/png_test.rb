@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class Mathematical::PNGTest < MiniTest::Test
   def before
