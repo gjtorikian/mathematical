@@ -30,7 +30,7 @@ require 'mathematical'
 Mathematical.new.render(string_with_math)
 ```
 
-`string_with_math` should just be a string of math TeX inline (`$..$`) or display (`$$..$$`) style math.
+`string_with_math` should just be a string of TeX math. The default delimiters are `$..$` for inline and `$$..$$` for display. These can be changed by options--see below.
 
 The output will be a hash, with keys that depend on the format you want:
 
@@ -44,11 +44,17 @@ The output will be a hash, with keys that depend on the format you want:
   * `:data`: the PNG data
 * If you asked for MathML, you'll get:
   * `:data`: the MathML data
-* If you pass in invalid LaTeX, you'll get:
-  * `:data`: the original invalid LaTeX
+* If you pass in invalid TeX, you'll get:
+  * `:data`: the original invalid TeX
   * `:exception`: the error class (with message)
 
-**Note**: If you pass in invalid LaTeX, an error is not raised, but a message *is* printed to STDERR. It is the caller's responsibility to check for `:exception` and act on it.
+**Note**: If you pass in invalid TeX, an error is not raised, but a message *is* printed to STDERR. It is the caller's responsibility to check for `:exception` and act on it.
+
+`render` just converts a single equation. There are several other methods you can use:
+
+* `filter`:  Given a string with a mix of TeX math and non-math elements, this returns a single string containing just the converted math elements.
+* `text_filter`: Given a string with a mix of TeX math and non-math elements, this converts all the math and leaves the rest of the string unmodified.
+* `strict_filter`:  Given a string with a mix of TeX math and non-math elements, this converts all the math and leaves the rest of the string unmodified. HTML tags are removed completely.
 
 ### Array of equations
 
@@ -69,7 +75,7 @@ This returns an array of hashes, rendering the indices. For example, for the abo
 [ {:data => "...", :width => ... }, { :data => '$not__thisisnotreal$', :exception => "...", {:data => "...", :width => ... }]
 ```
 
-That is, while the first and last elements are valid LaTeX math, the middle one is not, so the same string is returned. As with single strings, the error message is printed to STDERR, but not raised.
+That is, while the first and last elements are valid TeX math, the middle one is not, so the same string is returned. As with single strings, the error message is printed to STDERR, but not raised.
 
 ### Options
 
@@ -82,12 +88,13 @@ That is, while the first and last elements are valid LaTeX math, the middle one 
 | `:base64` | A boolean determining whether Mathematical's output should be a base64-encoded SVG string | `false`
 | `:maxsize` | A numeral indicating the `MAXSIZE` the output string can be. | `unsigned long`
 | `:format` | A symbol indicating whether you want an `:svg`, `:png`, or `:mathml` output. | `:svg`
+| `:delimiter` | A symbol indicating whether you want an `:dollar` for inline (`$..$`), `:double` for display (`$$..$$`), `:parens` for inline (`\(..\)`), or `:brackets` for display (`[..\]`). You can also pass in an array of symbols to have multiple delimiters considered. | `[:dollar, :double]`
 
 Pass these in like this:
 
 ``` ruby
-opts = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
-renderer = Mathematical.new(opts)
+options = { :ppi => 200.0, :zoom => 5.0, :base64 => true }
+renderer = Mathematical.new(options)
 renderer.render('$a \ne b$')
 ```
 
