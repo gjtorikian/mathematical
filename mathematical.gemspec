@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = %w(LICENSE.txt README.md Rakefile mathematical.gemspec)
   spec.files        += Dir.glob('lib/**/*.rb')
-  spec.files        += Dir.glob('ext/**/*.{a,c,h,l,y}')
+  spec.files        += Dir.glob('ext/**/*.{a,c,cmake,h,l,pc.in,txt,y}')
   spec.files        += Dir.glob('ext/**/extconf.rb')
   spec.files        += Dir.glob('ext/**/Makefile')
   spec.test_files    = Dir.glob('test/**/*')
