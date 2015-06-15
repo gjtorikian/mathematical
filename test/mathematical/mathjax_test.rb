@@ -5,14 +5,15 @@ class Mathematical::MathJaxTest < MiniTest::Test
 
   render_svg = Mathematical.new
 
-  MATHJAX_TEST_TEST_DIR = File.join('ext', 'mathematical', 'mtex2MML', 'tests', 'fixtures', 'MathJax')
-  MATHJAX_TEST_TEX_DIR = File.join(MATHJAX_TEST_TEST_DIR, 'LaTeXToMathML-tex')
-
   SKIPPED = []
-  Dir["#{MATHJAX_TEST_TEX_DIR}/**/*.txt"].each do |tex|
+  Dir["#{MATHJAX_TEX_DIR}/**/*.txt"].each do |tex|
     define_method "test_#{tex}" do
       tex_contents = File.read(tex)
-      data = render_svg.render(tex_contents)
+      data = nil
+
+      assert_silent do
+        data = render_svg.render(tex_contents)
+      end
 
       write_sample(tex_contents, File.basename(tex, '.txt')) if ENV['MATHEMATICAL_GENERATE_SAMPLE']
 

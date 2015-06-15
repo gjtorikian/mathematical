@@ -5,7 +5,9 @@ class Mathematical::BasicTest < MiniTest::Test
   def test_it_handles_big_files
     big_file = File.read('test/mathematical/fixtures/performance/big_file.text')
     speed = Benchmark.realtime do
-      MathToItex(big_file).convert { |equation| Mathematical.new.render(equation) }
+      assert_silent do
+        Mathematical.new.filter(big_file)
+      end
     end
 
     assert_operator speed, :<=, 5

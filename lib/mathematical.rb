@@ -1,5 +1,6 @@
 require 'mathematical/mathematical'
 
+require 'mathematical/configuration'
 require 'mathematical/corrections'
 require 'mathematical/validator'
 require 'mathematical/version'
@@ -15,25 +16,57 @@ class Mathematical
     :zoom => 1.0,
     :base64 => false,
     :maxsize => 0,
-    :format => :svg
+    :format => :svg,
+    :delimiter => [:dollar, :double]
   }
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 
-  def initialize(opts = {})
-    @config = DEFAULT_OPTS.merge(opts)
+  def initialize(options = {})
+    @config = DEFAULT_OPTS.merge(options)
 
     validate_config(@config)
 
     @config[:formatInt] = FORMAT_TYPES.index(@config[:format])
 
+    if @config[:delimiter].is_a?(Symbol)
+      @config[:delimiter] = Configuration::Delimiters.to_h[@config[:delimiter]]
+    else
+      @config[:delimiter] = @config[:delimiter].map do |delim|
+        Configuration::Delimiters.to_h[delim]
+      end.inject(0, :|)
+    end
+
     @processer = Mathematical::Process.new(@config)
   end
 
-  def render(maths)
+  def parse(maths)
     maths = validate_content(maths)
+    result_data = @processer.process(maths, RENDER_TYPES.find_index(:parse))
+    result(result_data)
+  end
+  # TODO: deprecate this?
+  alias_method :render, :parse
 
-    result_data = @processer.process(maths)
+  def filter(maths)
+    maths = validate_content(maths)
+    result_data = @processer.process(maths, RENDER_TYPES.find_index(:filter))
+    result(result_data)
+  end
+
+  def text_filter(maths)
+    maths = validate_content(maths)
+    result_data = @processer.process(maths, RENDER_TYPES.find_index(:text_filter))
+    result(result_data)
+  end
+
+  def strict_filter(maths)
+    maths = validate_content(maths)
+    result_data = @processer.process(maths, RENDER_TYPES.find_index(:strict_filter))
+    result(result_data)
+  end
+
+  def result(result_data)
     fail RuntimeError if !result_data.is_a?(Hash) && !result_data.is_a?(Array)
 
     if result_data.is_a? Array

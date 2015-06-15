@@ -1,5 +1,5 @@
 /****************************************************************************
-* Mathematical_rb Copyright(c) 2014, Garen J. Torikian, All rights reserved.
+* Mathematical Copyright(c) 2014, Garen J. Torikian, All rights reserved.
 * --------------------------------------------------------------------------
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -36,28 +36,28 @@ static VALUE rb_eDocumentCreationError;
 // Raised when the SVG document could not be read
 static VALUE rb_eDocumentReadError;
 
-// defines the numeric equation label
-static int global_start = 1;
-
 static VALUE MATHEMATICAL_init(VALUE self, VALUE rb_Options)
 {
   Check_Type (rb_Options, T_HASH);
-  VALUE rb_ppi, rb_zoom, rb_maxsize, rb_format;
+  VALUE rb_ppi, rb_zoom, rb_maxsize, rb_format, rb_delimiter;
 
   rb_ppi = rb_hash_aref(rb_Options, CSTR2SYM("ppi"));
   rb_zoom = rb_hash_aref(rb_Options, CSTR2SYM("zoom"));
   rb_maxsize = rb_hash_aref(rb_Options, CSTR2SYM("maxsize"));
   rb_format = rb_hash_aref(rb_Options, CSTR2SYM("formatInt"));
+  rb_delimiter = rb_hash_aref(rb_Options, CSTR2SYM("delimiter"));
 
   Check_Type(rb_ppi, T_FLOAT);
   Check_Type(rb_zoom, T_FLOAT);
   Check_Type(rb_maxsize, T_FIXNUM);
   Check_Type(rb_format, T_FIXNUM);
+  Check_Type(rb_delimiter, T_FIXNUM);
 
   rb_iv_set(self, "@ppi", rb_ppi);
   rb_iv_set(self, "@zoom", rb_zoom);
   rb_iv_set(self, "@maxsize", rb_maxsize);
   rb_iv_set(self, "@format", rb_format);
+  rb_iv_set(self, "@delimiter", rb_delimiter);
 
   rb_iv_set(self, "@png", Qnil);
   rb_iv_set(self, "@svg", Qnil);
@@ -86,7 +86,7 @@ static VALUE process_rescue(VALUE args, VALUE exception_object)
   return rescue_hash;
 }
 
-VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size)
+VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigned long latex_size, int delimiter, int parse_type)
 {
   if (latex_size > maxsize) {
     print_and_raise(rb_eMaxsizeError, "Size of latex string is greater than the maxsize");
@@ -95,14 +95,9 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   VALUE result_hash = rb_hash_new();
   FileFormat format = (FileFormat) FIX2INT(rb_iv_get(self, "@format"));
 
-  // convert the LaTeX math to MathML
-  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, global_start);
+  /* convert the TeX math to MathML */
+  char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, delimiter, parse_type);
   if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex"); }
-
-  // basically, only update the next equation counter if the last math had a numbered equation
-  if (strstr(mathml, "<mlabeledtr>") != NULL) {
-    global_start++;
-  }
 
   if (format == FORMAT_MATHML) {
     rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_str_new2(mathml));
@@ -185,28 +180,31 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   rb_hash_aset (result_hash, CSTR2SYM ("width"),  INT2FIX(width_pt));
   rb_hash_aset (result_hash, CSTR2SYM ("height"), INT2FIX(height_pt));
 
-  // we need to clear out this key when attempting multiple calls. See http://git.io/i1hblQ
+  /* we need to clear out this key when attempting multiple calls. See http://git.io/i1hblQ */
   rb_iv_set(self, "@svg", Qnil);
   rb_iv_set(self, "@png", Qnil);
 
   return result_hash;
 }
 
-// `process` can potentially raise a bunch of exceptions, so we need to wrap
-// the call in a rescue. And `rb_rescue` only takes one argument, so we need
-// to pack everything in an array, and then unpack it in `process_helper`.
+/* `process` can potentially raise a bunch of exceptions, so we need to wrap
+   the call in a rescue. And `rb_rescue` only takes one argument, so we need
+   to pack everything in an array, and then unpack it in `process_helper`. */
 static VALUE process_helper(VALUE data)
 {
   VALUE *args = (VALUE *) data;
 
-  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]));
+  return process(args[0], NUM2ULONG(args[1]), StringValueCStr(args[2]), NUM2ULONG(args[3]), NUM2INT(args[4]), NUM2INT(args[5]));
 }
 
-static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
+static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input, VALUE rb_ParseType)
 {
+  Check_Type(rb_ParseType, T_FIXNUM);
+
   unsigned long maxsize = (unsigned long) FIX2INT(rb_iv_get(self, "@maxsize"));
 
-  // make sure that the passed latex string is not larger than the maximum value of a signed long (or the maxsize option)
+  /* make sure that the passed latex string is not larger than the maximum value of
+    a signed long (or the maxsize option) */
   if (maxsize == 0) {
     maxsize = LONG_MAX;
   }
@@ -225,11 +223,13 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
     latex_code = StringValueCStr(rb_Input);
     latex_size = (unsigned long) strlen(latex_code);
 
-    VALUE args[4];
+    VALUE args[6];
     args[0] = self;
     args[1] = ULONG2NUM(maxsize);
     args[2] = rb_Input;
     args[3] = ULONG2NUM(latex_size);
+    args[4] = rb_iv_get(self, "@delimiter");
+    args[5] = rb_ParseType;
 
     output = rb_rescue(process_helper, args, process_rescue, rb_Input);
     break;
@@ -238,21 +238,22 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input)
     int length = RARRAY_LEN(rb_Input), i;
     VALUE hash;
     output = rb_ary_new2(length);
-    global_start = 1;
 
     for (i = 0; i < length; i++) {
-      // grab the ith element
+      /* grab the ith element */
       VALUE math = rb_ary_entry(rb_Input, i);
 
-      // get the string and length
+      /* get the string and length */
       latex_code = StringValueCStr(math);
       latex_size = (unsigned long) strlen(latex_code);
 
-      VALUE args[4];
+      VALUE args[6];
       args[0] = self;
       args[1] = ULONG2NUM(maxsize);
       args[2] = math;
       args[3] = ULONG2NUM(latex_size);
+      args[4] = rb_iv_get(self, "@delimiter");
+      args[5] = rb_ParseType;
 
       hash = rb_rescue(process_helper, args, process_rescue, math);
 
@@ -282,5 +283,5 @@ void Init_mathematical()
   rb_eDocumentReadError = rb_define_class_under(rb_mMathematical, "DocumentReadError", rb_eStandardError);
 
   rb_define_method(rb_cMathematicalProcess, "initialize", MATHEMATICAL_init, 1);
-  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 1);
+  rb_define_method(rb_cMathematicalProcess, "process", MATHEMATICAL_process, 2);
 }

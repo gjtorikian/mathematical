@@ -1,5 +1,12 @@
+#ifndef LASEM_OVERRIDES_H
+#define LASEM_OVERRIDES_H
+
 #include <glib.h>
-#include "mtex2MML.h"
+
+#define PARSE 0
+#define FILTER 1
+#define TEXT_FILTER 2
+#define STRICT_FILTER 3
 
 /**
  * lsm_mtex_to_mathml:
@@ -11,7 +18,7 @@
  * Return value: a newly allocated string, NULL on parse error. The returned data must be freed using @lsm_mtex_free_mathml_buffer.
  */
 
-extern char * lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start);
+extern char * lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_type);
 
 /**
  * lsm_mtex_free_mathml_buffer:
@@ -21,3 +28,5 @@ extern char * lsm_mtex_to_mathml (const char *mtex, gssize size, int global_star
  */
 
 extern void lsm_mtex_free_mathml_buffer (char *mathml);
+
+#endif

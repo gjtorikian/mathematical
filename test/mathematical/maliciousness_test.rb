@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class Mathematical::MaliciousnessTest < MiniTest::Test
 
@@ -19,7 +19,7 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
 
     # need to pass a string here
     render = Mathematical.new
-    assert_raises TypeError do
+    assert_raises ArgumentError do
       Mathematical.new.render(123)
     end
   end
@@ -65,38 +65,14 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
   end
 
   def test_it_does_not_blow_up_on_bad_input
-    assert_raises TypeError do
+    assert_raises ArgumentError do
       Mathematical.new.render(23)
     end
 
-    assert_raises ArgumentError do
-      Mathematical.new.render('No dollars')
-    end
-
-    assert_raises ArgumentError do
-      Mathematical.new.render('$$x')
-    end
-
-    assert_raises ArgumentError do
-      Mathematical.new.render('x$$')
-    end
-
-    assert_raises ArgumentError do
-      Mathematical.new.render('$$x$')
-    end
-
-    assert_raises ArgumentError do
-      Mathematical.new.render('$x$$')
-    end
-
-    assert_raises ArgumentError do
-      Mathematical.new.render('blah blah $x$ blah')
-    end
-
-    assert_raises ArgumentError do
-      array = %w(foof poof)
-      Mathematical.new.render(array)
-    end
+    # no delimiters
+    assert_equal Mathematical.new.render('x$$')[:exception].class, Mathematical::ParseError
+    assert_equal Mathematical.new.filter('$$x')[:exception].class, Mathematical::DocumentCreationError
+    assert_equal Mathematical.new.text_filter('No dollars')[:exception].class, Mathematical::DocumentCreationError
 
     assert_raises ArgumentError do
       array = ['$foof$', nil, '$poof$']
@@ -106,6 +82,22 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
     assert_raises ArgumentError do
       array = ['$x$', 4]
       Mathematical.new.render(array)
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => 'nope' }).render('$P$')
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => :nope }).render('$P$',)
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => [:dollar, 23] }).render('$P$',)
+    end
+
+    assert_raises TypeError do
+      Mathematical.new({ :delimiter => [] }).render('$P$',)
     end
   end
 

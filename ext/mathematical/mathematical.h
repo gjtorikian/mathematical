@@ -1,3 +1,6 @@
+#ifndef MATHEMATICAL_H
+#define MATHEMATICAL_H
+
 #include "ruby.h"
 
 #include <string.h>
@@ -13,7 +16,6 @@
 #include <gio/gio.h>
 #include <cairo-svg.h>
 
-#include "mtex2MML.h"
 #include <cairo_callbacks.h>
 #include <lasem_overrides.h>
 
@@ -22,3 +24,5 @@ typedef enum {
   FORMAT_PNG,
   FORMAT_MATHML
 } FileFormat;
+
+#endif

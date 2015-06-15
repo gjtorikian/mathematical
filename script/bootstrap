@@ -14,7 +14,7 @@ bundle install --local --binstubs --path vendor/cache "$@"
 echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
-  for pkg in glib gdk-pixbuf cairo pango; do
+  for pkg in glib gdk-pixbuf cairo pango cmake; do
     if brew list -1 | grep -q "^${pkg}\$"; then
         echo "Package '$pkg' is installed"
     else
@@ -24,4 +24,11 @@ if [ "$(uname)" == "Darwin" ]; then
   done
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
   sudo apt-get -qq -y install bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev ttf-lyx
+
+  if [ ${TRAVIS_OS_NAME:-'linux'} = 'linux' ]
+  then
+      echo 'yes' | sudo add-apt-repository ppa:kalakris/cmake
+      sudo apt-get update -qq
+      sudo apt-get install -qq cmake
+  fi
 fi

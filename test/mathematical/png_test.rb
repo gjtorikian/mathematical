@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class Mathematical::PNGTest < MiniTest::Test
   def before
@@ -16,10 +16,10 @@ class Mathematical::PNGTest < MiniTest::Test
      \end{pmatrix}
 $$
 '''
-    render = Mathematical.new({:format => :png})
+    render = Mathematical.new({ :format => :png })
     data_hash = render.render(string)
     header = data_hash[:data].unpack('H*').first.slice(0, 18)
-    File.open("#{fixtures_dir}/png/pmatrix.png", 'w') { |f| f.write(data_hash[:data])}
+    File.open("#{fixtures_dir}/png/pmatrix.png", 'w') { |f| f.write(data_hash[:data]) }
     assert_equal header, '89504e470d0a1a0a00'
   end
 end

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+bundle exec rake compile
+
+bundle exec rake test

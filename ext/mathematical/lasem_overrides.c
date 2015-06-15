@@ -1,10 +1,15 @@
+#include "ruby.h"
+
 #include <lasem_overrides.h>
+#include <string.h>
+#include "mtex2MML.h"
 
 char *
-lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
+lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_type)
 {
   gsize usize;
   char *mathml;
+  int status = 0;
 
   if (mtex == NULL) {
     return NULL;
@@ -16,8 +21,32 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int global_start)
     usize = size;
   }
 
-  mathml = mtex2MML_global_parse (mtex, usize, global_start);
-  if (mathml == NULL) {
+  switch (render_type) {
+  case PARSE:
+    mathml = mtex2MML_parse(mtex, usize, delimiter);
+    if (mathml == NULL) {
+      status = 1;
+    }
+    break;
+  case FILTER:
+    status = mtex2MML_filter(mtex, usize, delimiter);
+    mathml = mtex2MML_output();
+    break;
+  case TEXT_FILTER:
+    status = mtex2MML_text_filter(mtex, usize, delimiter);
+    mathml = mtex2MML_output();
+    break;
+  case STRICT_FILTER:
+    status = mtex2MML_strict_filter(mtex, usize, delimiter);
+    mathml = mtex2MML_output();
+    break;
+  default:
+    /* should be impossible, Ruby code prevents this */
+    print_and_raise(rb_eTypeError, "not valid render format");
+    break;
+  }
+
+  if (status) {
     return NULL;
   }
 
