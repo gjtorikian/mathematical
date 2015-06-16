@@ -1,7 +1,9 @@
 #!/usr/bin/ruby
 
 lib = File.expand_path('../../lib', __FILE__)
+dep = File.expand_path('../../vendor/cache/ruby/2.1.0/gems/ruby-enum-0.4.0/lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$LOAD_PATH.unshift(dep) unless $LOAD_PATH.include?(dep)
 require 'mathematical'
 
 if ENV['MATHEMATICAL_GENERATE_SAMPLE']
