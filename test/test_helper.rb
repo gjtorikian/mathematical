@@ -2,6 +2,7 @@ require 'bundler/setup'
 require 'mathematical'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'math-to-itex'
 require 'pp'
 
 MTEX2MML_FIXTURES_DIR = File.join('ext', 'mathematical', 'mtex2MML', 'tests', 'fixtures')
