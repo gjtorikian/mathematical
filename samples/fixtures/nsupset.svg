@@ -11,11 +11,11 @@
 <path style="stroke:none;" d=""/>
 </symbol>
 <symbol overflow="visible" id="glyph1-1">
-<path style="stroke:none;" d="M 2.628906 -9.804688 L 3.394531 -9.804688 L 3.394531 0.421875 L 2.628906 0.421875 Z "/>
+<path style="stroke:none;" d="M 2.628906 0.421875 L 3.394531 0.421875 L 3.394531 -9.804688 L 2.628906 -9.804688 Z "/>
 </symbol>
 </g>
 </defs>
-<g id="surface2301">
+<g id="surface973">
 <g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
   <use xlink:href="#glyph0-1" x="9.636719" y="9.803711"/>
 </g>
