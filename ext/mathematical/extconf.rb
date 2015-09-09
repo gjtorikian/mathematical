@@ -57,6 +57,6 @@ HEADER_DIRS << MTEX2MML_BUILD_DIR
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML"
-$CFLAGS << " #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
+$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
 
 create_makefile('mathematical/mathematical')
