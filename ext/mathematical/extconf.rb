@@ -12,7 +12,9 @@ unless find_executable('cmake')
 end
 
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
-LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem', 'src'))
+LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
+LASEM_SRC_DIR = File.join(LASEM_DIR, 'src')
+LASEM_LIB_DIR = File.join(LASEM_SRC_DIR, '.libs')
 MTEX2MML_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'mtex2MML'))
 MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, 'build')
 MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
@@ -30,11 +32,6 @@ find_header('libxml/parser.h', '/include/libxml2', '/usr/include/libxml2', '/usr
 find_header('libxml/xpath.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
 find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
 
-# TODO: this is so frakkin' stupid. but I can't seem to get subdirs to compile any other way
-# the `destroy_copies` task, immediately after `compile`, will destroy these files
-FileUtils.cp_r(Dir.glob("#{LASEM_DIR}/*"), File.dirname(__FILE__))
-File.delete(File.join(File.dirname(__FILE__), 'lasemrender.c'))
-
 # TODO: we need to clear out the build dir that's erroneously getting packaged
 # this causes problems, as Linux installation is expecting OS X output
 if File.directory?(MTEX2MML_BUILD_DIR) && !File.exist?(ROOT_TMP)
@@ -48,13 +45,24 @@ Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'make libmtex2MML_static'
 end
 
+# build Lasem library
+# MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
+Dir.chdir(LASEM_DIR) do
+  system './autogen.sh'
+  system 'make install'
+end
+
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
-FileUtils.cp_r(File.join(MTEX2MML_SRC_DIR, 'mtex2MML.h'), File.dirname(__FILE__))
 
-LIB_DIRS = [LIBDIR, MTEX2MML_LIB_DIR]
-HEADER_DIRS << MTEX2MML_BUILD_DIR
+LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR, LIBDIR]
+HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
+
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
+
+unless find_library('lasem-0.6.5', 'lsm_dom_document_create_view')
+  abort 'liblasem is missing.'
+end
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
