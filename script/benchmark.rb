@@ -1,5 +1,7 @@
 #!/usr/bin/ruby
 
+# Run with `bundle exec rake benchmark`
+
 require 'mathematical'
 require 'benchmark'
 require 'math-to-itex'
