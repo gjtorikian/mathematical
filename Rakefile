@@ -20,14 +20,6 @@ end
 
 Gem::PackageTask.new(spec)
 
-Rake::Task['compile'].enhance do
-  Rake::Task['destroy_copies'].invoke
-end
-
-Rake::Task['clean'].enhance do
-  Rake::Task['destroy_copies'].invoke
-end
-
 Rake::Task[:test].prerequisites
 
 task default: [:test]
@@ -41,19 +33,6 @@ task :copy_samples do
 
     system "cp -r #{tmp}/samples ."
   end
-end
-
-task :destroy_copies do
-  safe_files = [/extconf.rb/, /mathematical\.(?:c|h)/, /lasem_overrides/, /cairo_callbacks/]
-  ext_dir = File.join(File.dirname(__FILE__), 'ext', 'mathematical')
-  Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
-    next if safe_files.any? { |s| f =~ s }
-    File.delete(f)
-  end
-  Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
-  FileUtils.rm_rf(File.join(ext_dir, 'mtex2MML', 'build'))
-  FileUtils.rm_rf(File.join(ext_dir, 'lib'))
-  FileUtils.rm_rf(File.join(ext_dir, 'Testing'))
 end
 
 desc 'Pretty format C code'
