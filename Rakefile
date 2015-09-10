@@ -4,7 +4,10 @@ require 'bundler/gem_tasks'
 require 'rake/testtask'
 require 'fileutils'
 require 'tmpdir'
-require_relative 'ext/mathematical/extconf'
+
+LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'ext', 'mathematical', 'lasem'))
+LASEM_SRC_DIR = File.join(LASEM_DIR, 'src')
+LASEM_LIB_DIR = File.join(LASEM_SRC_DIR, '.libs')
 
 Rake::TestTask.new do |t|
   t.libs << 'test'
