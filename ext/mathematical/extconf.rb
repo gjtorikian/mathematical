@@ -4,7 +4,6 @@ require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
-HEADER_DIRS = [INCLUDEDIR]
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -49,20 +48,22 @@ end
 # MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
 Dir.chdir(LASEM_DIR) do
   system './autogen.sh'
-  system 'make install'
+  system 'make'
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
 
-LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR, LIBDIR]
+LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
 
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
-unless find_library('lasem-0.6.5', 'lsm_dom_document_create_view')
+unless find_library('lasem-0.6.5', 'lsm_dom_document_create_view', LASEM_LIB_DIR)
   abort 'liblasem is missing.'
 end
+
+find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"

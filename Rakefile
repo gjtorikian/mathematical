@@ -2,9 +2,9 @@
 
 require 'bundler/gem_tasks'
 require 'rake/testtask'
-require 'rbconfig'
 require 'fileutils'
 require 'tmpdir'
+require_relative 'ext/mathematical/extconf'
 
 Rake::TestTask.new do |t|
   t.libs << 'test'
@@ -20,9 +20,17 @@ end
 
 Gem::PackageTask.new(spec)
 
+task :compile => [:set_vars]
+
 Rake::Task[:test].prerequisites
 
 task default: [:test]
+
+desc 'Sets necessary environment variables for dynamically linking Lasem'
+task :set_vars do
+  ENV['DYLD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['DYLD_LIBRARY_PATH']}"
+  ENV['LD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['LD_LIBRARY_PATH']}"
+end
 
 desc 'Copy samples to gh-pages'
 task :copy_samples do
