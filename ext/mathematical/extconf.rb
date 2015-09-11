@@ -60,13 +60,13 @@ HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
 
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
-unless find_library('lasem-0.6.5', 'lsm_dom_document_create_view', LASEM_LIB_DIR)
+unless Dir.exist?(LASEM_LIB_DIR)
   abort 'liblasem is missing.'
 end
 
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
-$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML"
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML -llasem-0.6"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
 
 create_makefile('mathematical/mathematical')
