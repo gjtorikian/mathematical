@@ -48,6 +48,7 @@ end
 # MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
 Dir.chdir(LASEM_DIR) do
   system './autogen.sh'
+  system 'make clean' # being cautious
   system 'make'
 end
 
