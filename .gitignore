@@ -27,3 +27,5 @@ test/tmp
 test/version_tmp
 text.html
 tmp
+mkmf.log
+Makefile

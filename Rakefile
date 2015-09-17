@@ -2,9 +2,12 @@
 
 require 'bundler/gem_tasks'
 require 'rake/testtask'
-require 'rbconfig'
 require 'fileutils'
 require 'tmpdir'
+
+LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'ext', 'mathematical', 'lasem'))
+LASEM_SRC_DIR = File.join(LASEM_DIR, 'src')
+LASEM_LIB_DIR = File.join(LASEM_SRC_DIR, '.libs')
 
 Rake::TestTask.new do |t|
   t.libs << 'test'
@@ -20,17 +23,17 @@ end
 
 Gem::PackageTask.new(spec)
 
-Rake::Task['compile'].enhance do
-  Rake::Task['destroy_copies'].invoke
-end
-
-Rake::Task['clean'].enhance do
-  Rake::Task['destroy_copies'].invoke
-end
+task :compile => [:set_vars]
 
 Rake::Task[:test].prerequisites
 
 task default: [:test]
+
+desc 'Sets necessary environment variables for dynamically linking Lasem'
+task :set_vars do
+  ENV['DYLD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['DYLD_LIBRARY_PATH']}"
+  ENV['LD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['LD_LIBRARY_PATH']}"
+end
 
 desc 'Copy samples to gh-pages'
 task :copy_samples do
@@ -41,19 +44,6 @@ task :copy_samples do
 
     system "cp -r #{tmp}/samples ."
   end
-end
-
-task :destroy_copies do
-  safe_files = [/extconf.rb/, /mathematical\.(?:c|h)/, /lasem_overrides/, /cairo_callbacks/]
-  ext_dir = File.join(File.dirname(__FILE__), 'ext', 'mathematical')
-  Dir.glob("#{ext_dir}/*").select { |f| File.file?(f) }.each do |f|
-    next if safe_files.any? { |s| f =~ s }
-    File.delete(f)
-  end
-  Dir.glob("#{ext_dir}/{lib,src,test,ext,deps,uthash}").select { |d| FileUtils.rm_rf d }
-  FileUtils.rm_rf(File.join(ext_dir, 'mtex2MML', 'build'))
-  FileUtils.rm_rf(File.join(ext_dir, 'lib'))
-  FileUtils.rm_rf(File.join(ext_dir, 'Testing'))
 end
 
 desc 'Pretty format C code'
