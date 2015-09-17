@@ -21,13 +21,23 @@ Rake::ExtensionTask.new('mathematical', spec) do |ext|
   ext.lib_dir = File.join('lib', 'mathematical')
 end
 
+task default: [:test]
+
 Gem::PackageTask.new(spec)
 
 task :compile => [:set_vars]
 
 Rake::Task[:test].prerequisites
 
-task default: [:test]
+Rake::Task[:release].enhance [:clean]
+
+Rake::Task[:release].enhance do
+  Rake::Task[:clean].invoke
+end
+
+Rake::Task[:clean].enhance do
+  Dir.chdir(LASEM_DIR) { puts `make clean` }
+end
 
 desc 'Sets necessary environment variables for dynamically linking Lasem'
 task :set_vars do
