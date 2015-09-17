@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = %w(LICENSE.txt README.md Rakefile mathematical.gemspec)
   spec.files        += Dir.glob('lib/**/*.rb')
-  spec.files        += Dir['ext/**/*'].reject { |f| f =~ /tests/ }
+  spec.files        += Dir['ext/**/*'].reject { |f| f =~ /\.svg$|\.mml$|\.png$|\.o$/ }
   spec.test_files    = Dir.glob('test/**/*')
   spec.require_paths = %w(lib ext)
   spec.extensions    = ['ext/mathematical/extconf.rb']
