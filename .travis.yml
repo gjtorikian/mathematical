@@ -4,6 +4,8 @@ rvm:
   - 2.1
   - 2.2
 
+sudo: false
+
 script:
   - script/cibuild
 
