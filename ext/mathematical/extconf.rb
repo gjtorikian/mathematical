@@ -51,7 +51,6 @@ Dir.chdir(LASEM_DIR) do
 end
 
 Dir.chdir(LASEM_SRC_DIR) do
-  system 'make clean' # being cautious
   system 'make'
 end
 
