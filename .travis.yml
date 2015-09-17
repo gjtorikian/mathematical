@@ -4,13 +4,30 @@ rvm:
   - 2.1
   - 2.2
 
-before_install:
-  - script/bootstrap
+sudo: false
 
 script:
   - script/cibuild
 
-cache: bundler
+cache:
+  - bundler
+  - apt
 
 git:
   depth: 10
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - bison
+    - flex
+    - libffi-dev
+    - libxml2-dev
+    - libgdk-pixbuf2.0-dev
+    - libcairo2-dev
+    - libpango1.0-dev
+    - ttf-lyx
+    - intltool
+    - gobject-introspection
+    - gtk-doc-tools
