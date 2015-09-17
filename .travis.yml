@@ -7,10 +7,9 @@ rvm:
 script:
   - script/cibuild
 
-install: bundle install --local
 cache:
-  directories:
-  - vendor/cache
+  - bundler
+  - apt
 
 git:
   depth: 10
