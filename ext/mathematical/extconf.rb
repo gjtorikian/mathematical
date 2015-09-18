@@ -97,7 +97,8 @@ end
 
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
-$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML -llasem-0.6"
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
+$LIBS << ' -lmtex2MML -llasem-0.6'
 
 create_makefile('mathematical/mathematical')
