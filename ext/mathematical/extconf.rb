@@ -44,11 +44,23 @@ Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'make libmtex2MML_static'
 end
 
+IT_PROG_INTLTOOL = /^IT_PROG_INTLTOOL\(.+?\)/
+GTK_DOC_CHECK = /^GTK_DOC_CHECK\(.+?\)/
+AM_CONDITIONAL = '[test "x$enable_gtk_doc" = "xyes" || test ! -f "autogen.sh"]'
+
 # build Lasem library
 # MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
 Dir.chdir(LASEM_DIR) do
+  original_configureac = File.read('configure.ac')
+  modified_configureac = original_configureac.sub(IT_PROG_INTLTOOL, '')
+  modified_configureac = modified_configureac.sub(GTK_DOC_CHECK, '')
+  modified_configureac = modified_configureac.sub(AM_CONDITIONAL, '[false]')
+  File.write('configure.ac', modified_configureac)
+
   system './autogen.sh'
-  system 'make'
+  system 'echo \'all:\' > tests/Makefile ; make'
+
+  # File.write('configure.ac', original_configureac)
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
