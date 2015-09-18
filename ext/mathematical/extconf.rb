@@ -75,8 +75,6 @@ Dir.chdir(LASEM_DIR) do
 
   system './autogen.sh'
   system 'echo \'all:\' > tests/Makefile ; make'
-
-  # File.write('configure.ac', original_configureac)
 end
 
 if HOST_OS =~ /darwin|mac os/
