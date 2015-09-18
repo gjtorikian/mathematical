@@ -47,6 +47,18 @@ end
 IT_PROG_INTLTOOL = /^IT_PROG_INTLTOOL\(.+?\)/
 GTK_DOC_CHECK = /^GTK_DOC_CHECK\(.+?\)/
 AM_CONDITIONAL = '[test "x$enable_gtk_doc" = "xyes" || test ! -f "autogen.sh"]'
+LIBTOOL = <<-eos
+    if ["`uname`" = "Darwin"]; then
+     glibtoolize --force --copy
+    else
+     libtoolize --force --copy
+    fi
+eos
+
+LIBTOOL_MODIFIED = <<-eos
+    case `uname` in Darwin*) glibtoolize --force --copy ;;
+    *) libtoolize --force --copy ;; esac
+eos
 
 # build Lasem library
 # MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
@@ -56,6 +68,10 @@ Dir.chdir(LASEM_DIR) do
   modified_configureac = modified_configureac.sub(GTK_DOC_CHECK, '')
   modified_configureac = modified_configureac.sub(AM_CONDITIONAL, '[false]')
   File.write('configure.ac', modified_configureac)
+
+  original_autogensh = File.read('autogen.sh')
+  modified_autogensh = original_autogensh.sub(LIBTOOL, LIBTOOL_MODIFIED)
+  File.write('autogen.sh', modified_autogensh)
 
   system './autogen.sh'
   system 'echo \'all:\' > tests/Makefile ; make'
