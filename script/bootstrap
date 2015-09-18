@@ -14,7 +14,7 @@ bundle install --local --binstubs --path vendor/cache "$@"
 echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
-  for pkg in glib gdk-pixbuf cairo pango cmake gobject-introspection; do
+  for pkg in glib gdk-pixbuf cairo pango cmake gobject-introspection autoconf automake libtool; do
     if brew list -1 | grep -q "^${pkg}\$"; then
         echo "Package '$pkg' is installed"
     else
