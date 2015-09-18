@@ -79,6 +79,10 @@ Dir.chdir(LASEM_DIR) do
   # File.write('configure.ac', original_configureac)
 end
 
+if HOST_OS =~ /darwin|mac os/
+  FileUtils.cp_r("#{LASEM_LIB_DIR}/liblasem-0.6.5.dylib", '/usr/local/lib')
+end
+
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
 
