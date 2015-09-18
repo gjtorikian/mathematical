@@ -20,6 +20,8 @@ Or install it yourself as:
 
     $ gem install mathematical
 
+**Note:** you'll probably need to run [`script/bootstrap`](script/bootstrap) to fetch all the necessary dependencies.
+
 ## Usage
 
 The simplest way to do this is
