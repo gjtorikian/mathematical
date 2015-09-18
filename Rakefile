@@ -27,11 +27,7 @@ Gem::PackageTask.new(spec)
 
 Rake::Task[:test].prerequisites
 
-Rake::Task[:release].enhance [:clean]
-
-Rake::Task[:release].enhance do
-  Rake::Task[:clean].invoke
-end
+task :build => [:clean]
 
 Rake::Task[:clean].enhance do
   Dir.chdir(LASEM_DIR) { puts `make clean` }
