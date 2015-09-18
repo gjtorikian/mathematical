@@ -25,8 +25,6 @@ task default: [:test]
 
 Gem::PackageTask.new(spec)
 
-task :compile => [:set_vars]
-
 Rake::Task[:test].prerequisites
 
 Rake::Task[:release].enhance [:clean]
@@ -37,12 +35,6 @@ end
 
 Rake::Task[:clean].enhance do
   Dir.chdir(LASEM_DIR) { puts `make clean` }
-end
-
-desc 'Sets necessary environment variables for dynamically linking Lasem'
-task :set_vars do
-  ENV['DYLD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['DYLD_LIBRARY_PATH']}"
-  ENV['LD_LIBRARY_PATH'] = "#{LASEM_LIB_DIR}:#{ENV['LD_LIBRARY_PATH']}"
 end
 
 desc 'Copy samples to gh-pages'
