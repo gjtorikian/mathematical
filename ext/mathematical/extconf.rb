@@ -44,11 +44,43 @@ Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'make libmtex2MML_static'
 end
 
+IT_PROG_INTLTOOL = /^IT_PROG_INTLTOOL\(.+?\)/
+GTK_DOC_CHECK = /^GTK_DOC_CHECK\(.+?\)/
+AM_CONDITIONAL = '[test "x$enable_gtk_doc" = "xyes" || test ! -f "autogen.sh"]'
+LIBTOOL = <<-eos
+    if ["`uname`" = "Darwin"]; then
+     glibtoolize --force --copy
+    else
+     libtoolize --force --copy
+    fi
+eos
+
+LIBTOOL_MODIFIED = <<-eos
+    case `uname` in Darwin*) glibtoolize --force --copy ;;
+    *) libtoolize --force --copy ;; esac
+eos
+
 # build Lasem library
 # MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
 Dir.chdir(LASEM_DIR) do
+  original_configureac = File.read('configure.ac')
+  modified_configureac = original_configureac.sub(IT_PROG_INTLTOOL, '')
+  modified_configureac = modified_configureac.sub(GTK_DOC_CHECK, '')
+  modified_configureac = modified_configureac.sub(AM_CONDITIONAL, '[false]')
+  File.write('configure.ac', modified_configureac)
+
+  original_autogensh = File.read('autogen.sh')
+  modified_autogensh = original_autogensh.sub(LIBTOOL, LIBTOOL_MODIFIED)
+  File.write('autogen.sh', modified_autogensh)
+
   system './autogen.sh'
-  system 'make'
+  system 'echo \'all:\' > tests/Makefile ; make'
+
+  # File.write('configure.ac', original_configureac)
+end
+
+if HOST_OS =~ /darwin|mac os/
+  FileUtils.cp_r("#{LASEM_LIB_DIR}/liblasem-0.6.5.dylib", '/usr/local/lib')
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
@@ -65,7 +97,8 @@ end
 
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
-$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -lmtex2MML -llasem-0.6"
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
+$LIBS << ' -lmtex2MML -llasem-0.6'
 
 create_makefile('mathematical/mathematical')
