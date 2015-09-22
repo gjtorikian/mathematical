@@ -43,7 +43,6 @@ pkg_check_modules(PANGO_CAIRO REQUIRED pangocairo)
 
 include_directories(${LIBRARY}
   ${INCLUDE_DIRS}
-  ${LASEM_HEADERS}
   ${GLIB2_INCLUDE_DIRS}
   ${CAIRO_INCLUDE_DIRS}
   ${PANGO_INCLUDE_DIRS}
