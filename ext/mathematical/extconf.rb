@@ -4,6 +4,11 @@ require 'rbconfig'
 HOST_OS    = RbConfig::CONFIG['host_os']
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
+SHARED_EXT = if HOST_OS =~ /darwin|mac os/
+               'dylib'
+             else
+               'so'
+             end
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -63,7 +68,7 @@ FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
 
 FileUtils.mkdir_p(LASEM_LIB_DIR)
-FileUtils.cp_r(File.join(LASEM_BUILD_DIR, 'liblasem.dylib'), LASEM_LIB_DIR)
+FileUtils.cp_r(File.join(LASEM_BUILD_DIR, "liblasem.#{SHARED_EXT}"), LASEM_LIB_DIR)
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
