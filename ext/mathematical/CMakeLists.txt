@@ -33,6 +33,11 @@ add_library(${LIBRARY} SHARED
             ${LASEM_SRC}
 )
 
+#
+#
+#   Find the `pkg-config` modules
+#
+#
 pkg_check_modules(GLIB2 REQUIRED glib-2.0)
 pkg_check_modules(CAIRO REQUIRED cairo)
 pkg_check_modules(PANGO REQUIRED pango)
@@ -40,6 +45,12 @@ pkg_check_modules(GDK-PIXBUF2 REQUIRED gdk-pixbuf-2.0)
 pkg_check_modules(LIBXML2 REQUIRED libxml-2.0)
 pkg_check_modules(GIO2 REQUIRED gio-2.0)
 pkg_check_modules(PANGO_CAIRO REQUIRED pangocairo)
+
+#
+#
+#   Add the headers and libraries
+#
+#
 
 include_directories(${LIBRARY}
   ${INCLUDE_DIRS}
