@@ -8,6 +8,11 @@
 #define TEXT_FILTER 2
 #define STRICT_FILTER 3
 
+/* Dummies for mtex2MML_free_string */
+void itex2MML_free_string (char * str);
+void lsm_itex_free_mathml_buffer	(char *mathml);
+char * lsm_itex_to_mathml (const char *itex, gssize size);
+
 /**
  * lsm_mtex_to_mathml:
  * @mtex: (allow-none): an mtex string

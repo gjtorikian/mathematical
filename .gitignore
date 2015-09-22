@@ -29,3 +29,5 @@ text.html
 tmp
 mkmf.log
 Makefile
+ext/mathematical/build
+ext/mathematical/lasem/build

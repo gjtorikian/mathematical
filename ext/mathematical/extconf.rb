@@ -1,7 +1,7 @@
 require 'mkmf'
 require 'rbconfig'
 
-HOST_OS = RbConfig::CONFIG['host_os']
+HOST_OS    = RbConfig::CONFIG['host_os']
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
 
@@ -11,13 +11,16 @@ unless find_executable('cmake')
 end
 
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
+
 LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
-LASEM_SRC_DIR = File.join(LASEM_DIR, 'src')
-LASEM_LIB_DIR = File.join(LASEM_SRC_DIR, '.libs')
+LASEM_BUILD_DIR = File.join(LASEM_DIR, 'build')
+LASEM_SRC_DIR = File.expand_path(File.join(LASEM_DIR, 'src'))
+LASEM_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+
 MTEX2MML_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'mtex2MML'))
 MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, 'build')
-MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, 'src'))
+MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 if HOST_OS =~ /darwin|mac os/
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
@@ -33,10 +36,15 @@ find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2
 
 # TODO: we need to clear out the build dir that's erroneously getting packaged
 # this causes problems, as Linux installation is expecting OS X output
-if File.directory?(MTEX2MML_BUILD_DIR) && !File.exist?(ROOT_TMP)
-  FileUtils.rm_rf(MTEX2MML_BUILD_DIR)
+def clean_dir(dir)
+  if File.directory?(dir) && !File.exist?(ROOT_TMP)
+    FileUtils.rm_rf(dir)
+  end
+  FileUtils.mkdir_p(dir)
 end
-FileUtils.mkdir_p(MTEX2MML_BUILD_DIR)
+
+clean_dir(MTEX2MML_BUILD_DIR)
+clean_dir(LASEM_BUILD_DIR)
 
 # build mtex2MML library
 Dir.chdir(MTEX2MML_BUILD_DIR) do
@@ -44,59 +52,28 @@ Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'make libmtex2MML_static'
 end
 
-IT_PROG_INTLTOOL = /^IT_PROG_INTLTOOL\(.+?\)/
-GTK_DOC_CHECK = /^GTK_DOC_CHECK\(.+?\)/
-AM_CONDITIONAL = '[test "x$enable_gtk_doc" = "xyes" || test ! -f "autogen.sh"]'
-LIBTOOL = <<-eos
-    if ["`uname`" = "Darwin"]; then
-     glibtoolize --force --copy
-    else
-     libtoolize --force --copy
-    fi
-eos
-
-LIBTOOL_MODIFIED = <<-eos
-    case `uname` in Darwin*) glibtoolize --force --copy ;;
-    *) libtoolize --force --copy ;; esac
-eos
-
 # build Lasem library
-# MUST BE DYNAMICALLY LINKED for potential LGPL copyright issues
-Dir.chdir(LASEM_DIR) do
-  original_configureac = File.read('configure.ac')
-  modified_configureac = original_configureac.sub(IT_PROG_INTLTOOL, '')
-  modified_configureac = modified_configureac.sub(GTK_DOC_CHECK, '')
-  modified_configureac = modified_configureac.sub(AM_CONDITIONAL, '[false]')
-  File.write('configure.ac', modified_configureac)
-
-  original_autogensh = File.read('autogen.sh')
-  modified_autogensh = original_autogensh.sub(LIBTOOL, LIBTOOL_MODIFIED)
-  File.write('autogen.sh', modified_autogensh)
-
-  system './autogen.sh'
-  system 'echo \'all:\' > tests/Makefile ; make'
-end
-
-if HOST_OS =~ /darwin|mac os/
-  FileUtils.cp_r("#{LASEM_LIB_DIR}/liblasem-0.6.5.dylib", '/usr/local/lib')
+# SHOULD BE DYNAMICALLY LINKED for potential LGPL copyright issues
+Dir.chdir(LASEM_BUILD_DIR) do
+  system 'cmake ../..'
+  system 'make'
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
+
+FileUtils.mkdir_p(LASEM_LIB_DIR)
+FileUtils.cp_r(File.join(LASEM_BUILD_DIR, 'liblasem.dylib'), LASEM_LIB_DIR)
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
 
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
-unless Dir.exist?(LASEM_LIB_DIR)
-  abort 'liblasem is missing.'
-end
-
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} -I#{LASEM_DIR}"
-$LIBS << ' -lmtex2MML -llasem-0.6'
+$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
+$LIBS << ' -lmtex2MML -llasem'
 
 create_makefile('mathematical/mathematical')
