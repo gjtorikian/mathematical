@@ -4,9 +4,7 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mathematical'
 
-`bundle exec rake compile`
-
-svg = Mathematical::Render.new.render('$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$')['svg']
+svg = Mathematical.new.render('$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$')[:data]
 
 text = """
 <html>
