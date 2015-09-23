@@ -69,7 +69,7 @@ if !using_system_lasem?
     system 'make'
   end
 else
-  # dir_config('lasem').any? or pkg_config('liblasem')
+  dir_config('lasem').any? || pkg_config('liblasem') || system('dpkg -s lasem >/dev/null')
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
