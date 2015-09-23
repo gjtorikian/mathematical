@@ -15,6 +15,10 @@ unless find_executable('cmake')
   exit 1
 end
 
+def using_system_lasem?
+  arg_config('--use-system-lasem', !!ENV['MATHEMATICAL_USE_SYSTEM_LASEM'])
+end
+
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
 
 LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
@@ -57,11 +61,15 @@ Dir.chdir(MTEX2MML_BUILD_DIR) do
   system 'make libmtex2MML_static'
 end
 
-# build Lasem library
-# SHOULD BE DYNAMICALLY LINKED for potential LGPL copyright issues
-Dir.chdir(LASEM_BUILD_DIR) do
-  system 'cmake ../..'
-  system 'make'
+if !using_system_lasem?
+  # build Lasem library
+  # SHOULD BE DYNAMICALLY LINKED for potential LGPL copyright issues
+  Dir.chdir(LASEM_BUILD_DIR) do
+    system 'cmake ../..'
+    system 'make'
+  end
+else
+  dir_config('lasem').any? or pkg_config('liblasem')
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
