@@ -256,10 +256,10 @@ If you're having issues building Lasem, or have Lasem already preinstalled, you 
 
 * If you use bundler:
 
-            NOKOGIRI_USE_SYSTEM_LIBRARIES=1 bundle install
+            MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
 
 * If you use gem install:
-            NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install nokogiri
+            MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
 
 ### Issues with font alignment on OS X
 
