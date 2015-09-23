@@ -256,10 +256,11 @@ If you're having issues building Lasem, or have Lasem already preinstalled, you 
 
 * If you use bundler:
 
-            MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
 
 * If you use gem install:
-            MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
+
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
 
 ### Issues with font alignment on OS X
 
