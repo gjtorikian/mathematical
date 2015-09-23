@@ -14,7 +14,7 @@ bundle install --local --binstubs --path vendor/cache "$@"
 echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
-  for pkg in glib gdk-pixbuf cmake; do
+  for pkg in glib gdk-pixbuf cairo pango cmake; do
     if brew list -1 | grep -q "^${pkg}\$"; then
         echo "Package '$pkg' is installed"
     else
@@ -22,10 +22,6 @@ if [ "$(uname)" == "Darwin" ]; then
         brew install $pkg
     fi
   done
-  # many, many issues with dependencies on OS X: http://git.io/vnwMJ
-  brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535820c48442c23af44f72974880/Library/Formula/cairo.rb
-  brew install https://raw.githubusercontent.com/Homebrew/homebrew/e8a4de3960191c5726084416a3b78c5fcd5a3b05/Library/Formula/pango.rb
-  brew link gettext --force
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
   if [ ${TRAVIS_OS_NAME:-'linux'} = 'linux' ]; then
       echo 'nothing to do!'
