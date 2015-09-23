@@ -22,6 +22,9 @@ if [ "$(uname)" == "Darwin" ]; then
         brew install $pkg
     fi
   done
+  echo "I'm going to run brew link gettext --force"
+  echo "If this concerns you, run brew unlink gettext after installing the gem"
+  brew link gettext --force
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
   if [ ${TRAVIS_OS_NAME:-'linux'} = 'linux' ]; then
       echo 'nothing to do!'

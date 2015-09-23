@@ -247,3 +247,28 @@ MathToItex(string).convert do |eq, type|
   %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|
 end
 ```
+
+## Troubleshooting
+
+### Issues building Lasem
+
+If you're having issues building Lasem, or have Lasem already preinstalled, you should set the `MATHEMATICAL_USE_SYSTEM_LASEM` environment variable to skip the build:
+
+* If you use bundler:
+
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
+
+* If you use gem install:
+
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
+
+### Issues with font alignment on OS X
+
+If there's an issue with the resulting file(s) on OS X, chances are the problem is Cairo 1.14.2, which at the time of this writing, is the latest version of Cairo available on OS X via Homebrew.
+
+[This thread](http://git.io/vnXpv) has more information on the problem and a possible work-around. For right now, it's suggested that you use an older (but still functional) version of Cairo and Pango:
+
+```
+brew install https://raw.githubusercontent.com/Homebrew/homebrew/26d5775494b3535820c48442c23af44f72974880/Library/Formula/cairo.rb
+brew install https://raw.githubusercontent.com/Homebrew/homebrew/e8a4de3960191c5726084416a3b78c5fcd5a3b05/Library/Formula/pango.rb
+```
