@@ -68,15 +68,14 @@ if !using_system_lasem?
     system 'cmake ../..'
     system 'make'
   end
+  FileUtils.mkdir_p(LASEM_LIB_DIR)
+  FileUtils.cp_r(File.join(LASEM_BUILD_DIR, "liblasem.#{SHARED_EXT}"), LASEM_LIB_DIR)
 else
   dir_config('lasem').any? || pkg_config('liblasem') || system('dpkg -s liblasem >/dev/null')
 end
 
 FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
 FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
-
-FileUtils.mkdir_p(LASEM_LIB_DIR)
-FileUtils.cp_r(File.join(LASEM_BUILD_DIR, "liblasem.#{SHARED_EXT}"), LASEM_LIB_DIR)
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
