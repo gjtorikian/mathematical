@@ -86,7 +86,6 @@ find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$LIBS << ' -lmtex2MML'
-$LIBS << ' -llasem' unless using_system_lasem?
+$LIBS << ' -lmtex2MML -llasem'
 
 create_makefile('mathematical/mathematical')
