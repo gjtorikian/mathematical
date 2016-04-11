@@ -143,6 +143,20 @@ curl -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/cmex10.ttf \
      -LO http://mirrors.ctan.org/fonts/cm/ps-type1/bakoma/ttf/msbm10.ttf
 ```
 
+## Troubleshooting
+
+### Issues building Lasem
+
+If you're having issues building Lasem, or have Lasem already preinstalled, you should set the `MATHEMATICAL_USE_SYSTEM_LASEM` environment variable to skip the build:
+
+* If you use bundler:
+
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
+
+* If you use gem install:
+
+        MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
+
 ## Benchmark
 
 Run benchmarks with `bundle exec rake benchmark`:
@@ -239,17 +253,3 @@ MathToItex(string).convert do |eq, type|
   %|<img class="#{type.to_s}-math" data-math-type="#{type.to_s}-math" src="#{svg_content}"/>|
 end
 ```
-
-## Troubleshooting
-
-### Issues building Lasem
-
-If you're having issues building Lasem, or have Lasem already preinstalled, you should set the `MATHEMATICAL_USE_SYSTEM_LASEM` environment variable to skip the build:
-
-* If you use bundler:
-
-        MATHEMATICAL_USE_SYSTEM_LASEM=1 bundle install
-
-* If you use gem install:
-
-        MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
