@@ -1,4 +1,7 @@
 #include "lasem_overrides.h"
+#ifdef IS_TRAVISCI
+#define HAVE_STRDUP
+#endif
 #include <mtex2MML.h>
 
 void

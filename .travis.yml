@@ -24,9 +24,6 @@ compiler:
 git:
   depth: 10
 
-env:
-  global:
-    - CFLAGS="$CFLAGS -O0"
 
 addons:
   apt:
@@ -48,3 +45,5 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gdk-pixbuf; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pango; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link gettext --force; fi
+  - bundle install
