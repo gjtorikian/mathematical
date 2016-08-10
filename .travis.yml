@@ -13,6 +13,14 @@ cache:
   - bundler
   - apt
 
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
 git:
   depth: 10
 
