@@ -21,9 +21,6 @@ compiler:
   - gcc
   - clang
 
-env:
-  - CFLAGS="$CFLAGS -DIS_TRAVISCI
-
 git:
   depth: 10
 
