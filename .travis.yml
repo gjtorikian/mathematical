@@ -24,6 +24,10 @@ compiler:
 git:
   depth: 10
 
+env:
+  global:
+    - CFLAGS="$CFLAGS -O0"
+
 addons:
   apt:
     packages:
