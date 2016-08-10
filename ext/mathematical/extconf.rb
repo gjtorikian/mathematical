@@ -1,3 +1,5 @@
+ENV['RC_ARCHS'] = '' if RUBY_PLATFORM =~ /darwin|mac os/
+
 require 'mkmf'
 require 'rbconfig'
 

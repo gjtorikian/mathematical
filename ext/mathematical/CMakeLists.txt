@@ -12,7 +12,6 @@ set(LIBRARY "lasem")
 set(VERSION 0.6)
 
 find_package(PkgConfig)
-include(FindNewerRubies.cmake)
 
 set(LASEM_SRC_DIR ${CMAKE_SOURCE_DIR}/lasem/src/)
 set(MTEX2MML_SRC_DIR ${CMAKE_SOURCE_DIR}/mtex2MML/src/)
