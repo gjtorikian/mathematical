@@ -41,7 +41,8 @@ addons:
     - libpango1.0-dev
     - ttf-lyx
 
-before install:
+install:
+  - echo $TRAVIS_OS_NAME
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gdk-pixbuf; fi

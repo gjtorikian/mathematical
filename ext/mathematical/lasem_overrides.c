@@ -1,5 +1,4 @@
 #include "lasem_overrides.h"
-#include <string.h>
 #include <mtex2MML.h>
 
 void
