@@ -86,8 +86,9 @@ dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
+flag = ENV['TRAVIS'] ? '-O0' : '-O2'
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-$CFLAGS << " -O2 #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
+$CFLAGS << " #{flag} #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $LIBS << ' -lmtex2MML -llasem'
 
 create_makefile('mathematical/mathematical')
