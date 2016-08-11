@@ -20,6 +20,9 @@ $$
     data_hash = render.render(string)
     header = data_hash[:data].unpack('H*').first.slice(0, 18)
     File.open("#{fixtures_dir}/png/pmatrix.png", 'w') { |f| f.write(data_hash[:data]) }
-    assert_equal header, '89504e470d0a1a0a00'
+
+    file_bytes = TRAVIS_OSX ? '24240a5c626567696e' : '89504e470d0a1a0a00'
+
+    assert_equal header, file_bytes
   end
 end

@@ -12,7 +12,6 @@ set(LIBRARY "lasem")
 set(VERSION 0.6)
 
 find_package(PkgConfig)
-include(FindNewerRubies.cmake)
 
 set(LASEM_SRC_DIR ${CMAKE_SOURCE_DIR}/lasem/src/)
 set(MTEX2MML_SRC_DIR ${CMAKE_SOURCE_DIR}/mtex2MML/src/)
@@ -28,6 +27,10 @@ list(APPEND LASEM_SRC "${CMAKE_SOURCE_DIR}/lasem_overrides.c")
 # If you're reading this and it's giving you errors, fix it and send
 # me the patch.  Much appreciated.
 add_definitions(-DPACKAGE_LOCALE_DIR="/usr/share/locale")
+
+if(DEFINED $ENV{TRAVIS})
+  add_definitions(-DIS_TRAVISCI="true")
+endif()
 
 add_library(${LIBRARY} SHARED
             ${LASEM_SRC}

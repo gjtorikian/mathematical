@@ -1,7 +1,7 @@
-#include "ruby.h"
-
 #include "lasem_overrides.h"
-#include <string.h>
+#ifdef IS_TRAVISCI
+#define HAVE_STRDUP
+#endif
 #include <mtex2MML.h>
 
 void

@@ -29,6 +29,7 @@ task :build => [:clean]
 
 Rake::Task[:clean].enhance do
   Dir.chdir(LASEM_DIR) { puts `git clean -fdx`; }
+  `rm lib/mathematical/mathematical.bundle`
 end
 
 desc 'Copy samples to gh-pages'
