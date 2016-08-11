@@ -25,6 +25,14 @@ compiler:
 git:
   depth: 10
 
+matrix:
+  exclude:
+    -
+      os: osx
+      rvm: 2.2.5 # broken on Travis 🙄
+    -
+      os: osx
+      rvm: 2.3.1 # broken on Travis 🙄
 
 addons:
   apt:
