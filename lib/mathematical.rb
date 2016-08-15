@@ -22,6 +22,8 @@ class Mathematical
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 
+  MATH_MATCH = %r{<math xmlns.+?</math>}m
+
   def initialize(options = {})
     @config = DEFAULT_OPTS.merge(options)
 
@@ -56,7 +58,23 @@ class Mathematical
 
   def text_filter(maths)
     maths = validate_content(maths)
+    widths = []
+    heights = []
     result_data = @processer.process(maths, RENDER_TYPES.find_index(:text_filter))
+    # TODO: can/should be optimized to not do two calls here, but I am thinking
+    # about moving to Rust and don't have time to write safe C...
+    if result_data[:data] && @config[:format] != :mathml
+      result_data[:data].gsub!(MATH_MATCH) do |match|
+        result = @processer.process(maths, RENDER_TYPES.find_index(:parse))
+        widths << result[:width]
+        heights << result[:height]
+        result[:data]
+      end
+
+      result_data[:width] = widths
+      result_data[:height] = heights
+    end
+
     result(result_data)
   end
 
@@ -85,7 +103,7 @@ class Mathematical
     case @config[:format]
     when :svg
       # remove starting <?xml...> tag
-      result_hash[:data] = result_hash[:data][XML_HEADER.length..-1]
+      result_hash[:data] = result_hash[:data].gsub(XML_HEADER, '')
       result_hash[:data] = svg_to_base64(result_hash[:data]) if @config[:base64]
 
       result_hash

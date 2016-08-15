@@ -72,7 +72,6 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
     # no delimiters
     assert_equal Mathematical.new.render('x$$')[:exception].class, Mathematical::ParseError
     assert_equal Mathematical.new.filter('$$x')[:exception].class, Mathematical::DocumentCreationError
-    assert_equal Mathematical.new.text_filter('No dollars')[:exception].class, Mathematical::DocumentCreationError
 
     assert_raises ArgumentError do
       array = ['$foof$', nil, '$poof$']

@@ -41,7 +41,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
 
-  def test_filter
+  def test_filter_mathml
     render = Mathematical.new(:format => :mathml)
 
     fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'filter.txt'))
@@ -52,7 +52,7 @@ class Mathematical::BasicTest < MiniTest::Test
     assert_equal(fixture_mml, output)
   end
 
-  def test_text_filter
+  def test_text_filter_mathml
     render = Mathematical.new(:format => :mathml)
 
     fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'text_filter.txt'))
@@ -63,7 +63,20 @@ class Mathematical::BasicTest < MiniTest::Test
     assert_equal(fixture_mml, output)
   end
 
-  def test_strict_filter
+  def test_text_filter_svg
+    render = Mathematical.new(:format => :svg)
+
+    fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'text_filter.txt'))
+    result = render.text_filter(fixture_tex)
+
+    output = result[:data]
+
+    assert_match(/Inline: <svg/, output)
+    assert_match(/Block: <svg/, output)
+    assert_match(/Markup: <svg/, output)
+  end
+
+  def test_strict_filter_mathml
     render = Mathematical.new(:format => :mathml)
 
     fixture_tex = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'basic', 'strict_filter.txt'))

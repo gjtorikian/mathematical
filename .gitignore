@@ -6,6 +6,7 @@ _yardoc
 *.gif
 *.rbc
 *.so
+.byebug_history
 /vendor/cache/ruby/
 /vendor/gems/
 /vendor/ruby
