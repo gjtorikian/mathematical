@@ -99,7 +99,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   char * mathml = lsm_mtex_to_mathml(latex_code, latex_size, delimiter, parse_type);
   if (mathml == NULL) { print_and_raise(rb_eParseError, "Failed to parse mtex"); }
 
-  if (format == FORMAT_MATHML) {
+  if (format == FORMAT_MATHML || parse_type == TEXT_FILTER) {
     rb_hash_aset (result_hash, CSTR2SYM ("data"), rb_str_new2(mathml));
     mtex2MML_free_string(mathml);
     return result_hash;
