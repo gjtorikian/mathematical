@@ -29,7 +29,11 @@ list(APPEND LASEM_SRC "${CMAKE_SOURCE_DIR}/lasem_overrides.c")
 add_definitions(-DPACKAGE_LOCALE_DIR="/usr/share/locale")
 
 if(DEFINED $ENV{TRAVIS})
-  add_definitions(-DIS_TRAVISCI="true")
+  add_definitions(-DSKIP_STRDUP="true")
+endif()
+
+if(DEFINED $ENV{SKIP_STRDUP})
+  add_definitions(-DSKIP_STRDUP="true")
 endif()
 
 add_library(${LIBRARY} SHARED
