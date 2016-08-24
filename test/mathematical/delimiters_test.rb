@@ -45,6 +45,17 @@ class Mathematical::BasicTest < MiniTest::Test
     assert_equal(fixture_mml, output)
   end
 
+  def test_environments
+    render = Mathematical.new(:delimiter => :environments, :format => :mathml)
+
+    fixture_tex = "\\begin{equation}f(x)=(x+a)(x+b)\\end{equation}"
+    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'single_equation.html')).strip
+    result = render.render(fixture_tex)
+    output = result[:data]
+
+    assert_equal(fixture_mml, output)
+  end
+
   def test_mixed
     render = Mathematical.new(:delimiter => [:brackets, :double], :format => :mathml)
 
