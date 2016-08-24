@@ -32,7 +32,7 @@ if(DEFINED $ENV{TRAVIS})
   add_definitions(-DSKIP_STRDUP="true")
 endif()
 
-if(DEFINED $ENV{SKIP_STRDUP})
+if(DEFINED $ENV{MATHEMATICAL_SKIP_STRDUP})
   add_definitions(-DSKIP_STRDUP="true")
 endif()
 
