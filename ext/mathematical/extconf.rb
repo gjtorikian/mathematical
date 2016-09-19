@@ -21,10 +21,6 @@ def using_system_lasem?
   arg_config('--use-system-lasem', !!ENV['MATHEMATICAL_USE_SYSTEM_LASEM'])
 end
 
-def skipping_strdup?
-  !!ENV['MATHEMATICAL_SKIP_STRDUP']
-end
-
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
 
 LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
@@ -93,9 +89,6 @@ find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 flag = ENV['TRAVIS'] ? '-O0' : '-O2'
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 $CFLAGS << " #{flag} #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
-if skipping_strdup?
-  $CFLAGS << ' -DMATHEMATICAL_SKIP_STRDUP'
-end
 $LIBS << ' -lmtex2MML -llasem'
 
 create_makefile('mathematical/mathematical')
