@@ -90,7 +90,7 @@ That is, while the first and last elements are valid TeX math, the middle one is
 | `:base64` | A boolean determining whether Mathematical's output should be a base64-encoded SVG string | `false`
 | `:maxsize` | A numeral indicating the `MAXSIZE` the output string can be. | `unsigned long`
 | `:format` | A symbol indicating whether you want an `:svg`, `:png`, or `:mathml` output. | `:svg`
-| `:delimiter` | A symbol indicating whether you want an `:dollar` for inline (`$..$`), `:double` for display (`$$..$$`), `:parens` for inline (`\(..\)`), `:brackets` for display (`[..\]`), or `:environments` for parsing bare `\\begin..\\end` environments. You can also pass in an array of symbols to have multiple delimiters considered. | `[:dollar, :double]`
+| `:delimiter` | A symbol indicating whether you want an `:DOLLAR` for inline (`$..$`), `:DOUBLE` for display (`$$..$$`), `:PARENS` for inline (`\(..\)`), `:BRACKETS` for display (`[..\]`), or `:ENVIRONMENTS` for parsing bare `\\begin..\\end` environments. You can also pass in an array of symbols to have multiple delimiters considered. | `[:DOLLAR, :DOUBLE]`
 
 Pass these in like this:
 

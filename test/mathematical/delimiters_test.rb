@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Mathematical::BasicTest < MiniTest::Test
   def test_single_dollar
-    render = Mathematical.new(:delimiter => :dollar, :format => :mathml)
+    render = Mathematical.new(:delimiter => :DOLLAR, :format => :mathml)
 
     fixture_tex = "$\\pi$"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'single_dollar.html')).strip
@@ -13,7 +13,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_double_dollar
-    render = Mathematical.new(:delimiter => :double, :format => :mathml)
+    render = Mathematical.new(:delimiter => :DOUBLE, :format => :mathml)
 
     fixture_tex = "$$\\pi$$"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'double_dollar.html')).strip
@@ -24,7 +24,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_parens
-    render = Mathematical.new(:delimiter => :parens, :format => :mathml)
+    render = Mathematical.new(:delimiter => :PARENS, :format => :mathml)
 
     fixture_tex = "\\(\\pi\\)"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'parens.html')).strip
@@ -35,7 +35,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_brackets
-    render = Mathematical.new(:delimiter => :brackets, :format => :mathml)
+    render = Mathematical.new(:delimiter => :BRACKETS, :format => :mathml)
 
     fixture_tex = "\\[\\pi\\]"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'brackets.html')).strip
@@ -46,7 +46,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_environments
-    render = Mathematical.new(:delimiter => :environments, :format => :mathml)
+    render = Mathematical.new(:delimiter => :ENVIRONMENTS, :format => :mathml)
 
     fixture_tex = "\\begin{equation}f(x)=(x+a)(x+b)\\end{equation}"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'single_equation.html')).strip
@@ -57,7 +57,7 @@ class Mathematical::BasicTest < MiniTest::Test
   end
 
   def test_mixed
-    render = Mathematical.new(:delimiter => [:brackets, :double], :format => :mathml)
+    render = Mathematical.new(:delimiter => [:BRACKETS, :DOUBLE], :format => :mathml)
 
     fixture_tex = "\\[\\alpha\\] $$\\beta$$"
     fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'mixed.html')).strip
