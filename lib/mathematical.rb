@@ -17,7 +17,7 @@ class Mathematical
     :base64 => false,
     :maxsize => 0,
     :format => :svg,
-    :delimiter => [:dollar, :double]
+    :delimiter => [:DOLLAR, :DOUBLE]
   }
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
