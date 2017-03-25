@@ -21,6 +21,10 @@ def using_system_lasem?
   arg_config('--use-system-lasem', !!ENV['MATHEMATICAL_USE_SYSTEM_LASEM'])
 end
 
+def using_system_mtex2mml?
+  arg_config('--use-system-mtex2MML', !!ENV['MATHEMATICAL_USE_SYSTEM_MTEX2MML'])
+end
+
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
 
 LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
@@ -57,10 +61,16 @@ end
 clean_dir(MTEX2MML_BUILD_DIR)
 clean_dir(LASEM_BUILD_DIR)
 
-# build mtex2MML library
-Dir.chdir(MTEX2MML_BUILD_DIR) do
-  system 'cmake ..'
-  system 'make libmtex2MML_static'
+if !using_system_mtex2mml?
+  # build mtex2MML library
+  Dir.chdir(MTEX2MML_BUILD_DIR) do
+    system 'cmake ..'
+    system 'make libmtex2MML_static'
+  end
+  FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
+  FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
+else
+  dir_config('mtex2MML').any? || pkg_config('libmtex2MML') || system('dpkg -s libmtex2MML >/dev/null')
 end
 
 if !using_system_lasem?
@@ -75,9 +85,6 @@ if !using_system_lasem?
 else
   dir_config('lasem').any? || pkg_config('liblasem') || system('dpkg -s liblasem >/dev/null')
 end
-
-FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
-FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
