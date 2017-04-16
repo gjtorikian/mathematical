@@ -88,10 +88,10 @@ if !using_system_lasem?
   end
   FileUtils.mkdir_p(LASEM_LIB_DIR)
   FileUtils.cp_r(File.join(LASEM_BUILD_DIR, "liblasem.#{SHARED_EXT}"), LASEM_LIB_DIR)
-  $LIBS << '-llasem'
+  $LIBS << ' -llasem'
 else
   if dir_config('lasem').any? || system('dpkg -s liblasem >/dev/null')
-    $LIBS << '-llasem'
+    $LIBS << ' -llasem'
   else
     # NOTE: pkg_config implicitly adds right -l argument for the linker.
     pkg_config('liblasem') || pkg_config('lasem')
