@@ -5,7 +5,7 @@ class Mathematical
     RENDER_TYPES = [:parse, :filter, :text_filter, :strict_filter].freeze
 
     def validate_config(config)
-      fail(TypeError, 'maxsize must be an integer!') unless config[:maxsize].is_a? Fixnum
+      fail(TypeError, 'maxsize must be an integer!') unless config[:maxsize].is_a? Integer
       fail(TypeError, 'maxsize cannot be less than 0!') if config[:maxsize] < 0
       fail(TypeError, 'format must be a symbol!') unless config[:format].is_a? Symbol
       fail(TypeError, "format type must be one of the following formats: #{FORMAT_TYPES.join(', ')}") unless FORMAT_TYPES.include?(config[:format])
