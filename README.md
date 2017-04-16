@@ -157,6 +157,18 @@ If you're having issues building Lasem, or have Lasem already preinstalled, you 
 
         MATHEMATICAL_USE_SYSTEM_LASEM=1 gem install mathematical
 
+### Issues building mtex2mml
+
+If you're having issues building mtex2mml, or have mtex2mml already preinstalled, you should set the `MATHEMATICAL_USE_SYSTEM_MTEX2MML` environment variable to skip the build:
+
+* If you use bundler:
+
+        MATHEMATICAL_USE_SYSTEM_MTEX2MML=1 bundle install
+
+* If you use gem install:
+
+        MATHEMATICAL_USE_SYSTEM_MTEX2MML=1 gem install mathematical
+        
 ## Benchmark
 
 Run benchmarks with `bundle exec rake benchmark`:
