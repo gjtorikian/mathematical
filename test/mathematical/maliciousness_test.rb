@@ -58,8 +58,9 @@ class Mathematical::MaliciousnessTest < MiniTest::Test
     assert_equal output[:data], '$a \ne b$'
     assert_equal output[:exception].class, Mathematical::MaxsizeError
 
-    assert_raises RangeError do
-      render = Mathematical.new({ :maxsize => 4_294_967_295 }) # unsigned long max
+    # ruby <= 2.3, RangeError, > TypeError
+    assert_raises do
+      render = Mathematical.new({ :maxsize => 2**80 })
       render.render('$a \ne b$')
     end
   end
