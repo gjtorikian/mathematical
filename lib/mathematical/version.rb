@@ -1,3 +1,3 @@
 class Mathematical
-  VERSION = '1.6.9'.freeze
+  VERSION = '1.6.10'.freeze
 end
