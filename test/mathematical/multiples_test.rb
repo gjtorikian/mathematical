@@ -44,7 +44,7 @@ $$
 
   def test_it_properly_accounts_for_equations
     # seems to barf on Travis
-    skip if TRAVIS_OSX
+    skip if TRAVIS_MACOS
     inputs = []
     (1..2).each do |i|
       string = """
