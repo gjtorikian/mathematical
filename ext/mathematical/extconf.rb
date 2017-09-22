@@ -3,14 +3,22 @@ ENV['RC_ARCHS'] = '' if RUBY_PLATFORM =~ /darwin|mac os/
 require 'mkmf'
 require 'rbconfig'
 
-HOST_OS    = RbConfig::CONFIG['host_os']
+OS         = case RbConfig::CONFIG['host_os']
+             when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+               :windows
+             when /darwin|mac os/
+               :macosx
+             when /linux/
+               :linux
+             when /solaris|bsd/
+               :unix
+             else
+               raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+             end
+
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
-SHARED_EXT = if HOST_OS =~ /darwin|mac os/
-               'dylib'
-             else
-               'so'
-             end
+SHARED_EXT = OS == :macosx ? 'dylib' : 'so'
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -37,7 +45,7 @@ MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, 'build')
 MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, 'src'))
 MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
-if HOST_OS =~ /darwin|mac os/
+if OS == :macos
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
 end
 
@@ -88,7 +96,11 @@ if !using_system_lasem?
   end
   FileUtils.mkdir_p(LASEM_LIB_DIR)
   FileUtils.cp_r(File.join(LASEM_BUILD_DIR, "liblasem.#{SHARED_EXT}"), LASEM_LIB_DIR)
-  $LIBS << ' -llasem'
+  if OS == :linux
+    $LIBS << " -Wl,-rpath,#{LASEM_LIB_DIR} -llasem"
+  else
+    $LIBS << ' -llasem'
+  end
 else
   if dir_config('lasem').any? || system('dpkg -s liblasem >/dev/null')
     $LIBS << ' -llasem'
