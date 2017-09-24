@@ -7,7 +7,7 @@ OS         = case RbConfig::CONFIG['host_os']
              when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
                :windows
              when /darwin|mac os/
-               :macosx
+               :macos
              when /linux/
                :linux
              when /solaris|bsd/
@@ -18,7 +18,7 @@ OS         = case RbConfig::CONFIG['host_os']
 
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
-SHARED_EXT = OS == :macosx ? 'dylib' : 'so'
+SHARED_EXT = OS == :macos ? 'dylib' : 'so'
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
