@@ -2,6 +2,8 @@ ENV['RC_ARCHS'] = '' if RUBY_PLATFORM =~ /darwin|mac os/
 
 require 'mkmf'
 require 'rbconfig'
+require 'pry'
+require 'pathname'
 
 OS         = case RbConfig::CONFIG['host_os']
              when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
@@ -20,6 +22,14 @@ LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
 SHARED_EXT = OS == :macos ? 'dylib' : 'so'
 
+HEADER_DIRS = [
+
+  INCLUDEDIR
+]
+
+LIB_DIRS = [LIBDIR]
+
+
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
   exit 1
@@ -35,27 +45,49 @@ end
 
 ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
 
-LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
-LASEM_BUILD_DIR = File.join(LASEM_DIR, 'build')
-LASEM_SRC_DIR = File.expand_path(File.join(LASEM_DIR, 'src'))
-LASEM_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+EXTCONF_DIR = Pathname(__dir__)
+root2 = EXTCONF_DIR.parent.parent + 'tmp'
 
-MTEX2MML_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'mtex2MML'))
-MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, 'build')
-MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, 'src'))
-MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+
+
+
+
+LASEM_DIR = EXTCONF_DIR + 'lasem'
+
+LASEM_BUILD_DIR = LASEM_DIR + 'build'
+
+LASEM_SRC_DIR = LASEM_DIR + 'src'
+
+LASEM_LIB_DIR = EXTCONF_DIR + 'lib'
+
+
+MTEX2MML_DIR  = EXTCONF_DIR + 'mtext2MML'
+
+MTEX2MML_BUILD_DIR = MTEX2MML_DIR + 'build'
+
+MTEX2MML_SRC_DIR = MTEX2MML_DIR + 'src'
+
+MTEX2MML_LIB_DIR = EXTCONF_DIR + 'lib'
 
 if OS == :macos
   ENV['PKG_CONFIG_PATH'] = "/opt/X11/lib/pkgconfig:#{ENV['PKG_CONFIG_PATH']}"
 end
 
+
 # pre-compile checks
 have_library('xml2')
 have_library('pangocairo-1.0')
-find_header('libxml/tree.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/parser.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/xpath.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
+
+libxml_include_dirs = ['/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2']
+
+if lib_xml_dir = pkg_config('libxml-2.0', 'cflags-only-I')
+  libxml_include_dirs.unshift lib_xml_dir[/-I(.+)/,1]
+end
+
+find_header('libxml/tree.h', *libxml_include_dirs)
+find_header('libxml/parser.h', *libxml_include_dirs)
+find_header('libxml/xpath.h', *libxml_include_dirs)
+find_header('libxml/xpathInternals.h', *libxml_include_dirs)
 
 # TODO: we need to clear out the build dir that's erroneously getting packaged
 # this causes problems, as Linux installation is expecting OS X output
@@ -78,6 +110,8 @@ if !using_system_mtex2mml?
   FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
   FileUtils.cp_r(File.join(MTEX2MML_BUILD_DIR, 'libmtex2MML.a'), MTEX2MML_LIB_DIR)
   $LIBS << ' -lmtex2MML'
+  LIB_DIRS << MTEX2MML_LIB_DIR
+  HEADER_DIRS << MTEX2MML_SRC_DIR
 else
   if dir_config('mtex2MML').any? || system('dpkg -s libmtex2MML >/dev/null')
     $LIBS << ' -lmtex2MML'
@@ -101,21 +135,25 @@ if !using_system_lasem?
   else
     $LIBS << ' -llasem'
   end
+  LIB_DIRS << LASEM_LIB_DIR
+  HEADER_DIRS << LASEM_SRC_DIR
 else
   if dir_config('lasem').any? || system('dpkg -s liblasem >/dev/null')
     $LIBS << ' -llasem'
   else
     # NOTE: pkg_config implicitly adds right -l argument for the linker.
-    pkg_config('liblasem') || pkg_config('lasem')
+    pkg_config('liblasem') || pkg_config('lasem') || pkg_config('lasem-0.4')
   end
 end
 
+if !using_system_mtex2mml?
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
 
 dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
+end
 
 flag = ENV['TRAVIS'] ? '-O0' : '-O2'
 $LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
