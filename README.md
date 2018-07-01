@@ -110,6 +110,7 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 Before building this gem, you must install the following libraries:
 
+* Ruby 2.1 or higher (you'll need Ruby header files, so a `*-dev` version is also required)
 * GNU make
 * glib-2.0
 * gdk-pixbuf-2.0
@@ -168,7 +169,7 @@ If you're having issues building mtex2mml, or have mtex2mml already preinstalled
 * If you use gem install:
 
         MATHEMATICAL_USE_SYSTEM_MTEX2MML=1 gem install mathematical
-        
+
 ## Benchmark
 
 Run benchmarks with `bundle exec rake benchmark`:
