@@ -1,8 +1,6 @@
 language: ruby
 rvm:
-  - 2.1
-  - 2.2.5
-  - 2.3.1
+  - 2.4.4
 
 sudo: false
 
@@ -10,8 +8,9 @@ script:
   - script/cibuild
 
 cache:
-  - bundler
-  - apt
+  bundler: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
 
 os:
   - linux
@@ -23,15 +22,6 @@ compiler:
 
 git:
   depth: 10
-
-matrix:
-  exclude:
-    -
-      os: osx
-      rvm: 2.2.5 # broken on Travis 🙄
-    -
-      os: osx
-      rvm: 2.3.1 # broken on Travis 🙄
 
 addons:
   apt:
