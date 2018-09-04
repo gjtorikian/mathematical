@@ -8,8 +8,9 @@ script:
   - script/cibuild
 
 cache:
-  - bundler
-  - apt
+  bundler: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
 
 os:
   - linux
