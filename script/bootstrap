@@ -9,7 +9,7 @@ git submodule update --init --recursive
 
 echo "==> Installing gem dependencies…"
 
-bundle install --local --binstubs --path vendor/cache "$@"
+bundle install --path vendor/gems --local --standalone --clean "$@"
 
 echo "==> Installing required libraries…"
 
