@@ -7,11 +7,12 @@ project(lasem)
 enable_language(C)
 cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
 cmake_policy(SET CMP0015 NEW)
+set(CMAKE_MACOSX_RPATH 1)
 
 set(LIBRARY "lasem")
 set(VERSION 0.6)
 
-find_package(PkgConfig)
+find_package(PkgConfig REQUIRED)
 
 set(LASEM_SRC_DIR ${CMAKE_SOURCE_DIR}/lasem/src/)
 set(MTEX2MML_SRC_DIR ${CMAKE_SOURCE_DIR}/mtex2MML/src/)
@@ -51,6 +52,20 @@ pkg_check_modules(PANGO_CAIRO REQUIRED pangocairo)
 #
 #
 
+# Special MacOS Catalina changes
+if(CMAKE_HOST_APPLE AND APPLE)
+  if(NOT CMAKE_XCRUN)
+    find_program(CMAKE_XCRUN NAMES xcrun)
+  endif()
+  if(CMAKE_XCRUN)
+    execute_process(COMMAND ${CMAKE_XCRUN} --show-sdk-path
+      OUTPUT_VARIABLE SDK_PATH
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(LIBXML2_MACOS_INCLUDE_DIRS ${SDK_PATH}/usr/include/libxml2)
+    message(STATUS "Found SDK libxml2")
+  endif()
+endif()
+
 include_directories(${LIBRARY}
   ${INCLUDE_DIRS}
   ${GLIB2_INCLUDE_DIRS}
@@ -58,6 +73,7 @@ include_directories(${LIBRARY}
   ${PANGO_INCLUDE_DIRS}
   ${GDK-PIXBUF2_INCLUDE_DIRS}
   ${LIBXML2_INCLUDE_DIRS}
+  ${LIBXML2_MACOS_INCLUDE_DIRS}
   ${GIO2_INCLUDE_DIRS}
   ${PANGO_CAIRO_INCLUDE_DIRS}
 )

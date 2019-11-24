@@ -19,6 +19,8 @@ OS         = case RbConfig::CONFIG['host_os']
 LIBDIR     = RbConfig::CONFIG['libdir']
 INCLUDEDIR = RbConfig::CONFIG['includedir']
 SHARED_EXT = OS == :macos ? 'dylib' : 'so'
+# Starting in Catalina, libxml2 was moved elsewhere
+SDKROOT = OS == :macos ? `/usr/bin/xcrun --show-sdk-path`.chomp : ''
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -32,8 +34,6 @@ end
 def using_system_mtex2mml?
   arg_config('--use-system-mtex2MML', !!ENV['MATHEMATICAL_USE_SYSTEM_MTEX2MML'])
 end
-
-ROOT_TMP = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
 
 LASEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'lasem'))
 LASEM_BUILD_DIR = File.join(LASEM_DIR, 'build')
@@ -52,15 +52,15 @@ end
 # pre-compile checks
 have_library('xml2')
 have_library('pangocairo-1.0')
-find_header('libxml/tree.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/parser.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/xpath.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
-find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2')
+find_header('libxml/tree.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2', "#{SDKROOT}/usr/include/libxml2")
+find_header('libxml/parser.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2', "#{SDKROOT}/usr/include/libxml2")
+find_header('libxml/xpath.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2', "#{SDKROOT}/usr/include/libxml2")
+find_header('libxml/xpathInternals.h', '/include/libxml2', '/usr/include/libxml2', '/usr/local/include/libxml2', "#{SDKROOT}/usr/include/libxml2")
 
 # TODO: we need to clear out the build dir that's erroneously getting packaged
 # this causes problems, as Linux installation is expecting OS X output
 def clean_dir(dir)
-  if File.directory?(dir) && !File.exist?(ROOT_TMP)
+  if File.directory?(dir)
     FileUtils.rm_rf(dir)
   end
   FileUtils.mkdir_p(dir)
@@ -109,6 +109,8 @@ else
     pkg_config('liblasem') || pkg_config('lasem')
   end
 end
+
+print "*** Cmake completed ***"
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
