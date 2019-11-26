@@ -110,7 +110,7 @@ else
   end
 end
 
-print "*** Cmake completed ***"
+puts '*** Library work completed ***'
 
 LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
 HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
