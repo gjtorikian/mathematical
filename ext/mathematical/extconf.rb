@@ -21,6 +21,7 @@ INCLUDEDIR = RbConfig::CONFIG['includedir']
 SHARED_EXT = OS == :macos ? 'dylib' : 'so'
 # Starting in Catalina, libxml2 was moved elsewhere
 SDKROOT = OS == :macos ? `/usr/bin/xcrun --show-sdk-path`.chomp : ''
+RPATH = OS == :macos ? '-rpath @loader_path/../../ext/mathematical/lib'.chomp : ''
 
 unless find_executable('cmake')
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -120,7 +121,7 @@ dir_config('mathematical', HEADER_DIRS, LIB_DIRS)
 find_header('mtex2MML.h', MTEX2MML_SRC_DIR)
 
 flag = ENV['TRAVIS'] ? '-O0' : '-O2'
-$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
+$LDFLAGS << " #{`pkg-config --static --libs glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp} #{RPATH}"
 $CFLAGS << " #{flag} #{`pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango`.chomp}"
 
 create_makefile('mathematical/mathematical')
