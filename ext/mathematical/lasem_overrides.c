@@ -37,6 +37,9 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_typ
     usize = size;
   }
 
+  // reset parse pointer to clear out previous potential errors
+  mtex2MML_reset_parsing_environment();
+
   switch (render_type) {
   case PARSE:
     mathml = mtex2MML_parse(mtex, usize, delimiter);
