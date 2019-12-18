@@ -7,11 +7,12 @@ project(lasem)
 enable_language(C)
 cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
 cmake_policy(SET CMP0015 NEW)
+set(CMAKE_MACOSX_RPATH 1)
 
 set(LIBRARY "lasem")
 set(VERSION 0.6)
 
-find_package(PkgConfig)
+find_package(PkgConfig REQUIRED)
 
 set(LASEM_SRC_DIR ${CMAKE_SOURCE_DIR}/lasem/src/)
 set(MTEX2MML_SRC_DIR ${CMAKE_SOURCE_DIR}/mtex2MML/src/)
@@ -51,25 +52,66 @@ pkg_check_modules(PANGO_CAIRO REQUIRED pangocairo)
 #
 #
 
+# Special MacOS Catalina changes
+if(CMAKE_HOST_APPLE AND APPLE)
+  if(NOT CMAKE_XCRUN)
+    find_program(CMAKE_XCRUN NAMES xcrun)
+  endif()
+  if(CMAKE_XCRUN)
+    execute_process(COMMAND ${CMAKE_XCRUN} --show-sdk-path
+      OUTPUT_VARIABLE SDK_PATH
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(LIBXML2_MACOS_INCLUDE_DIRS ${SDK_PATH}/usr/include/libxml2)
+    message(STATUS "Found SDK libxml2")
+  endif()
+endif()
+
+set(GLIB_LIB_SUFFIX 2.0)
+set(PANGO_LIB_SUFFIX 1.0)
+set(GDK_PIXBUF_LIB_SUFFIX 2.0)
+
+# find dependencies
+# glib
+find_path(GLIB_INCLUDE_DIR glib.h)
+find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_SUFFIX})
+find_library(GLIB_GIO_LIBRARY gio-${GLIB_LIB_SUFFIX})
+find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_SUFFIX})
+find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_SUFFIX})
+set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRARY} ${GLIB_GOBJECT_LIBRARY})
+
+# pango
+find_path(PANGO_INCLUDE_DIR pango/pango.h)
+find_library(PANGO_LIBRARY pango-${PANGO_LIB_SUFFIX})
+find_library(PANGO_CAIRO_LIBRARY pangocairo-${PANGO_LIB_SUFFIX})
+set(PANGO_LIBRARIES ${PANGO_LIBRARY} ${PANGO_CAIRO_LIBRARY})
+
+# cairo
+find_library(CAIRO_LIBRARY cairo${CAIRO_LIB_SUFFIX})
+find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_LIB_SUFFIX})
+set(CAIRO_LIBRARIES ${CAIRO_LIBRARY} ${CAIRO_GOBJECT_LIBRARY})
+find_path(CAIRO_INCLUDE_DIR cairo.h)
+
+# gdk-pixbuf
+find_path(GDK_PIXBUF_INCLUDE_DIR gdk-pixbuf/gdk-pixbuf.h)
+find_library(GDK_PIXBUF_LIBRARY gdk_pixbuf-${GDK_PIXBUF_LIB_SUFFIX})
+
 include_directories(${LIBRARY}
   ${INCLUDE_DIRS}
   ${GLIB2_INCLUDE_DIRS}
   ${CAIRO_INCLUDE_DIRS}
-  ${PANGO_INCLUDE_DIRS}
   ${GDK-PIXBUF2_INCLUDE_DIRS}
   ${LIBXML2_INCLUDE_DIRS}
+  ${LIBXML2_MACOS_INCLUDE_DIRS}
   ${GIO2_INCLUDE_DIRS}
   ${PANGO_CAIRO_INCLUDE_DIRS}
 )
 
 target_link_libraries(${LIBRARY}
-  ${GLIB2_LIBRARIES}
+  ${GLIB_LIBRARIES}
   ${CAIRO_LIBRARIES}
   ${PANGO_LIBRARIES}
-  ${GDK-PIXBUF2_LIBRARIES}
+  ${GDK_PIXBUF_LIBRARY}
   ${LIBXML2_LIBRARIES}
-  ${GIO2_LIBRARIES}
-  ${PANGO_CAIRO_LIBRARIES}
   ${RUBY_LIBRARY}
   ${MTEX2MML_BUILD_DIR}/libmtex2MML.a
 )
