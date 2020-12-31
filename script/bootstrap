@@ -15,7 +15,7 @@ echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
   for pkg in glib gdk-pixbuf cairo pango cmake; do
-    if brew list -1 | grep -q "^${pkg}\$"; then
+    if brew list --formula -1 | grep -q "^${pkg}$"; then
         echo "Package '$pkg' is installed"
     else
         echo "Package '$pkg' is not installed"
