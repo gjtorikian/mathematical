@@ -20,9 +20,6 @@ compiler:
   - gcc
   - clang
 
-git:
-  depth: 10
-
 addons:
   apt:
     packages:
