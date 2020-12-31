@@ -35,10 +35,6 @@ addons:
 
 install:
   - echo $TRAVIS_OS_NAME
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list glib || brew install glib; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list gdk-pixbuf || brew install gdk-pixbuf; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list cairo || brew install cairo; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list pango || install pango; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link gettext --force; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core fetch --unshallow; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then script/bootstrap; fi
   - bundle install
