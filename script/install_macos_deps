@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+export CC=gcc
+
+for pkg in glib gdk-pixbuf cairo pango cmake; do
+  brew list ${pkg} || brew install ${pkg}
+done
+echo "I'm going to run brew link gettext --force"
+echo "If this concerns you, run brew unlink gettext after installing the gem"
+brew link gettext --force
