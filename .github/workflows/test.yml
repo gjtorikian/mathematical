@@ -21,10 +21,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Install Linux packages
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: sudo apt-get update -qq && sudo apt-get install -y cmake bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev
 
       - name: Install MacOS packages
         if: ${{ matrix.os == 'macos-11.0' }}
