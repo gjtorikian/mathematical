@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+export CC=gcc
+
+sudo apt-get -qq -y install bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev
+
+# not necessary for tests, but is for any production/development environment
+if [[ ! -v CI ]]; then
+  sudo apt-get -qq -y install ttf-lyx
+fi

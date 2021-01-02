@@ -14,16 +14,7 @@ bundle install "$@"
 echo "==> Installing required libraries…"
 
 if [ "$(uname)" == "Darwin" ]; then
-  for pkg in glib gdk-pixbuf cairo pango cmake; do
-    brew list ${pkg} || brew install ${pkg}
-  done
-  echo "I'm going to run brew link gettext --force"
-  echo "If this concerns you, run brew unlink gettext after installing the gem"
-  brew link gettext --force
+  script/install_homebrew_deps
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-  if [ ${TRAVIS_OS_NAME:-'linux'} = 'linux' ]; then
-      echo 'nothing to do!'
-  else
-    sudo apt-get -qq -y install bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev ttf-lyx
-  fi
+  script/install_linux_deps
 fi
