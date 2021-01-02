@@ -16,12 +16,11 @@ os:
   - linux
   - osx
 
+osx_image: xcode12.2
+
 compiler:
   - gcc
   - clang
-
-git:
-  depth: 10
 
 addons:
   apt:
@@ -38,10 +37,5 @@ addons:
 
 install:
   - echo $TRAVIS_OS_NAME
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gdk-pixbuf; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pango; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link gettext --force; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then script/bootstrap; fi
   - bundle install
