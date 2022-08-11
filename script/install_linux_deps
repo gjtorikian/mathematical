@@ -7,5 +7,5 @@ sudo apt-get -qq -y install bison flex libffi-dev libxml2-dev libgdk-pixbuf2.0-d
 
 # not necessary for tests, but is for any production/development environment
 if [[ ! -v CI ]]; then
-  sudo apt-get -qq -y install ttf-lyx
+  sudo apt-get -qq -y install fonts-lyx
 fi
