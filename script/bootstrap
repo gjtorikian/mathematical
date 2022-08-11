@@ -16,5 +16,5 @@ echo "==> Installing required libraries…"
 if [ "$(uname)" == "Darwin" ]; then
   ../script/install_homebrew_deps
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-  ../script/install_linux_deps
+  $(dirname $0)/install_linux_deps
 fi
