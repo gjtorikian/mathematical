@@ -11,8 +11,6 @@ module Mathematical
     end
 
     def test_it_creates_a_png
-      # seems to barf on Travis
-      skip if TRAVIS_MACOS
       string = ""'
     $$
 \begin{pmatrix}
@@ -28,7 +26,7 @@ $$
       header = data_hash[:data].unpack("H*").first.slice(0, 18)
       File.open("#{fixtures_dir}/png/pmatrix.png", "w") { |f| f.write(data_hash[:data]) }
 
-      file_bytes = TRAVIS_MACOS ? "24240a5c626567696e" : "89504e470d0a1a0a00"
+      file_bytes = "89504e470d0a1a0a00"
 
       assert_equal(header, file_bytes)
     end

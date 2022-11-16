@@ -10,10 +10,9 @@ require "pp"
 MTEX2MML_FIXTURES_DIR = File.join("ext", "mathematical", "mtex2MML", "tests", "fixtures")
 MATHJAX_TEST_DIR = File.join(MTEX2MML_FIXTURES_DIR, "MathJax")
 MATHJAX_TEX_DIR = File.join(MATHJAX_TEST_DIR, "LaTeXToMathML-tex")
-TRAVIS_MACOS = ENV["TRAVIS"] && ENV["TRAVIS_OS_NAME"] == "osx"
 
-unless TRAVIS_MACOS
-  require "pry-byebug"
+def ci?
+  ENV.fetch("CI", false)
 end
 
 def fixtures_dir
