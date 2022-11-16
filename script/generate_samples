@@ -1,41 +1,44 @@
 #!/usr/bin/ruby
+# frozen_string_literal: true
 
-lib = File.expand_path('../../lib', __FILE__)
-dep = File.expand_path('../../vendor/cache/ruby/2.1.0/gems/ruby-enum-0.4.0/lib', __FILE__)
+# rubocop:disable Lint/ImplicitStringConcatenation
+
+lib = File.expand_path("../../lib", __FILE__)
+dep = File.expand_path("../../vendor/cache/ruby/2.1.0/gems/ruby-enum-0.4.0/lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 $LOAD_PATH.unshift(dep) unless $LOAD_PATH.include?(dep)
-require 'mathematical'
+require "mathematical"
 
-if ENV['MATHEMATICAL_GENERATE_SAMPLE']
+if ENV["MATHEMATICAL_GENERATE_SAMPLE"]
   system "bundle exec rake test TEST=test/mathematical/fixtures_test.rb"
   system "bundle exec rake test TEST=test/mathematical/mathjax_test.rb"
 end
 
 quality = {
-  'pi' => '$\pi$',
-  'font quality' => '$$\mathbb{E}((X-\alpha Y )^2) = \mathbb{E}(\alpha^2 Y^2 - 2 \alpha X Y + X^2 )$$',
-  'skew' => '$$x \skew{100}\hat A x$$',
-  'Fourier Transform' => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
-  'An Identity of Ramanujan' => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
-  'The Cauchy-Schwarz Inequality' => '$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$',
-  'A Rogers-Ramanujan Identity' => '$$1 + \frac{q^2}{(1-q)} + \frac{q^6}{(1-q)(1-q^2)} + \cdots= \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},\quad\quad for\,|q| \lt 1.$$',
-  'Mathclap sample' => '''
+  "pi" => '$\pi$',
+  "font quality" => '$$\mathbb{E}((X-\alpha Y )^2) = \mathbb{E}(\alpha^2 Y^2 - 2 \alpha X Y + X^2 )$$',
+  "skew" => '$$x \skew{100}\hat A x$$',
+  "Fourier Transform" => '$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$',
+  "An Identity of Ramanujan" => '$\frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac{2}{5} \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }$',
+  "The Cauchy-Schwarz Inequality" => '$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$',
+  "A Rogers-Ramanujan Identity" => '$$1 + \frac{q^2}{(1-q)} + \frac{q^6}{(1-q)(1-q^2)} + \cdots= \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},\quad\quad for\,|q| \lt 1.$$',
+  "Mathclap sample" => ""'
 $$
  y = a + f(\underbrace{b x}_{
                     \ge 0 \text{ by assumption}})
    = a + f(\underbrace{b x}_{
           \mathclap{\ge 0 \text{ by assumption}}})
 $$
-''',
-  'Maxwell\'s Equations' => '''
+'"",
+  "Maxwell's Equations" => ""'
 $$
 \begin{aligned}
 \nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} & = \frac{4\pi}{c}\vec{\mathbf{j}} \\\   \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\\
 \nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\\
 \nabla \cdot \vec{\mathbf{B}} & = 0 \end{aligned}
 $$
-''',
-  'colors' => '''
+'"",
+  "colors" => ""'
 $$
 \begin{array}{|rc|}
 black& \color{black}{text} \\\
@@ -56,8 +59,8 @@ purple& \color{purple}{text} \\\
 fuchsia& \color{magenta}{text} \\\
 \end{array}
 $$
-''',
-  'big braces' => '''
+'"",
+  "big braces" => ""'
 $$
 f\left(
    \left[
@@ -72,9 +75,9 @@ f\left(
    \right]^{3/2}
 \right)
 $$
-''',
-  'Integral equation' => '$\phi_n(\kappa) =\frac{1}{4\pi^2\kappa^2} \int_0^\infty\frac{\sin(\kappa R)}{\kappa R}\frac{\partial}{\partial R}\left[R^2\frac{\partial D_n(R)}{\partial R}\right]\,dR$',
-  'stacked equations' => '''
+'"",
+  "Integral equation" => '$\phi_n(\kappa) =\frac{1}{4\pi^2\kappa^2} \int_0^\infty\frac{\sin(\kappa R)}{\kappa R}\frac{\partial}{\partial R}\left[R^2\frac{\partial D_n(R)}{\partial R}\right]\,dR$',
+  "stacked equations" => ""'
 $$
 \begin{gathered}
 a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\,\mathrm{d}x\\\
@@ -88,8 +91,8 @@ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,\mathrm{d}x=\\\
 \end{split}\\\
 \end{gathered}
 $$
-''',
-  'fussy spacing' => '''
+'"",
+  "fussy spacing" => ""'
 $$
 \begin{array}{c|c}
 \mathrm{Bad} & \mathrm{Better} \\\\
@@ -97,8 +100,8 @@ $$
 \iiint_V f(x)dz dy dx & \iiint_V f(x)\,dz\,dy\,dx
 \end{array}
 $$
-''',
-  'fancy looking matrix' => '''
+'"",
+  "fancy looking matrix" => ""'
 $$
 \begin{pmatrix}
      1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
@@ -107,16 +110,16 @@ $$
      1 & a_m & a_m^2 & \cdots & a_m^n
      \end{pmatrix}
 $$
-''',
-  'augment matrix' => '''
+'"",
+  "augment matrix" => ""'
 $$ \left[
     \begin{array}{cc|c}
       1&2&3\\\\
       4&5&6
     \end{array}
 \right] $$
-''',
-  'definition cases' => '''
+'"",
+  "definition cases" => ""'
 $$
 f(n) =
 \begin{cases}
@@ -124,29 +127,13 @@ f(n) =
 3n+1, & \text{if n is odd}
 \end{cases}
 $$
-''',
- 'big braces' => '''
-$$
-f\left(
-   \left[
-     \frac{
-       1+\left\{x,y\right\}
-     }{
-       \left(
-          \frac{x}{y}+\frac{y}{x}
-       \right)
-       \left(u+1\right)
-     }+a
-   \right]^{3/2}
-\right)
-$$
-''',
-'inline smallmatrix' => '''
+'"",
+  "inline smallmatrix" => ""'
 $g\'_{\tau} = \left(
 \begin{smallmatrix}1&u\\\\0&1\end{smallmatrix} \right) \left(
 \begin{smallmatrix}v^{1/2}&0\\\\0&v^{-1/2}\end{smallmatrix} \right)$
-''',
-'crazy complicated math' => '''
+'"",
+  "crazy complicated math" => ""'
 $$
 \begin{aligned}
     (L_{ijr}^{T}L_{ijr}+\left[\begin{array}{cc}q_{11} & 0\\\\0 & 0 \end{array}\right])\mathbf{v}_{er,x}
@@ -171,12 +158,13 @@ $$
     +q_{45} = 0
 \end{aligned}
 $$
-''',
-'skew' => '$$x \skew{30}\hat A x$$'
+'"",
 }
 
 quality.each_pair do |filename, eq|
-  filename = filename.gsub(/[\$\\]*/, '').gsub(/\s+/, '-').gsub(/[^a-zA-Z\d]/, '-').gsub(/-{2,}/, '-').gsub(/-$/, '').downcase
+  filename = filename.gsub(/[\$\\]*/, "").gsub(/\s+/, "-").gsub(/[^a-zA-Z\d]/, "-").gsub(/-{2,}/, "-").gsub(/-$/, "").downcase
   svg_content = Mathematical.new.render(eq)
-  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write svg_content[:data] }
+  File.open("samples/quality/#{filename}.svg", "w") { |file| file.write(svg_content[:data]) }
 end
+
+# rubocop:enable Lint/ImplicitStringConcatenation

@@ -1,69 +1,73 @@
-require 'test_helper'
+# frozen_string_literal: true
 
-class Mathematical::BasicTest < MiniTest::Test
-  def test_single_dollar
-    render = Mathematical.new(:delimiter => :DOLLAR, :format => :mathml)
+require "test_helper"
 
-    fixture_tex = "$\\pi$"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'single_dollar.html')).strip
-    result = render.render(fixture_tex)
-    output = result[:data]
+module Mathematical
+  class BasicTest < MiniTest::Test
+    def test_single_dollar
+      render = Mathematical.new(delimiter: :DOLLAR, format: :mathml)
 
-    assert_equal(fixture_mml, output)
-  end
+      fixture_tex = "$\\pi$"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "single_dollar.html")).strip
+      result = render.render(fixture_tex)
+      output = result[:data]
 
-  def test_double_dollar
-    render = Mathematical.new(:delimiter => :DOUBLE, :format => :mathml)
+      assert_equal(fixture_mml, output)
+    end
 
-    fixture_tex = "$$\\pi$$"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'double_dollar.html')).strip
-    result = render.render(fixture_tex)
-    output = result[:data]
+    def test_double_dollar
+      render = Mathematical.new(delimiter: :DOUBLE, format: :mathml)
 
-    assert_equal(fixture_mml, output)
-  end
+      fixture_tex = "$$\\pi$$"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "double_dollar.html")).strip
+      result = render.render(fixture_tex)
+      output = result[:data]
 
-  def test_parens
-    render = Mathematical.new(:delimiter => :PARENS, :format => :mathml)
+      assert_equal(fixture_mml, output)
+    end
 
-    fixture_tex = "\\(\\pi\\)"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'parens.html')).strip
-    result = render.render(fixture_tex)
-    output = result[:data]
+    def test_parens
+      render = Mathematical.new(delimiter: :PARENS, format: :mathml)
 
-    assert_equal(fixture_mml, output)
-  end
+      fixture_tex = "\\(\\pi\\)"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "parens.html")).strip
+      result = render.render(fixture_tex)
+      output = result[:data]
 
-  def test_brackets
-    render = Mathematical.new(:delimiter => :BRACKETS, :format => :mathml)
+      assert_equal(fixture_mml, output)
+    end
 
-    fixture_tex = "\\[\\pi\\]"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'brackets.html')).strip
-    result = render.render(fixture_tex)
-    output = result[:data]
+    def test_brackets
+      render = Mathematical.new(delimiter: :BRACKETS, format: :mathml)
 
-    assert_equal(fixture_mml, output)
-  end
+      fixture_tex = "\\[\\pi\\]"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "brackets.html")).strip
+      result = render.render(fixture_tex)
+      output = result[:data]
 
-  def test_environments
-    render = Mathematical.new(:delimiter => :ENVIRONMENTS, :format => :mathml)
+      assert_equal(fixture_mml, output)
+    end
 
-    fixture_tex = "\\begin{equation}f(x)=(x+a)(x+b)\\end{equation}"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'single_equation.html')).strip
-    result = render.render(fixture_tex)
-    output = result[:data]
+    def test_environments
+      render = Mathematical.new(delimiter: :ENVIRONMENTS, format: :mathml)
 
-    assert_equal(fixture_mml, output)
-  end
+      fixture_tex = "\\begin{equation}f(x)=(x+a)(x+b)\\end{equation}"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "single_equation.html")).strip
+      result = render.render(fixture_tex)
+      output = result[:data]
 
-  def test_mixed
-    render = Mathematical.new(:delimiter => [:BRACKETS, :DOUBLE], :format => :mathml)
+      assert_equal(fixture_mml, output)
+    end
 
-    fixture_tex = "\\[\\alpha\\] $$\\beta$$"
-    fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, 'delimiters', 'mixed.html')).strip
-    result = render.filter(fixture_tex)
-    output = result[:data]
+    def test_mixed
+      render = Mathematical.new(delimiter: [:BRACKETS, :DOUBLE], format: :mathml)
 
-    assert_equal(fixture_mml.strip, output)
+      fixture_tex = "\\[\\alpha\\] $$\\beta$$"
+      fixture_mml = File.read(File.join(MTEX2MML_FIXTURES_DIR, "delimiters", "mixed.html")).strip
+      result = render.filter(fixture_tex)
+      output = result[:data]
+
+      assert_equal(fixture_mml.strip, output)
+    end
   end
 end

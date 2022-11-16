@@ -1,4 +1,6 @@
-require 'ruby-enum'
+# frozen_string_literal: true
+
+require "ruby-enum"
 
 class Configuration
   class Delimiters
@@ -11,10 +13,12 @@ class Configuration
     define :BRACKETS, 8
     define :ENVIRONMENTS, 16
 
-    def self.option_exists?(option)
-      unless Delimiters.keys.include?(option)
-        fail TypeError, "delimiter type does not exist: #{option}"
+    class << self
+      def option_exists?(option)
+        unless Delimiters.key?(option)
+          raise(TypeError, "delimiter type does not exist: #{option}")
+        end
       end
-    end
+  end
   end
 end

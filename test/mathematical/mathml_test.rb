@@ -1,9 +1,12 @@
-require 'test_helper'
+# frozen_string_literal: true
 
-class Mathematical::MathMLTest < MiniTest::Test
+# rubocop:disable Lint/ImplicitStringConcatenation
+require "test_helper"
 
-  def test_it_returns_mathml
-    string = '''
+module Mathematical
+  class MathMLTest < MiniTest::Test
+    def test_it_returns_mathml
+      string = ""'
     $$
 \begin{pmatrix}
      1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
@@ -12,10 +15,13 @@ class Mathematical::MathMLTest < MiniTest::Test
      1 & a_m & a_m^2 & \cdots & a_m^n
      \end{pmatrix}
 $$
-'''
-    render = Mathematical.new({:format => :mathml})
-    mathml = render.render(string)[:data]
+'""
+      render = Mathematical.new({ format: :mathml })
+      mathml = render.render(string)[:data]
 
-    assert_match %r{<math xmlns='http://www.w3.org/1998/Math/MathML' display='block'><semantics><mrow><mrow><mo>\(}, mathml
+      assert_match(%r{<math xmlns='http://www.w3.org/1998/Math/MathML' display='block'><semantics><mrow><mrow><mo>\(}, mathml)
+    end
   end
 end
+
+# rubocop:enable Lint/ImplicitStringConcatenation

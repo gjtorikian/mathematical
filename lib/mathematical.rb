@@ -1,23 +1,25 @@
-require 'mathematical/mathematical'
+# frozen_string_literal: true
 
-require 'mathematical/configuration'
-require 'mathematical/corrections'
-require 'mathematical/validator'
-require 'mathematical/version'
+require "mathematical/mathematical"
 
-require 'base64'
+require "mathematical/configuration"
+require "mathematical/corrections"
+require "mathematical/validator"
+require "mathematical/version"
+
+require "base64"
 
 class Mathematical
   include Corrections
   include Validator
 
   DEFAULT_OPTS = {
-    :ppi => 72.0,
-    :zoom => 1.0,
-    :base64 => false,
-    :maxsize => 0,
-    :format => :svg,
-    :delimiter => [:DOLLAR, :DOUBLE]
+    ppi: 72.0,
+    zoom: 1.0,
+    base64: false,
+    maxsize: 0,
+    format: :svg,
+    delimiter: [:DOLLAR, :DOUBLE],
   }
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -31,10 +33,10 @@ class Mathematical
 
     @config[:formatInt] = FORMAT_TYPES.index(@config[:format])
 
-    if @config[:delimiter].is_a?(Symbol)
-      @config[:delimiter] = Configuration::Delimiters.to_h[@config[:delimiter]]
+    @config[:delimiter] = if @config[:delimiter].is_a?(Symbol)
+      Configuration::Delimiters.to_h[@config[:delimiter]]
     else
-      @config[:delimiter] = @config[:delimiter].map do |delim|
+      @config[:delimiter].map do |delim|
         Configuration::Delimiters.to_h[delim]
       end.inject(0, :|)
     end
@@ -64,7 +66,7 @@ class Mathematical
     # TODO: can/should be optimized to not do two calls here, but I am thinking
     # about moving to Rust and don't have time to write safe C...
     if result_data[:data] && @config[:format] != :mathml
-      result_data[:data].gsub!(MATH_MATCH) do |match|
+      result_data[:data].gsub!(MATH_MATCH) do |_match|
         result = @processer.process(maths, RENDER_TYPES.find_index(:parse))
         widths << result[:width]
         heights << result[:height]
@@ -85,9 +87,9 @@ class Mathematical
   end
 
   def result(result_data)
-    fail RuntimeError if !result_data.is_a?(Hash) && !result_data.is_a?(Array)
+    raise(RuntimeError) if !result_data.is_a?(Hash) && !result_data.is_a?(Array)
 
-    if result_data.is_a? Array
+    if result_data.is_a?(Array)
       result_data.map { |d| format_data(d) }
     else
       format_data(result_data)
@@ -103,7 +105,7 @@ class Mathematical
     case @config[:format]
     when :svg
       # remove starting <?xml...> tag
-      result_hash[:data] = result_hash[:data].gsub(XML_HEADER, '')
+      result_hash[:data] = result_hash[:data].gsub(XML_HEADER, "")
       result_hash[:data] = svg_to_base64(result_hash[:data]) if @config[:base64]
 
       result_hash
