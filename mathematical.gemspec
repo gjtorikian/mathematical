@@ -22,10 +22,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'ruby-enum', '~> 0.4'
 
-  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rake-compiler', '~> 1.0'
   spec.add_development_dependency 'minitest', '~> 5.6'
   spec.add_development_dependency 'math-to-itex', '~> 0.3'
   spec.add_development_dependency 'nokogiri', '~> 1.10'
-  spec.add_development_dependency 'pry-byebug', '~> 3.9.0'
 end
