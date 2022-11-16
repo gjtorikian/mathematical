@@ -1,8 +1,9 @@
 #!/usr/bin/ruby
+# frozen_string_literal: true
 
-lib = File.expand_path('../../lib', __FILE__)
+lib = File.expand_path("../../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'mathematical'
+require "mathematical"
 
 svg = Mathematical.new.render('$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$')[:data]
 
@@ -18,8 +19,8 @@ text = """
 </html>
 """
 
-File.open('test.html', 'w') { |file| file.write(text) }
+File.open("test.html", "w") { |file| file.write(text) }
 
-unless ARGV[0] == '-s'
-  `open text.html`
+unless ARGV[0] == "-s"
+  %x(open text.html)
 end

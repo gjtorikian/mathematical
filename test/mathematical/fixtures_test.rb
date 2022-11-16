@@ -1,50 +1,55 @@
-require 'test_helper'
-require 'math-to-itex'
+# frozen_string_literal: true
 
-class Mathematical::FixturesTest < MiniTest::Test
-  # the same SVGs sometimes get random id values, throwing off the tests
-  def strip_id(blob)
-    blob.gsub(/id="surface.+?"/, '')
-  end
+require "test_helper"
+require "math-to-itex"
 
-  Dir["#{fixtures_dir}/before/*.text"].each do |before|
-    name = before.split('/').last
+module Mathematical
+  class FixturesTest < MiniTest::Test
+    # the same SVGs sometimes get random id values, throwing off the tests
+    def strip_id(blob)
+      blob.gsub(/id="surface.+?"/, "")
+    end
 
-    define_method "test_#{name}" do
-      source = File.read(before)
+    Dir["#{fixtures_dir}/before/*.text"].each do |before|
+      name = before.split("/").last
 
-      if ENV['MATHEMATICAL_GENERATE_SAMPLE']
-        next unless name.match(/compliance/)
-        write_sample(source)
-      end
+      define_method "test_#{name}" do
+        source = File.read(before)
 
-      actual = MathToItex(source).convert do |eq, type|
-        svg_content = Mathematical.new(:base64 => true).render(eq)
+        if ENV["MATHEMATICAL_GENERATE_SAMPLE"]
+          next unless /compliance/.match?(name)
 
-        %(<img class="#{type}-math" data-math-type="#{type}-math" src="#{svg_content[:data]}"/>)
-      end.rstrip
-
-      expected_file = before.sub(/before/, 'after').sub(/text/, 'html')
-
-      File.open(expected_file, 'w') { |file| file.write(actual) } unless ENV['DEBUG_MATHEMATICAL'].nil?
-
-      expected = File.read(expected_file)
-
-      expected = (MathToItex(expected).convert { |string| Mathematical.new.render(string) }).rstrip
-
-      # Travis and OS X each render SVGs differently. For now, let's just be happy
-      # that something renders at all.
-      unless actual.match('PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My')
-        diff = IO.popen("diff -u - #{expected_file}", 'r+') do |f|
-          f.write actual
-          f.close_write
-          f.read
+          write_sample(source)
         end
 
-        assert expected == actual, <<-eos
-  #{File.basename expected_file}'s contents don't match command output:
+        actual = MathToItex(source).convert do |eq, type|
+          svg_content = Mathematical.new(base64: true).render(eq)
+
+          %(<img class="#{type}-math" data-math-type="#{type}-math" src="#{svg_content[:data]}"/>)
+        end.rstrip
+
+        expected_file = before.sub(/before/, "after").sub(/text/, "html")
+
+        File.open(expected_file, "w") { |file| file.write(actual) } unless ENV["DEBUG_MATHEMATICAL"].nil?
+
+        expected = File.read(expected_file)
+
+        expected = (MathToItex(expected).convert { |string| Mathematical.new.render(string) }).rstrip
+
+        # Travis and OS X each render SVGs differently. For now, let's just be happy
+        # that something renders at all.
+        unless actual.match?("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My")
+          diff = IO.popen("diff -u - #{expected_file}", "r+") do |f|
+            f.write(actual)
+            f.close_write
+            f.read
+          end
+
+          assert_equal expected, actual, <<-eos
+  #{File.basename(expected_file)}'s contents don't match command output:
   #{diff}
-  eos
+          eos
+        end
       end
     end
   end

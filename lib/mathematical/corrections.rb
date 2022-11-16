@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mathematical
   module Corrections
     def apply_corrections(maths)

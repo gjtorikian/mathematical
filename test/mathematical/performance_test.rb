@@ -1,15 +1,19 @@
-require 'test_helper'
-require 'benchmark'
+# frozen_string_literal: true
 
-class Mathematical::BasicTest < MiniTest::Test
-  def test_it_handles_big_files
-    big_file = File.read('test/mathematical/fixtures/performance/big_file.text')
-    speed = Benchmark.realtime do
-      assert_silent do
-        Mathematical.new.filter(big_file)
+require "test_helper"
+require "benchmark"
+
+module Mathematical
+  class BasicTest < MiniTest::Test
+    def test_it_handles_big_files
+      big_file = File.read("test/mathematical/fixtures/performance/big_file.text")
+      speed = Benchmark.realtime do
+        assert_silent do
+          Mathematical.new.filter(big_file)
+        end
       end
-    end
 
-    assert_operator speed, :<=, 5
+      assert_operator(speed, :<=, 5)
+    end
   end
 end
