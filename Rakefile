@@ -58,3 +58,8 @@ task :benchmark do
   $LOAD_PATH.unshift("lib")
   load "script/benchmark.rb"
 end
+
+GEMSPEC = Bundler.load_gemspec("mathematical.gemspec")
+gem_path = Gem::PackageTask.new(GEMSPEC).define
+desc "Package the ruby gem"
+task "package" => [gem_path]
