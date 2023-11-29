@@ -30,7 +30,7 @@ jobs:
           script/install_linux_deps
 
       - name: Install MacOS packages
-        if: ${{ matrix.os == 'macos-11.0' }}
+        if: ${{ matrix.os == 'macos-latest' }}
         run: script/install_macos_deps
 
       - name: Set up Ruby ${{ matrix.ruby-version }}

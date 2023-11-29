@@ -3,8 +3,8 @@
 require "test_helper"
 require "math-to-itex"
 
-module Mathematical
-  class FixturesTest < MiniTest::Test
+class Mathematical
+  class FixturesTest < Minitest::Test
     # the same SVGs sometimes get random id values, throwing off the tests
     def strip_id(blob)
       blob.gsub(/id="surface.+?"/, "")

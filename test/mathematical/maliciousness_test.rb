@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-module Mathematical
-  class MaliciousnessTest < MiniTest::Test
+class Mathematical
+  class MaliciousnessTest < Minitest::Test
     def test_it_does_not_error_on_unrecognized_commands
       render = Mathematical.new
       # In mtex2MML, we raise a ParseError, but Mathematical suppresses it and returns the string.
@@ -60,9 +60,8 @@ module Mathematical
       assert_equal('$a \ne b$', output[:data])
       assert_equal(output[:exception].class, Mathematical::MaxsizeError)
 
-      render = Mathematical.new({ maxsize: 2**80 })
       assert_raises(TypeError) do
-        render.render('$a \ne b$')
+        render = Mathematical.new({ maxsize: 2**80 })
       end
     end
 
