@@ -6,6 +6,12 @@ Quickly convert math equations into beautiful SVGs (or PNGs/MathML).
 
 ![Mathematical](https://i.imgur.com/JC7HT32.gif)
 
+## ⚠️ Maintenance Status ⚠️
+
+SVG and especially PNG generation is currently unmaintained. This library should primarily be used for MathML generation.
+
+Please reach out if you would like to mantain SVG and PNG portions of the library.
+
 ## Installation
 
 Add this line to your application's Gemfile:
