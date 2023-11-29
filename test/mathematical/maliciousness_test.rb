@@ -122,11 +122,11 @@ class Mathematical
       end
 
       assert_equal(3, output.length)
-      assert_equal(Hash, output.first.class)
-      assert_equal(Hash, output.last.class)
+      assert_instance_of(Hash, output.first)
+      assert_instance_of(Hash, output.last)
 
       assert_equal("$/this___istotallyfake$", output[1][:data])
-      assert_equal(Mathematical::ParseError, output[1][:exception].class)
+      assert_instance_of(Mathematical::ParseError, output[1][:exception])
       assert_match("Failed to parse mtex", output[1][:exception].message)
 
       # array errors also output to STDERR
@@ -144,7 +144,7 @@ class Mathematical
       assert_equal(1, output.length)
 
       assert_equal('$a \ne b$', output[0][:data])
-      assert_equal(Mathematical::MaxsizeError, output[0][:exception].class)
+      assert_instance_of(Mathematical::MaxsizeError, output[0][:exception])
       assert_match("Size of latex string is greater than the maxsize", output[0][:exception].message)
 
       # array errors also output to STDERR

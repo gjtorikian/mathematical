@@ -11,7 +11,7 @@ class Mathematical
     # inside itex equations. So "<" and ">" are significant.
     # To obtain a less-than or greater-than sign, you should use \lt or \gt, respectively.
     def adjust_lt_gt(maths)
-      maths.gsub(/</, '\lt').gsub(/>/, '\gt')
+      maths.gsub("<", '\lt').gsub(">", '\gt')
     end
   end
 end

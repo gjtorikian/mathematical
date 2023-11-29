@@ -17,7 +17,7 @@ class Mathematical
         source = File.read(before)
 
         if ENV["MATHEMATICAL_GENERATE_SAMPLE"]
-          next unless /compliance/.match?(name)
+          next unless name.include?("compliance")
 
           write_sample(source)
         end
@@ -28,7 +28,7 @@ class Mathematical
           %(<img class="#{type}-math" data-math-type="#{type}-math" src="#{svg_content[:data]}"/>)
         end.rstrip
 
-        expected_file = before.sub(/before/, "after").sub(/text/, "html")
+        expected_file = before.sub("before", "after").sub("text", "html")
 
         File.open(expected_file, "w") { |file| file.write(actual) } unless ENV["DEBUG_MATHEMATICAL"].nil?
 

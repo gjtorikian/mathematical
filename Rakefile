@@ -29,7 +29,7 @@ Rake::Task[:test].prerequisites
 task build: [:clean]
 
 Rake::Task[:clean].enhance do
-  Dir.chdir(LASEM_DIR) { puts %x(git clean -fdx); }
+  Dir.chdir(LASEM_DIR) { puts %x(git clean -fdx) }
 end
 
 desc "Copy samples to gh-pages"

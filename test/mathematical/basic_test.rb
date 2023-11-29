@@ -14,7 +14,7 @@ class Mathematical
       render.render('$\pi$')
       output = render.render('$\pi$')[:data]
 
-      assert_equal(1, output.scan(/<svg/).size, "should only contain one svg")
+      assert_equal(1, output.scan("<svg").size, "should only contain one svg")
 
       # assert the SVG actually rendered
       doc = Nokogiri::HTML(output)
