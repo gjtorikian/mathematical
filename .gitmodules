@@ -1,7 +1,8 @@
 [submodule "ext/mathematical/lasem"]
   path = ext/mathematical/lasem
-  url = https://gitlab.gnome.org/GNOME/lasem.git
+	url = https://github.com/LasemProject/lasem.git
   ignore = dirty
+	branch = main
 [submodule "ext/mathematical/mtex2MML"]
 	path = ext/mathematical/mtex2MML
 	url = https://github.com/gjtorikian/mtex2MML
