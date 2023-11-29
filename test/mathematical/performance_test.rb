@@ -3,8 +3,8 @@
 require "test_helper"
 require "benchmark"
 
-module Mathematical
-  class BasicTest < MiniTest::Test
+class Mathematical
+  class BasicTest < Minitest::Test
     def test_it_handles_big_files
       big_file = File.read("test/mathematical/fixtures/performance/big_file.text")
       speed = Benchmark.realtime do

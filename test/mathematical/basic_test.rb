@@ -3,8 +3,8 @@
 require "test_helper"
 require "nokogiri"
 
-module Mathematical
-  class BasicTest < MiniTest::Test
+class Mathematical
+  class BasicTest < Minitest::Test
     def test_it_has_a_version
       assert(Mathematical::VERSION)
     end
@@ -14,7 +14,7 @@ module Mathematical
       render.render('$\pi$')
       output = render.render('$\pi$')[:data]
 
-      assert_equal(1, output.scan(/<svg/).size, "should only contain one svg")
+      assert_equal(1, output.scan("<svg").size, "should only contain one svg")
 
       # assert the SVG actually rendered
       doc = Nokogiri::HTML(output)

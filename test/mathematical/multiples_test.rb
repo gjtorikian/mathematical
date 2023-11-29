@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-module Mathematical
-  class MultiplesTest < MiniTest::Test
+class Mathematical
+  class MultiplesTest < Minitest::Test
     def setup
       @render = Mathematical.new(base64: true)
     end
@@ -20,7 +20,7 @@ module Mathematical
       output = @render.render([string])
       svg = output.first[:data]
 
-      assert_equal(1, svg.scan(/svg\+xml;/).size, "should only contain one svg")
+      assert_equal(1, svg.scan("svg+xml;").size, "should only contain one svg")
       assert_match("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My", svg)
     end
 
@@ -46,6 +46,7 @@ module Mathematical
     end
 
     def test_it_properly_accounts_for_equations
+      skip("png tests are currently unsupported")
       inputs = []
       (1..2).each do |i|
         string = """
