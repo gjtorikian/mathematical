@@ -11,7 +11,7 @@ class Mathematical
     end
 
     def test_it_creates_a_png
-      skip "png tests are currently unsupported"
+      skip("png tests are currently unsupported")
       string = ""'
     $$
 \begin{pmatrix}
