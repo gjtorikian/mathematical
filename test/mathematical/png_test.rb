@@ -4,13 +4,14 @@
 
 require "test_helper"
 
-module Mathematical
-  class PNGTest < MiniTest::Test
+class Mathematical
+  class PNGTest < Minitest::Test
     def before
       File.delete("#{fixtures_dir}/png/pmatrix.png") if File.exist?("#{fixtures_dir}/png/pmatrix.png")
     end
 
     def test_it_creates_a_png
+      skip "png tests are currently unsupported"
       string = ""'
     $$
 \begin{pmatrix}

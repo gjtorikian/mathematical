@@ -3,8 +3,8 @@
 require "test_helper"
 require "nokogiri"
 
-module Mathematical
-  class MathJaxTest < MiniTest::Test
+class Mathematical
+  class MathJaxTest < Minitest::Test
     render_svg = Mathematical.new
 
     SKIPPED = []

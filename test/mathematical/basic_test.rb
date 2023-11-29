@@ -3,8 +3,8 @@
 require "test_helper"
 require "nokogiri"
 
-module Mathematical
-  class BasicTest < MiniTest::Test
+class Mathematical
+  class BasicTest < Minitest::Test
     def test_it_has_a_version
       assert(Mathematical::VERSION)
     end

@@ -19,6 +19,6 @@ class Configuration
           raise(TypeError, "delimiter type does not exist: #{option}")
         end
       end
-  end
+    end
   end
 end

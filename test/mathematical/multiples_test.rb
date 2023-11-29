@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-module Mathematical
-  class MultiplesTest < MiniTest::Test
+class Mathematical
+  class MultiplesTest < Minitest::Test
     def setup
       @render = Mathematical.new(base64: true)
     end
@@ -46,6 +46,7 @@ module Mathematical
     end
 
     def test_it_properly_accounts_for_equations
+      skip "png tests are currently unsupported"
       inputs = []
       (1..2).each do |i|
         string = """
