@@ -2,8 +2,8 @@ name: Linting
 
 on:
   pull_request:
-    paths:
-      - "**/*.rb"
+    branches:
+      - main
 
 permissions:
   contents: read
