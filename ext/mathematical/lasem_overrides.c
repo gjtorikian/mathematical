@@ -17,7 +17,7 @@ lsm_itex_free_mathml_buffer	(char *mathml)
 }
 
 char *
-lsm_itex_to_mathml (const char *itex, gssize size) { }
+lsm_itex_to_mathml (const char *itex, gssize size) { return NULL; }
 
 
 char *
@@ -27,7 +27,7 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_typ
   char *mathml;
   int status = 0;
 
-  if (mtex == NULL) {
+  if (!mtex) {
     return NULL;
   }
 
@@ -42,7 +42,7 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_typ
 
   switch (render_type) {
   case PARSE:
-    mathml = mtex2MML_parse(mtex, usize, delimiter);
+    mathml = mtex2MML_global_parse(mtex, usize, delimiter, 1);
     if (mathml == NULL) {
       status = 1;
     }
@@ -60,7 +60,7 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_typ
     mathml = mtex2MML_output();
     break;
   default:
-    mathml = mtex2MML_parse(mtex, usize, delimiter);
+    mathml = mtex2MML_global_parse(mtex, usize, delimiter, 1);
     if (mathml == NULL) {
       status = 1;
     }
@@ -82,9 +82,5 @@ lsm_mtex_to_mathml (const char *mtex, gssize size, int delimiter, int render_typ
 void
 lsm_mtex_free_mathml_buffer (char *mathml)
 {
-  if (mathml == NULL) {
-    return;
-  }
-
   mtex2MML_free_string (mathml);
 }
