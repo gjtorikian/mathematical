@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-module Mathematical
-  class BasicTest < MiniTest::Test
+class Mathematical
+  class BasicTest < Minitest::Test
     def test_single_dollar
       render = Mathematical.new(delimiter: :DOLLAR, format: :mathml)
 

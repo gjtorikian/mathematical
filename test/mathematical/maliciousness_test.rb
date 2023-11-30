@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-module Mathematical
-  class MaliciousnessTest < MiniTest::Test
+class Mathematical
+  class MaliciousnessTest < Minitest::Test
     def test_it_does_not_error_on_unrecognized_commands
       render = Mathematical.new
       # In mtex2MML, we raise a ParseError, but Mathematical suppresses it and returns the string.
@@ -60,9 +60,8 @@ module Mathematical
       assert_equal('$a \ne b$', output[:data])
       assert_equal(output[:exception].class, Mathematical::MaxsizeError)
 
-      render = Mathematical.new({ maxsize: 2**80 })
       assert_raises(TypeError) do
-        render.render('$a \ne b$')
+        render = Mathematical.new({ maxsize: 2**80 })
       end
     end
 
@@ -123,11 +122,11 @@ module Mathematical
       end
 
       assert_equal(3, output.length)
-      assert_equal(Hash, output.first.class)
-      assert_equal(Hash, output.last.class)
+      assert_instance_of(Hash, output.first)
+      assert_instance_of(Hash, output.last)
 
       assert_equal("$/this___istotallyfake$", output[1][:data])
-      assert_equal(Mathematical::ParseError, output[1][:exception].class)
+      assert_instance_of(Mathematical::ParseError, output[1][:exception])
       assert_match("Failed to parse mtex", output[1][:exception].message)
 
       # array errors also output to STDERR
@@ -145,7 +144,7 @@ module Mathematical
       assert_equal(1, output.length)
 
       assert_equal('$a \ne b$', output[0][:data])
-      assert_equal(Mathematical::MaxsizeError, output[0][:exception].class)
+      assert_instance_of(Mathematical::MaxsizeError, output[0][:exception])
       assert_match("Size of latex string is greater than the maxsize", output[0][:exception].message)
 
       # array errors also output to STDERR

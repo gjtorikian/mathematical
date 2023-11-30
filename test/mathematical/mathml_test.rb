@@ -3,8 +3,8 @@
 # rubocop:disable Lint/ImplicitStringConcatenation
 require "test_helper"
 
-module Mathematical
-  class MathMLTest < MiniTest::Test
+class Mathematical
+  class MathMLTest < Minitest::Test
     def test_it_returns_mathml
       string = ""'
     $$
