@@ -1,3 +1,10 @@
+## [v1.6.18] - 30-11-2023
+## What's Changed
+* Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/gjtorikian/mathematical/pull/118
+* bump version by @4e554c4c in https://github.com/gjtorikian/mathematical/pull/127
+
+
+**Full Changelog**: https://github.com/gjtorikian/mathematical/compare/v1.6.17...v1.6.18
 ## [v1.6.17] - 30-11-2023
 ## What's Changed
 * Fix tests by @4e554c4c in https://github.com/gjtorikian/mathematical/pull/121
