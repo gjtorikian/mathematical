@@ -32,3 +32,6 @@ mkmf.log
 Makefile
 ext/mathematical/build
 ext/mathematical/lasem/build
+# clangd files
+*compile_commands.json
+*.cache

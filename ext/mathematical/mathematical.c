@@ -145,13 +145,11 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   lsm_dom_view_render (view, cairo, 0, 0);
 
   switch (format) {
-  case FORMAT_PNG: {
+  case FORMAT_PNG:
     cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
     break;
-  }
-  default: {
+  default:
     break;
-  }
   }
 
   cairo_destroy (cairo);
