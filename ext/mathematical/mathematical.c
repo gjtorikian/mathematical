@@ -135,7 +135,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
   cairo_surface_t *surface;
 
   if (format == FORMAT_SVG) {
-    surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, self, width_pt, height_pt);
+    surface = cairo_svg_surface_create_for_stream (cairoSvgSurfaceCallback, (void *)self, width_pt, height_pt);
   } else if (format == FORMAT_PNG) {
     surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
   }
@@ -146,7 +146,7 @@ VALUE process(VALUE self, unsigned long maxsize, const char *latex_code, unsigne
 
   switch (format) {
   case FORMAT_PNG:
-    cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, self);
+    cairo_surface_write_to_png_stream (cairo_get_target (cairo), cairoPngSurfaceCallback, (void *)self);
     break;
   default:
     break;
@@ -229,7 +229,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input, VALUE rb_ParseType
     args[4] = rb_iv_get(self, "@delimiter");
     args[5] = rb_ParseType;
 
-    output = rb_rescue(process_helper, args, process_rescue, rb_Input);
+    output = rb_rescue(process_helper, (VALUE)&args[0], process_rescue, rb_Input);
     break;
   }
   case T_ARRAY: {
@@ -253,7 +253,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input, VALUE rb_ParseType
       args[4] = rb_iv_get(self, "@delimiter");
       args[5] = rb_ParseType;
 
-      hash = rb_rescue(process_helper, args, process_rescue, math);
+      hash = rb_rescue(process_helper, (VALUE)&args[0], process_rescue, math);
 
       rb_ary_store(output, i, hash);
     }
@@ -262,7 +262,7 @@ static VALUE MATHEMATICAL_process(VALUE self, VALUE rb_Input, VALUE rb_ParseType
   default: {
     /* should be impossible, Ruby code prevents this */
     print_and_raise(rb_eTypeError, "not valid value");
-    output = NULL;
+    output = (VALUE)NULL;
     break;
   }
   }
