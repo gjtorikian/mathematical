@@ -16,6 +16,7 @@ doc/
 ext/mathematical/lib
 file.svg
 Gemfile.lock
+*.gem
 InstalledFiles
 lib/bundler/man
 lib/mathematical.bundle
