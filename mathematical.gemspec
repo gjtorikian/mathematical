@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib", "ext"]
   spec.extensions    = ["ext/mathematical/extconf.rb"]
 
-  spec.add_dependency("ruby-enum", "~> 0.4")
+  spec.add_dependency("ruby-enum", ">= 0.4", "< 2.0")
 
   spec.add_development_dependency("math-to-itex", "~> 0.3")
   spec.add_development_dependency("minitest", "~> 5.6")
