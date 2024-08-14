@@ -13,7 +13,7 @@ class Mathematical
     Dir["#{fixtures_dir}/before/*.text"].each do |before|
       name = before.split("/").last
 
-      define_method "test_#{name}" do
+      define_method :"test_#{name}" do
         source = File.read(before)
 
         if ENV["MATHEMATICAL_GENERATE_SAMPLE"]
