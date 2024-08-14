@@ -6,3 +6,10 @@ inherit_gem:
 AllCops:
   Exclude:
     - 'ext/mathematical/mtex2MML/**/*'
+
+# temporary fix for current rubocop bug
+# https://github.com/rubocop/rubocop/issues/13093
+Lint/ImplicitStringConcatenation:
+  Enabled: false
+Lint/RedundantCopDisableDirective:
+  Enabled: false

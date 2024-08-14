@@ -9,7 +9,7 @@ class Mathematical
 
     SKIPPED = []
     Dir["#{MATHJAX_TEX_DIR}/**/*.txt"].each do |tex|
-      define_method "test_#{tex}" do
+      define_method :"test_#{tex}" do
         tex_contents = File.read(tex)
         data = nil
 
