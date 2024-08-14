@@ -3,7 +3,8 @@
 require "bundler/setup"
 require "mathematical"
 require "minitest/autorun"
-require "minitest/pride"
+# minitest/pride broken on gh runners
+# require "minitest/pride"
 require "math-to-itex"
 require "pp"
 
