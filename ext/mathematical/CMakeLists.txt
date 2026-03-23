@@ -5,7 +5,7 @@
 #
 project(lasem)
 enable_language(C)
-cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 cmake_policy(SET CMP0015 NEW)
 set(CMAKE_MACOSX_RPATH 1)
 
