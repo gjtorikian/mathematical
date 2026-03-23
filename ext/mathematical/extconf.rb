@@ -26,6 +26,7 @@ SHARED_EXT = OS == :macos ? "dylib" : "so"
 # Starting in Catalina, libxml2 was moved elsewhere
 SDKROOT = OS == :macos ? %x(/usr/bin/xcrun --show-sdk-path).chomp : ""
 RPATH = OS == :macos ? "-rpath @loader_path/../../ext/mathematical/lib".chomp : ""
+CMAKE_GENERATOR = OS == :windows ? "-G \"MSYS Makefiles\"" : ""
 
 unless find_executable("cmake")
   $stderr.puts "\n\n\n[ERROR]: cmake is required and not installed. Get it here: http://www.cmake.org/\n\n"
@@ -77,7 +78,7 @@ clean_dir(LASEM_BUILD_DIR)
 if !using_system_mtex2mml?
   # build mtex2MML library
   Dir.chdir(MTEX2MML_BUILD_DIR) do
-    system "cmake .."
+    system "cmake #{CMAKE_GENERATOR} .."
     system "make libmtex2MML_static"
   end
   FileUtils.mkdir_p(MTEX2MML_LIB_DIR)
@@ -94,7 +95,7 @@ if !using_system_lasem?
   # build Lasem library
   # SHOULD BE DYNAMICALLY LINKED for potential LGPL copyright issues
   Dir.chdir(LASEM_BUILD_DIR) do
-    system "cmake ../.."
+    system "cmake #{CMAKE_GENERATOR} ../.."
     system "make"
   end
   FileUtils.mkdir_p(LASEM_LIB_DIR)
