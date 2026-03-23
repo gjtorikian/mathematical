@@ -114,6 +114,8 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 ## Building
 
+_If building on Windows, see this [README](README-Windows.md)._
+
 Before building this gem, you must install the following libraries:
 
 * Ruby 2.1 or higher (you'll need Ruby header files, so a `*-dev` version is also required)
