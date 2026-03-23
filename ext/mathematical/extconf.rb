@@ -22,7 +22,7 @@ end
 
 LIBDIR     = RbConfig::CONFIG["libdir"]
 INCLUDEDIR = RbConfig::CONFIG["includedir"]
-SHARED_EXT = OS == :macos ? "dylib" : "so"
+SHARED_EXT = OS == :macos ? "dylib" : OS == :windows ? "dll" : "so"
 # Starting in Catalina, libxml2 was moved elsewhere
 SDKROOT = OS == :macos ? %x(/usr/bin/xcrun --show-sdk-path).chomp : ""
 RPATH = OS == :macos ? "-rpath @loader_path/../../ext/mathematical/lib".chomp : ""
