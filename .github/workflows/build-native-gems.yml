@@ -289,12 +289,12 @@ jobs:
           - platform: arm64-darwin
             runner: macos-latest
             ruby: "3.3"
-            install_deps: ""
-          # Windows
-          - platform: x64-mingw-ucrt
-            runner: windows-latest
-            ruby: "3.3"
-            install_deps: ""
+            install_deps: brew install glib gdk-pixbuf cairo pango libxml2
+          # Windows — skipped: native gem needs MSYS2 DLLs bundled (future work)
+          # - platform: x64-mingw-ucrt
+          #   runner: windows-latest
+          #   ruby: "3.3"
+          #   install_deps: ""
 
     runs-on: ${{ matrix.runner }}
 
