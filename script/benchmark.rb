@@ -11,7 +11,7 @@ include Benchmark
 
 ITERATIONS = 1
 
-file = File.open("test/mathematical/fixtures/performance/big_file.text").read.to_s
+file = File.read("test/mathematical/fixtures/performance/big_file.text").to_s
 
 puts "Benchmarking....\n"
 

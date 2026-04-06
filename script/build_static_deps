@@ -1,0 +1,307 @@
+#!/usr/bin/env bash
+#
+# Build static dependencies for the mathematical gem.
+#
+# This compiles all C library dependencies from source as static libraries
+# and installs them into vendor/ so the gem extension can link against them
+# without requiring users to have development packages installed.
+#
+# Usage:
+#   script/build_static_deps [--prefix DIR]
+#
+# The build order handles the FreeType↔HarfBuzz circular dependency:
+#   1. Foundation libs (zlib, libffi, pcre2, gettext/libiconv, expat, libpng, libjpeg)
+#   2. libxml2
+#   3. glib (needs libffi, pcre2, gettext, zlib)
+#   4. freetype pass 1 (WITHOUT harfbuzz)
+#   5. harfbuzz (needs glib, freetype)
+#   6. freetype pass 2 (WITH harfbuzz)
+#   7. fontconfig (needs freetype, expat)
+#   8. fribidi
+#   9. pixman
+#   10. cairo (needs pixman, freetype, fontconfig, libpng, glib)
+#   11. pango (needs glib, cairo, harfbuzz, fribidi, fontconfig)
+#   12. gdk-pixbuf (needs glib, libjpeg, libpng)
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PREFIX="${1:-$ROOT_DIR/vendor}"
+BUILD_DIR="$ROOT_DIR/tmp/static_deps_build"
+NPROC=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+
+# Versions
+ZLIB_VERSION="1.3.1"
+LIBFFI_VERSION="3.4.6"
+PCRE2_VERSION="10.44"
+GETTEXT_VERSION="0.22.5"
+EXPAT_VERSION="2.6.2"
+LIBPNG_VERSION="1.6.43"
+LIBJPEG_VERSION="3.0.3"
+LIBXML2_VERSION="2.12.7"
+GLIB_VERSION="2.80.4"
+FREETYPE_VERSION="2.13.3"
+HARFBUZZ_VERSION="9.0.0"
+FONTCONFIG_VERSION="2.15.0"
+FRIBIDI_VERSION="1.0.15"
+PIXMAN_VERSION="0.43.4"
+CAIRO_VERSION="1.18.0"
+PANGO_VERSION="1.54.0"
+GDK_PIXBUF_VERSION="2.42.12"
+
+glib_minor=$(echo "$GLIB_VERSION" | cut -d. -f1,2)
+pango_minor=$(echo "$PANGO_VERSION" | cut -d. -f1,2)
+gdk_pixbuf_minor=$(echo "$GDK_PIXBUF_VERSION" | cut -d. -f1,2)
+cairo_minor=$(echo "$CAIRO_VERSION" | cut -d. -f1,2)
+
+export PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PREFIX/lib64/pkgconfig:${PKG_CONFIG_PATH:-}"
+export PATH="$PREFIX/bin:$PATH"
+export CFLAGS="-fPIC -I$PREFIX/include ${CFLAGS:-}"
+export CXXFLAGS="-fPIC -I$PREFIX/include ${CXXFLAGS:-}"
+export LDFLAGS="-L$PREFIX/lib -L$PREFIX/lib64 ${LDFLAGS:-}"
+
+mkdir -p "$PREFIX" "$BUILD_DIR"
+
+log() {
+  echo "==> $1"
+}
+
+download() {
+  local url="$1"
+  local dest="$2"
+  if [ ! -f "$dest" ]; then
+    log "Downloading $(basename "$dest")..."
+    curl -sSL "$url" -o "$dest"
+  fi
+}
+
+# Check for required build tools
+for tool in cmake meson ninja pkg-config; do
+  if ! command -v "$tool" &>/dev/null; then
+    echo "ERROR: $tool is required. Please install it."
+    exit 1
+  fi
+done
+
+meson_build() {
+  local src_dir="$1"
+  local build_dir="$2"
+  shift 2
+  meson setup "$build_dir" "$src_dir" \
+    --prefix="$PREFIX" \
+    --libdir=lib \
+    --default-library=static \
+    --buildtype=release \
+    -Dpkg_config_path="$PKG_CONFIG_PATH" \
+    "$@"
+  ninja -C "$build_dir" -j"$NPROC"
+  ninja -C "$build_dir" install
+}
+
+cmake_build() {
+  local src_dir="$1"
+  local build_dir="$2"
+  shift 2
+  cmake -S "$src_dir" -B "$build_dir" \
+    -DCMAKE_INSTALL_PREFIX="$PREFIX" \
+    -DCMAKE_PREFIX_PATH="$PREFIX" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    "$@"
+  cmake --build "$build_dir" -j"$NPROC"
+  cmake --install "$build_dir"
+}
+
+# ─── 1. zlib ───────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libz.a" ]; then
+  log "Building zlib $ZLIB_VERSION..."
+  download "https://github.com/madler/zlib/releases/download/v${ZLIB_VERSION}/zlib-${ZLIB_VERSION}.tar.gz" "$BUILD_DIR/zlib.tar.gz"
+  tar xf "$BUILD_DIR/zlib.tar.gz" -C "$BUILD_DIR"
+  cd "$BUILD_DIR/zlib-${ZLIB_VERSION}"
+  ./configure --prefix="$PREFIX" --static
+  make -j"$NPROC"
+  make install
+fi
+
+# ─── 2. libffi ─────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libffi.a" ]; then
+  log "Building libffi $LIBFFI_VERSION..."
+  download "https://github.com/libffi/libffi/releases/download/v${LIBFFI_VERSION}/libffi-${LIBFFI_VERSION}.tar.gz" "$BUILD_DIR/libffi.tar.gz"
+  tar xf "$BUILD_DIR/libffi.tar.gz" -C "$BUILD_DIR"
+  cd "$BUILD_DIR/libffi-${LIBFFI_VERSION}"
+  ./configure --prefix="$PREFIX" --disable-shared --enable-static
+  make -j"$NPROC"
+  make install
+fi
+
+# ─── 3. pcre2 ──────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libpcre2-8.a" ]; then
+  log "Building pcre2 $PCRE2_VERSION..."
+  download "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.tar.gz" "$BUILD_DIR/pcre2.tar.gz"
+  tar xf "$BUILD_DIR/pcre2.tar.gz" -C "$BUILD_DIR"
+  cmake_build "$BUILD_DIR/pcre2-${PCRE2_VERSION}" "$BUILD_DIR/pcre2-build" \
+    -DPCRE2_BUILD_PCRE2GREP=OFF -DPCRE2_BUILD_TESTS=OFF
+fi
+
+# ─── 4. gettext/libintl ───────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libintl.a" ] && [ ! -f "$PREFIX/lib/libgettextlib.a" ]; then
+  # On Linux with glibc, libintl is part of libc. Only build on macOS/musl.
+  if [ "$(uname)" = "Darwin" ] || grep -q musl /usr/lib/libc.* 2>/dev/null; then
+    log "Building gettext $GETTEXT_VERSION..."
+    download "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz" "$BUILD_DIR/gettext.tar.gz"
+    tar xf "$BUILD_DIR/gettext.tar.gz" -C "$BUILD_DIR"
+    cd "$BUILD_DIR/gettext-${GETTEXT_VERSION}"
+    ./configure --prefix="$PREFIX" --disable-shared --enable-static \
+      --disable-java --disable-csharp --without-emacs
+    make -j"$NPROC"
+    make install
+  else
+    log "Skipping gettext (libintl provided by glibc)"
+  fi
+fi
+
+# ─── 5. expat ──────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libexpat.a" ]; then
+  log "Building expat $EXPAT_VERSION..."
+  expat_tag=$(echo "$EXPAT_VERSION" | tr '.' '_')
+  download "https://github.com/libexpat/libexpat/releases/download/R_${expat_tag}/expat-${EXPAT_VERSION}.tar.gz" "$BUILD_DIR/expat.tar.gz"
+  tar xf "$BUILD_DIR/expat.tar.gz" -C "$BUILD_DIR"
+  cmake_build "$BUILD_DIR/expat-${EXPAT_VERSION}" "$BUILD_DIR/expat-build" \
+    -DEXPAT_BUILD_TOOLS=OFF -DEXPAT_BUILD_EXAMPLES=OFF -DEXPAT_BUILD_TESTS=OFF
+fi
+
+# ─── 6. libpng ─────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libpng16.a" ] && [ ! -f "$PREFIX/lib/libpng.a" ]; then
+  log "Building libpng $LIBPNG_VERSION..."
+  download "https://download.sourceforge.net/libpng/libpng-${LIBPNG_VERSION}.tar.gz" "$BUILD_DIR/libpng.tar.gz"
+  tar xf "$BUILD_DIR/libpng.tar.gz" -C "$BUILD_DIR"
+  cmake_build "$BUILD_DIR/libpng-${LIBPNG_VERSION}" "$BUILD_DIR/libpng-build" \
+    -DPNG_SHARED=OFF -DPNG_STATIC=ON -DPNG_TESTS=OFF
+fi
+
+# ─── 7. libjpeg-turbo ─────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libjpeg.a" ]; then
+  log "Building libjpeg-turbo $LIBJPEG_VERSION..."
+  download "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/${LIBJPEG_VERSION}/libjpeg-turbo-${LIBJPEG_VERSION}.tar.gz" "$BUILD_DIR/libjpeg.tar.gz"
+  tar xf "$BUILD_DIR/libjpeg.tar.gz" -C "$BUILD_DIR"
+  cmake_build "$BUILD_DIR/libjpeg-turbo-${LIBJPEG_VERSION}" "$BUILD_DIR/libjpeg-build" \
+    -DENABLE_SHARED=OFF -DENABLE_STATIC=ON
+fi
+
+# ─── 8. libxml2 ────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libxml2.a" ]; then
+  log "Building libxml2 $LIBXML2_VERSION..."
+  download "https://download.gnome.org/sources/libxml2/2.12/libxml2-${LIBXML2_VERSION}.tar.xz" "$BUILD_DIR/libxml2.tar.xz"
+  tar xf "$BUILD_DIR/libxml2.tar.xz" -C "$BUILD_DIR"
+  cmake_build "$BUILD_DIR/libxml2-${LIBXML2_VERSION}" "$BUILD_DIR/libxml2-build" \
+    -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_TESTS=OFF -DLIBXML2_WITH_PROGRAMS=OFF \
+    -DLIBXML2_WITH_LZMA=OFF -DLIBXML2_WITH_ZLIB=ON
+fi
+
+# ─── 9. glib ───────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libglib-2.0.a" ]; then
+  log "Building glib $GLIB_VERSION..."
+  download "https://download.gnome.org/sources/glib/${glib_minor}/glib-${GLIB_VERSION}.tar.xz" "$BUILD_DIR/glib.tar.xz"
+  tar xf "$BUILD_DIR/glib.tar.xz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/glib-${GLIB_VERSION}" "$BUILD_DIR/glib-build" \
+    -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dselinux=disabled
+fi
+
+# ─── 10. freetype pass 1 (WITHOUT harfbuzz) ───────────────────────────────────
+if [ ! -f "$PREFIX/lib/libfreetype.a" ]; then
+  log "Building freetype $FREETYPE_VERSION (pass 1, no harfbuzz)..."
+  download "https://download.sourceforge.net/freetype/freetype-${FREETYPE_VERSION}.tar.gz" "$BUILD_DIR/freetype.tar.gz"
+  tar xf "$BUILD_DIR/freetype.tar.gz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/freetype-${FREETYPE_VERSION}" "$BUILD_DIR/freetype-build-pass1" \
+    -Dharfbuzz=disabled -Dbzip2=disabled -Dbrotli=disabled -Dpng=enabled -Dzlib=enabled
+fi
+
+# ─── 11. harfbuzz ──────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libharfbuzz.a" ]; then
+  log "Building harfbuzz $HARFBUZZ_VERSION..."
+  download "https://github.com/harfbuzz/harfbuzz/releases/download/${HARFBUZZ_VERSION}/harfbuzz-${HARFBUZZ_VERSION}.tar.xz" "$BUILD_DIR/harfbuzz.tar.xz"
+  tar xf "$BUILD_DIR/harfbuzz.tar.xz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/harfbuzz-${HARFBUZZ_VERSION}" "$BUILD_DIR/harfbuzz-build" \
+    -Dglib=enabled -Dfreetype=enabled -Dcairo=disabled \
+    -Dicu=disabled -Dgobject=disabled -Dintrospection=disabled \
+    -Dtests=disabled -Ddocs=disabled
+fi
+
+# ─── 12. freetype pass 2 (WITH harfbuzz) ──────────────────────────────────────
+log "Building freetype $FREETYPE_VERSION (pass 2, with harfbuzz)..."
+rm -rf "$BUILD_DIR/freetype-build-pass2"
+meson_build "$BUILD_DIR/freetype-${FREETYPE_VERSION}" "$BUILD_DIR/freetype-build-pass2" \
+  -Dharfbuzz=enabled -Dbzip2=disabled -Dbrotli=disabled -Dpng=enabled -Dzlib=enabled
+
+# ─── 13. fontconfig ────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libfontconfig.a" ]; then
+  log "Building fontconfig $FONTCONFIG_VERSION..."
+  download "https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz" "$BUILD_DIR/fontconfig.tar.gz"
+  tar xf "$BUILD_DIR/fontconfig.tar.gz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/fontconfig-${FONTCONFIG_VERSION}" "$BUILD_DIR/fontconfig-build" \
+    -Ddoc=disabled -Dtests=disabled -Dtools=disabled -Dcache-build=disabled
+fi
+
+# ─── 14. fribidi ───────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libfribidi.a" ]; then
+  log "Building fribidi $FRIBIDI_VERSION..."
+  download "https://github.com/fribidi/fribidi/releases/download/v${FRIBIDI_VERSION}/fribidi-${FRIBIDI_VERSION}.tar.xz" "$BUILD_DIR/fribidi.tar.xz"
+  tar xf "$BUILD_DIR/fribidi.tar.xz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/fribidi-${FRIBIDI_VERSION}" "$BUILD_DIR/fribidi-build" \
+    -Ddocs=false -Dtests=false
+fi
+
+# ─── 15. pixman ────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libpixman-1.a" ]; then
+  log "Building pixman $PIXMAN_VERSION..."
+  download "https://cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz" "$BUILD_DIR/pixman.tar.gz"
+  tar xf "$BUILD_DIR/pixman.tar.gz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/pixman-${PIXMAN_VERSION}" "$BUILD_DIR/pixman-build" \
+    -Dtests=disabled -Ddemos=disabled -Dgtk=disabled
+fi
+
+# ─── 16. cairo ─────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libcairo.a" ]; then
+  log "Building cairo $CAIRO_VERSION..."
+  download "https://cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz" "$BUILD_DIR/cairo.tar.xz"
+  tar xf "$BUILD_DIR/cairo.tar.xz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/cairo-${CAIRO_VERSION}" "$BUILD_DIR/cairo-build" \
+    -Dxlib=disabled -Dxcb=disabled -Dquartz=disabled \
+    -Dtee=disabled -Dtests=disabled -Dspectre=disabled
+fi
+
+# ─── 17. pango ─────────────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libpango-1.0.a" ]; then
+  log "Building pango $PANGO_VERSION..."
+  download "https://download.gnome.org/sources/pango/${pango_minor}/pango-${PANGO_VERSION}.tar.xz" "$BUILD_DIR/pango.tar.xz"
+  tar xf "$BUILD_DIR/pango.tar.xz" -C "$BUILD_DIR"
+  meson_build "$BUILD_DIR/pango-${PANGO_VERSION}" "$BUILD_DIR/pango-build" \
+    -Dintrospection=disabled -Dgtk_doc=false
+fi
+
+# ─── 18. gdk-pixbuf ───────────────────────────────────────────────────────────
+if [ ! -f "$PREFIX/lib/libgdk_pixbuf-2.0.a" ]; then
+  log "Building gdk-pixbuf $GDK_PIXBUF_VERSION..."
+  download "https://download.gnome.org/sources/gdk-pixbuf/${gdk_pixbuf_minor}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.tar.xz" "$BUILD_DIR/gdk-pixbuf.tar.xz"
+  tar xf "$BUILD_DIR/gdk-pixbuf.tar.xz" -C "$BUILD_DIR"
+  # gdk-pixbuf with builtin_loaders=all compiles PNG/JPEG support directly
+  # into the static library. Its utility executables (gdk-pixbuf-csource,
+  # gdk-pixbuf-pixdata) then need libpng and libjpeg at link time, but meson
+  # doesn't propagate these transitive deps automatically for static builds.
+  # Add them to LDFLAGS so meson captures them during setup.
+  GDK_PIXBUF_EXTRA_LIBS="$(pkg-config --libs --static libpng16 libjpeg 2>/dev/null || echo "-lpng16 -ljpeg")"
+  LDFLAGS="$LDFLAGS $GDK_PIXBUF_EXTRA_LIBS" \
+  meson_build "$BUILD_DIR/gdk-pixbuf-${GDK_PIXBUF_VERSION}" "$BUILD_DIR/gdk-pixbuf-build" \
+    -Dinstalled_tests=false -Dgtk_doc=false -Dintrospection=disabled \
+    -Dman=false -Dbuiltin_loaders=all -Drelocatable=true \
+    -Dgio_sniffing=false
+fi
+
+log ""
+log "All static dependencies built successfully!"
+log "Installed to: $PREFIX"
+log ""
+log "Set PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/lib64/pkgconfig"
+log "to use these libraries when building the mathematical extension."

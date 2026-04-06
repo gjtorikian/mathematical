@@ -36,3 +36,12 @@ ext/mathematical/lasem/build
 # clangd files
 *compile_commands.json
 *.cache
+
+# Vendored static dependencies (built by script/build_static_deps)
+/vendor/lib/
+/vendor/lib64/
+/vendor/include/
+/vendor/bin/
+/vendor/share/
+# Windows DLLs
+*.dll

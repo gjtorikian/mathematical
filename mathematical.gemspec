@@ -15,16 +15,20 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/gjtorikian/mathematical"
   spec.license       = "MIT"
 
+  spec.required_ruby_version = ">= 3.1"
+
   spec.files         = ["LICENSE.txt", "README.md", "Rakefile", "mathematical.gemspec"]
   spec.files        += Dir.glob("lib/**/*.rb")
   spec.files        += Dir["ext/**/*"].reject { |f| f =~ /\.svg$|\.mml$|\.png$|\.o$/ }
-  spec.require_paths = ["lib", "ext"]
+  spec.files        += Dir.glob("fonts/**/*")
+  spec.require_paths = ["lib"]
   spec.extensions    = ["ext/mathematical/extconf.rb"]
 
   spec.add_dependency("ruby-enum", ">= 0.4", "< 2.0")
 
+  spec.add_development_dependency("benchmark")
   spec.add_development_dependency("math-to-itex", "~> 0.3")
   spec.add_development_dependency("minitest", "~> 5.6")
   spec.add_development_dependency("nokogiri", "~> 1.10")
-  spec.add_development_dependency("rake-compiler", "~> 1.0")
+  spec.add_development_dependency("rake-compiler", "~> 1.2")
 end
