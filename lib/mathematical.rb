@@ -4,7 +4,7 @@
 # to the source-compiled extension.
 begin
   RUBY_VERSION =~ /(\d+\.\d+)/
-  require "mathematical/#{$1}/mathematical"
+  require "mathematical/#{Regexp.last_match(1)}/mathematical"
 rescue LoadError
   require "mathematical/mathematical"
 end

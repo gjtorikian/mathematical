@@ -34,7 +34,7 @@ class Mathematical
 
         expected = File.read(expected_file)
 
-        expected = (MathToItex(expected).convert { |string| Mathematical.new.render(string) }).rstrip
+        expected = MathToItex(expected).convert { |string| Mathematical.new.render(string) }.rstrip
 
         # Travis and OS X each render SVGs differently. For now, let's just be happy
         # that something renders at all.

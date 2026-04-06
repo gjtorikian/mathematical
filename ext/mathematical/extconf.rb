@@ -79,7 +79,7 @@ MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), "lib"))
 if OS == :macos
   # Homebrew paths must come before X11 so we get newer versions of libs like cairo
   homebrew_prefix = %x(brew --prefix 2>/dev/null).chomp
-  homebrew_pkgconfig = "#{homebrew_prefix}/lib/pkgconfig" if !homebrew_prefix.empty?
+  homebrew_pkgconfig = "#{homebrew_prefix}/lib/pkgconfig" unless homebrew_prefix.empty?
   ENV["PKG_CONFIG_PATH"] = [homebrew_pkgconfig, "/opt/X11/lib/pkgconfig", ENV["PKG_CONFIG_PATH"]].compact.join(":")
 end
 
@@ -112,7 +112,7 @@ end
 
 if !using_system_mtex2mml?
   # build mtex2MML library
-  Dir.chdir(MTEX2MML_BUILD_DIR) do
+  Dir.chdir(MTEX2MML_BUILD_DIR) do # rubocop:disable ThreadSafety/DirChdir
     system "cmake #{CMAKE_GENERATOR}#{cmake_env} .."
     system "make libmtex2MML_static"
   end
@@ -127,7 +127,7 @@ end
 
 if !using_system_lasem?
   # build Lasem library as STATIC (linked directly into the Ruby extension)
-  Dir.chdir(LASEM_BUILD_DIR) do
+  Dir.chdir(LASEM_BUILD_DIR) do # rubocop:disable ThreadSafety/DirChdir
     system "cmake #{CMAKE_GENERATOR}#{cmake_env} ../.."
     system "make"
   end
