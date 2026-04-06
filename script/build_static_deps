@@ -72,7 +72,19 @@ download() {
   local dest="$2"
   if [ ! -f "$dest" ]; then
     log "Downloading $(basename "$dest")..."
-    curl -sSL "$url" -o "$dest"
+    local attempt
+    for attempt in 1 2 3; do
+      curl -sSL --retry 3 "$url" -o "$dest"
+      # Verify the download is valid (not an error page)
+      if file "$dest" | grep -qiE "gzip|xz|tar|compress"; then
+        return 0
+      fi
+      log "Download attempt $attempt got invalid file, retrying..."
+      rm -f "$dest"
+      sleep 2
+    done
+    echo "ERROR: Failed to download $url after 3 attempts"
+    exit 1
   fi
 }
 
