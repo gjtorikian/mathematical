@@ -78,6 +78,8 @@ namespace "gem" do
         export PATH="$(python3 -m site --user-base)/bin:$PATH"
         # Build static deps from source (Debian lacks .a files for meson-built libs)
         script/build_static_deps
+        # RCD containers use rbenv; override .ruby-version which may not match
+        export RBENV_VERSION="$(rbenv versions --bare | tail -1)"
         gem install bundler --no-document
         bundle install
         bundle exec rake native:#{platform} gem MAKE="nice make -j$(nproc)"
