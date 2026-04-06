@@ -50,6 +50,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || needs.tag.outputs.tag_created == 'true'
     needs: [tag]
     uses: ./.github/workflows/build-native-gems.yml
+    with:
+      publish: true
     permissions:
       contents: write
       id-token: write
