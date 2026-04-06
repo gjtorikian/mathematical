@@ -154,21 +154,18 @@ flag = ENV["CI"] ? "-O0" : "-O2"
 # Get link flags — prefer static linking when available
 pkg_config_static_flag = File.directory?(VENDOR_DIR) ? "--static" : ""
 
-# System library link flags go in $libs (not $LDFLAGS) so they appear AFTER
-# -llasem and -lmtex2MML in the link command. This matters because the linker
-# resolves symbols left-to-right: liblasem.a references glib symbols, so
-# -lglib-2.0 must come after -llasem.
-pkg_libs = %x(pkg-config #{pkg_config_static_flag} --libs glib-2.0 gdk-pixbuf-2.0 cairo pango pangocairo gio-2.0).chomp
-$libs = "#{$libs} #{pkg_libs}"
+# Link flags for system libraries must appear AFTER -llasem and -lmtex2MML
+# because the linker resolves symbols left-to-right: liblasem.a references
+# glib/libxml2 symbols, so those libs must come after -llasem.
+# We append directly to $LIBS (which becomes LOCAL_LIBS in the Makefile)
+# to guarantee correct ordering on all platforms including Windows.
+pkg_packages = "glib-2.0 gdk-pixbuf-2.0 cairo pango pangocairo gio-2.0 libxml-2.0"
+pkg_libs = %x(pkg-config #{pkg_config_static_flag} --libs #{pkg_packages}).chomp
+puts "*** pkg-config --libs: #{pkg_libs} ***"
+$LIBS << " #{pkg_libs}"
 
 $LDFLAGS << " #{RPATH}" unless RPATH.empty?
 $CFLAGS << " #{flag} #{%x(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango).chomp}"
-
-# Windows static compilation flags
-if OS == :windows
-  $CFLAGS << " -DGLIB_STATIC_COMPILATION -DGOBJECT_STATIC_COMPILATION"
-  $CFLAGS << " -DGDK_PIXBUF_STATIC_COMPILATION -DPANGO_STATIC_COMPILATION"
-end
 
 # fPIC is needed for linking static libs into the shared extension
 $CFLAGS << " -fPIC" unless OS == :windows

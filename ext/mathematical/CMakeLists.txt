@@ -25,18 +25,9 @@ list(APPEND LASEM_SRC "${CMAKE_SOURCE_DIR}/lasem_overrides.c")
 
 add_definitions(-DPACKAGE_LOCALE_DIR="/usr/share/locale")
 
-# On Windows, when statically linking against glib/pango/gdk-pixbuf DLLs,
-# we must tell the headers NOT to use __declspec(dllimport).
-if(WIN32)
-  add_definitions(
-    -DGLIB_STATIC_COMPILATION
-    -DGOBJECT_STATIC_COMPILATION
-    -DGIO_STATIC_COMPILATION
-    -DGDK_PIXBUF_STATIC_COMPILATION
-    -DPANGO_STATIC_COMPILATION
-    -DCAIRO_WIN32_STATIC_BUILD
-  )
-endif()
+# On Windows with MSYS2, glib/pango/gdk-pixbuf/cairo are shared libraries (DLLs).
+# Do NOT define *_STATIC_COMPILATION — headers must use __declspec(dllimport)
+# so the linker correctly resolves symbols via the import libraries (.dll.a).
 
 # Build lasem as a STATIC library so it links directly into the Ruby extension.
 # Lasem is LGPL-2.1+, but since mathematical is MIT and fully open source,

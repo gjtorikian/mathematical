@@ -74,6 +74,8 @@ namespace "gem" do
           cmake bison flex pkg-config meson ninja-build python3 python3-pip \
           libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev \
           libpango1.0-dev libwebp-dev libglib2.0-dev
+        # RCD containers ship CMake 3.16; libxml2 2.12+ needs CMake 3.18+
+        pip3 install cmake
         # Build static deps from source (Debian lacks .a files for meson-built libs)
         script/build_static_deps
         gem install bundler --no-document
