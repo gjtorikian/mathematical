@@ -286,6 +286,13 @@ if [ ! -f "$PREFIX/lib/libgdk_pixbuf-2.0.a" ]; then
   log "Building gdk-pixbuf $GDK_PIXBUF_VERSION..."
   download "https://download.gnome.org/sources/gdk-pixbuf/${gdk_pixbuf_minor}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.tar.xz" "$BUILD_DIR/gdk-pixbuf.tar.xz"
   tar xf "$BUILD_DIR/gdk-pixbuf.tar.xz" -C "$BUILD_DIR"
+  # gdk-pixbuf with builtin_loaders=all compiles PNG/JPEG support directly
+  # into the static library. Its utility executables (gdk-pixbuf-csource,
+  # gdk-pixbuf-pixdata) then need libpng and libjpeg at link time, but meson
+  # doesn't propagate these transitive deps automatically for static builds.
+  # Add them to LDFLAGS so meson captures them during setup.
+  GDK_PIXBUF_EXTRA_LIBS="$(pkg-config --libs --static libpng16 libjpeg 2>/dev/null || echo "-lpng16 -ljpeg")"
+  LDFLAGS="$LDFLAGS $GDK_PIXBUF_EXTRA_LIBS" \
   meson_build "$BUILD_DIR/gdk-pixbuf-${GDK_PIXBUF_VERSION}" "$BUILD_DIR/gdk-pixbuf-build" \
     -Dinstalled_tests=false -Dgtk_doc=false -Dintrospection=disabled \
     -Dman=false -Dbuiltin_loaders=all -Drelocatable=true
