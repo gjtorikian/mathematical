@@ -90,6 +90,7 @@ meson_build() {
   shift 2
   meson setup "$build_dir" "$src_dir" \
     --prefix="$PREFIX" \
+    --libdir=lib \
     --default-library=static \
     --buildtype=release \
     -Dpkg_config_path="$PKG_CONFIG_PATH" \
