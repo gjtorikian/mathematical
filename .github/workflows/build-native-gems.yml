@@ -321,24 +321,19 @@ jobs:
         if: matrix.install_deps != ''
         run: ${{ matrix.install_deps }}
 
-      # Windows native gem links against MSYS2 shared libs at runtime
+      # Windows native gem links against MSYS2 shared libs at runtime.
+      # ruby/setup-ruby already installs MSYS2, so just add packages to it.
       - name: Install MSYS2 runtime libraries (Windows)
         if: matrix.platform == 'x64-mingw-ucrt'
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: false
-          install: >-
-            mingw-w64-ucrt-x86_64-glib2
-            mingw-w64-ucrt-x86_64-cairo
-            mingw-w64-ucrt-x86_64-pango
-            mingw-w64-ucrt-x86_64-gdk-pixbuf2
-            mingw-w64-ucrt-x86_64-libxml2
-
-      - name: Add MSYS2 to PATH (Windows)
-        if: matrix.platform == 'x64-mingw-ucrt'
         shell: bash
-        run: echo "D:\\a\\_temp\\msys64\\ucrt64\\bin" >> "$GITHUB_PATH"
+        run: |
+          D:/a/_temp/msys64/usr/bin/pacman.exe -S --noconfirm --needed \
+            mingw-w64-ucrt-x86_64-glib2 \
+            mingw-w64-ucrt-x86_64-cairo \
+            mingw-w64-ucrt-x86_64-pango \
+            mingw-w64-ucrt-x86_64-gdk-pixbuf2 \
+            mingw-w64-ucrt-x86_64-libxml2
+          echo "D:\a\_temp\msys64\ucrt64\bin" >> "$GITHUB_PATH"
 
       - name: Download native gem
         uses: actions/download-artifact@v4
