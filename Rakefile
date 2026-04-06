@@ -71,9 +71,7 @@ namespace "gem" do
       RakeCompilerDock.sh(<<~SCRIPT, platform: platform, verbose: true)
         set -e
         sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends \
-          cmake bison flex pkg-config meson ninja-build python3 python3-pip \
-          libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev \
-          libpango1.0-dev libwebp-dev libglib2.0-dev
+          cmake bison flex pkg-config ninja-build python3 python3-pip
         # RCD containers (Ubuntu 20.04) ship old CMake 3.16 and Meson 0.53;
         # libxml2 2.12+ needs CMake 3.18+ and glib 2.80+ needs Meson 1.2+
         pip3 install --upgrade cmake meson packaging
