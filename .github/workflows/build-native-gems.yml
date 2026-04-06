@@ -290,11 +290,11 @@ jobs:
             runner: macos-latest
             ruby: "3.3"
             install_deps: brew install glib gdk-pixbuf cairo pango libxml2
-          # Windows — skipped: native gem needs MSYS2 DLLs bundled (future work)
-          # - platform: x64-mingw-ucrt
-          #   runner: windows-latest
-          #   ruby: "3.3"
-          #   install_deps: ""
+          # Windows
+          - platform: x64-mingw-ucrt
+            runner: windows-latest
+            ruby: "3.3"
+            install_deps: ""
 
     runs-on: ${{ matrix.runner }}
 
@@ -310,6 +310,25 @@ jobs:
       - name: Install runtime dependencies
         if: matrix.install_deps != ''
         run: ${{ matrix.install_deps }}
+
+      # Windows native gem links against MSYS2 shared libs at runtime
+      - name: Install MSYS2 runtime libraries (Windows)
+        if: matrix.platform == 'x64-mingw-ucrt'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: false
+          install: >-
+            mingw-w64-ucrt-x86_64-glib2
+            mingw-w64-ucrt-x86_64-cairo
+            mingw-w64-ucrt-x86_64-pango
+            mingw-w64-ucrt-x86_64-gdk-pixbuf2
+            mingw-w64-ucrt-x86_64-libxml2
+
+      - name: Add MSYS2 to PATH (Windows)
+        if: matrix.platform == 'x64-mingw-ucrt'
+        shell: bash
+        run: echo "D:\\a\\_temp\\msys64\\ucrt64\\bin" >> "$GITHUB_PATH"
 
       - name: Download native gem
         uses: actions/download-artifact@v4
