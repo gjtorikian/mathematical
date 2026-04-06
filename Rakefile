@@ -76,6 +76,7 @@ namespace "gem" do
           libpango1.0-dev libwebp-dev libglib2.0-dev
         # RCD containers ship CMake 3.16; libxml2 2.12+ needs CMake 3.18+
         pip3 install cmake
+        export PATH="$(python3 -m site --user-base)/bin:$PATH"
         # Build static deps from source (Debian lacks .a files for meson-built libs)
         script/build_static_deps
         gem install bundler --no-document
