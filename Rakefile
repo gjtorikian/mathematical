@@ -76,7 +76,7 @@ namespace "gem" do
           libpango1.0-dev libwebp-dev libglib2.0-dev
         # RCD containers (Ubuntu 20.04) ship old CMake 3.16 and Meson 0.53;
         # libxml2 2.12+ needs CMake 3.18+ and glib 2.80+ needs Meson 1.2+
-        pip3 install cmake meson
+        pip3 install --upgrade cmake meson
         export PATH="$(python3 -m site --user-base)/bin:$PATH"
         # Build static deps from source (Debian lacks .a files for meson-built libs)
         script/build_static_deps
