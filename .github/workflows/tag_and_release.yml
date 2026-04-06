@@ -47,7 +47,7 @@ jobs:
 
   # Build and release native gems (triggered by tag or manual dispatch)
   build-and-release:
-    if: github.event_name == 'workflow_dispatch' || needs.tag.outputs.tag_created == 'true'
+    if: always() && (github.event_name == 'workflow_dispatch' || needs.tag.outputs.tag_created == 'true')
     needs: [tag]
     uses: ./.github/workflows/build-native-gems.yml
     with:
