@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+#
+# Pre-download source tarballs for build_static_deps.
+#
+# Run this on the CI host (which has `gh` with authentication) BEFORE
+# entering the rake-compiler-dock container. The downloaded files land
+# in tmp/static_deps_build/ which is volume-mounted into the container.
+# build_static_deps skips downloads for files that already exist.
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+BUILD_DIR="$ROOT_DIR/tmp/static_deps_build"
+mkdir -p "$BUILD_DIR"
+
+# Versions (keep in sync with script/build_static_deps)
+ZLIB_VERSION="1.3.2"
+LIBFFI_VERSION="3.4.6"
+PCRE2_VERSION="10.44"
+GETTEXT_VERSION="0.22.5"
+EXPAT_VERSION="2.6.2"
+LIBPNG_VERSION="1.6.43"
+LIBJPEG_VERSION="3.0.3"
+LIBXML2_VERSION="2.12.7"
+GLIB_VERSION="2.80.4"
+FREETYPE_VERSION="2.13.3"
+HARFBUZZ_VERSION="9.0.0"
+FONTCONFIG_VERSION="2.15.0"
+FRIBIDI_VERSION="1.0.15"
+PIXMAN_VERSION="0.43.4"
+CAIRO_VERSION="1.18.0"
+PANGO_VERSION="1.54.0"
+GDK_PIXBUF_VERSION="2.42.12"
+
+glib_minor=$(echo "$GLIB_VERSION" | cut -d. -f1,2)
+pango_minor=$(echo "$PANGO_VERSION" | cut -d. -f1,2)
+gdk_pixbuf_minor=$(echo "$GDK_PIXBUF_VERSION" | cut -d. -f1,2)
+
+dl() {
+  local dest="$BUILD_DIR/$1"
+  local url="$2"
+  if [ -f "$dest" ]; then
+    echo "  exists: $1"
+    return
+  fi
+  echo "  downloading: $1"
+  curl -sSL --retry 3 --retry-delay 5 -o "$dest" "$url"
+}
+
+gh_dl() {
+  local dest="$BUILD_DIR/$1"
+  local repo="$2"
+  local tag="$3"
+  local asset="$4"
+  if [ -f "$dest" ]; then
+    echo "  exists: $1"
+    return
+  fi
+  echo "  downloading: $1 (via gh)"
+  gh release download "$tag" --repo "$repo" --pattern "$asset" --dir "$BUILD_DIR" --clobber
+  # Rename if the asset name differs from our dest name
+  if [ "$asset" != "$1" ] && [ -f "$BUILD_DIR/$asset" ]; then
+    mv "$BUILD_DIR/$asset" "$dest"
+  fi
+}
+
+echo "Pre-downloading source tarballs..."
+
+# GitHub-hosted releases (use gh for authenticated downloads)
+gh_dl "zlib.tar.gz"     "madler/zlib"                 "v${ZLIB_VERSION}"     "zlib-${ZLIB_VERSION}.tar.gz"
+gh_dl "libffi.tar.gz"   "libffi/libffi"               "v${LIBFFI_VERSION}"   "libffi-${LIBFFI_VERSION}.tar.gz"
+gh_dl "pcre2.tar.gz"    "PCRE2Project/pcre2"           "pcre2-${PCRE2_VERSION}" "pcre2-${PCRE2_VERSION}.tar.gz"
+expat_tag=$(echo "$EXPAT_VERSION" | tr '.' '_')
+gh_dl "expat.tar.gz"    "libexpat/libexpat"            "R_${expat_tag}"       "expat-${EXPAT_VERSION}.tar.gz"
+gh_dl "libjpeg.tar.gz"  "libjpeg-turbo/libjpeg-turbo"  "${LIBJPEG_VERSION}"   "libjpeg-turbo-${LIBJPEG_VERSION}.tar.gz"
+gh_dl "harfbuzz.tar.xz" "harfbuzz/harfbuzz"            "${HARFBUZZ_VERSION}"  "harfbuzz-${HARFBUZZ_VERSION}.tar.xz"
+gh_dl "fribidi.tar.xz"  "fribidi/fribidi"              "v${FRIBIDI_VERSION}"  "fribidi-${FRIBIDI_VERSION}.tar.xz"
+
+# Non-GitHub sources (curl is fine)
+dl "libpng.tar.gz"      "https://download.sourceforge.net/libpng/libpng-${LIBPNG_VERSION}.tar.gz"
+dl "libxml2.tar.xz"     "https://download.gnome.org/sources/libxml2/2.12/libxml2-${LIBXML2_VERSION}.tar.xz"
+dl "glib.tar.xz"        "https://download.gnome.org/sources/glib/${glib_minor}/glib-${GLIB_VERSION}.tar.xz"
+dl "freetype.tar.gz"    "https://download.sourceforge.net/freetype/freetype-${FREETYPE_VERSION}.tar.gz"
+dl "fontconfig.tar.gz"  "https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz"
+dl "pixman.tar.gz"      "https://cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
+dl "cairo.tar.xz"       "https://cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
+dl "pango.tar.xz"       "https://download.gnome.org/sources/pango/${pango_minor}/pango-${PANGO_VERSION}.tar.xz"
+dl "gdk-pixbuf.tar.xz"  "https://download.gnome.org/sources/gdk-pixbuf/${gdk_pixbuf_minor}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.tar.xz"
+dl "gettext.tar.gz"     "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz"
+
+echo "All source tarballs ready."

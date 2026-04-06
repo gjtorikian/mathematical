@@ -70,6 +70,11 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      - name: Pre-download source tarballs
+        run: script/download_sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Build native gem for ${{ matrix.platform }}
         run: bundle exec rake gem:${{ matrix.platform }}
         env:
