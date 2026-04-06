@@ -295,7 +295,8 @@ if [ ! -f "$PREFIX/lib/libgdk_pixbuf-2.0.a" ]; then
   LDFLAGS="$LDFLAGS $GDK_PIXBUF_EXTRA_LIBS" \
   meson_build "$BUILD_DIR/gdk-pixbuf-${GDK_PIXBUF_VERSION}" "$BUILD_DIR/gdk-pixbuf-build" \
     -Dinstalled_tests=false -Dgtk_doc=false -Dintrospection=disabled \
-    -Dman=false -Dbuiltin_loaders=all -Drelocatable=true
+    -Dman=false -Dbuiltin_loaders=all -Drelocatable=true \
+    -Dgio_sniffing=false
 fi
 
 log ""
