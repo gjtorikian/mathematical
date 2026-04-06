@@ -7,18 +7,45 @@ on:
       - main
     paths:
       - "lib/mathematical/version.rb"
-  pull_request_target:
-    types:
-      - closed
+
+permissions:
+  contents: write
 
 jobs:
-  ruby:
-    uses: yettoapp/actions/.github/workflows/ruby_gem_release.yml@main
-    secrets:
-      rubygems_api_key: ${{ secrets.RUBYGEMS_API_BOT_KEY }}
-      gh_token: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      gem_name: mathematical
-      version_filepath: lib/mathematical/version.rb
-      prepare: ${{ github.event_name == 'push' }}
-      release: ${{ github.event_name == 'workflow_dispatch' || ((github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'release'))) }}
+  # Create a git tag when version.rb changes
+  tag:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag_created: ${{ steps.tag.outputs.created }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          version=$(ruby -e 'load "lib/mathematical/version.rb"; puts Mathematical::VERSION')
+          echo "version=v${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        id: tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git tag "${{ steps.version.outputs.version }}"; then
+            git push origin "${{ steps.version.outputs.version }}"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag already exists"
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Build and release native gems (triggered by tag or manual dispatch)
+  build-and-release:
+    if: github.event_name == 'workflow_dispatch' || needs.tag.outputs.tag_created == 'true'
+    needs: [tag]
+    uses: ./.github/workflows/build-native-gems.yml
+    permissions:
+      contents: write
+      id-token: write

@@ -1,0 +1,385 @@
+name: Build Native Gems
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  RUBY_CC_VERSION: "3.1.0:3.2.0:3.3.0:3.4.0"
+
+jobs:
+  # ─── Source gem (platform=ruby fallback) ──────────────────────────────────────
+  source-gem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build source gem
+        run: bundle exec gem build mathematical.gemspec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gem-source
+          path: "*.gem"
+
+  # ─── Linux native gems (via rake-compiler-dock) ──────────────────────────────
+  native-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: x86_64-linux-gnu
+            runner: ubuntu-latest
+          - platform: x86_64-linux-musl
+            runner: ubuntu-latest
+          - platform: aarch64-linux-gnu
+            runner: ubuntu-24.04-arm
+          - platform: aarch64-linux-musl
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build native gem for ${{ matrix.platform }}
+        run: bundle exec rake gem:${{ matrix.platform }}
+        env:
+          MAKE: "nice make -j$(nproc)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gem-${{ matrix.platform }}
+          path: pkg/*-${{ matrix.platform }}.gem
+
+  # ─── macOS native extension builds ───────────────────────────────────────────
+  build-macos-ext:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.1", "3.2", "3.3", "3.4"]
+        include:
+          - os: macos-latest
+            platform: arm64-darwin
+          - os: macos-13
+            platform: x86_64-darwin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          brew install glib gdk-pixbuf cairo pango cmake pkg-config meson ninja
+          brew link gettext --force
+
+      - name: Build static dependencies
+        run: script/build_static_deps
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "11.0"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Compile extension
+        run: bundle exec rake compile
+
+      - name: Find compiled extension
+        id: find_ext
+        run: |
+          ext_path=$(find lib -name "mathematical.bundle" -o -name "mathematical.so" | head -1)
+          echo "path=$ext_path" >> "$GITHUB_OUTPUT"
+          echo "Found: $ext_path"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ext-${{ matrix.platform }}-ruby${{ matrix.ruby }}
+          path: ${{ steps.find_ext.outputs.path }}
+
+  # ─── Assemble macOS native gems ──────────────────────────────────────────────
+  assemble-macos-gem:
+    needs: build-macos-ext
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [arm64-darwin, x86_64-darwin]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Download extension artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ext-${{ matrix.platform }}-ruby*
+          path: tmp/extensions
+
+      - name: Assemble multi-version gem
+        run: |
+          ext_name=$([ "${{ matrix.platform }}" = *darwin* ] && echo "mathematical.bundle" || echo "mathematical.so")
+          for ruby_dir in tmp/extensions/ext-${{ matrix.platform }}-ruby*/; do
+            ruby_version=$(basename "$ruby_dir" | sed 's/ext-${{ matrix.platform }}-ruby//')
+            mkdir -p "lib/mathematical/${ruby_version}"
+            cp "$ruby_dir"/* "lib/mathematical/${ruby_version}/"
+            echo "Placed extension for Ruby ${ruby_version}"
+          done
+          ls -laR lib/mathematical/
+
+      - name: Build platform gem
+        run: |
+          ruby -e '
+            spec = Gem::Specification.load("mathematical.gemspec")
+            spec.platform = Gem::Platform.new("${{ matrix.platform }}")
+            spec.extensions.clear
+            spec.files.reject! { |f| f.start_with?("ext/") }
+            Dir.glob("lib/mathematical/*/mathematical.*").each { |f| spec.files << f }
+            Dir.glob("fonts/**/*").each { |f| spec.files << f }
+            File.write("mathematical-native.gemspec", spec.to_ruby)
+          '
+          gem build mathematical-native.gemspec
+          mkdir -p pkg
+          mv *.gem pkg/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gem-${{ matrix.platform }}
+          path: pkg/*.gem
+
+  # ─── Windows native extension builds ─────────────────────────────────────────
+  build-windows-ext:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.1", "3.2", "3.3", "3.4"]
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-pkg-config
+            mingw-w64-ucrt-x86_64-glib2
+            mingw-w64-ucrt-x86_64-cairo
+            mingw-w64-ucrt-x86_64-pango
+            mingw-w64-ucrt-x86_64-gdk-pixbuf2
+            mingw-w64-ucrt-x86_64-libxml2
+            bison flex make
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Compile extension
+        shell: msys2 {0}
+        run: bundle exec rake compile
+        env:
+          PKG_CONFIG_PATH: /ucrt64/lib/pkgconfig
+
+      - name: Find compiled extension
+        id: find_ext
+        shell: bash
+        run: |
+          ext_path=$(find lib -name "mathematical.so" -o -name "mathematical.dll" | head -1)
+          echo "path=$ext_path" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ext-x64-mingw-ucrt-ruby${{ matrix.ruby }}
+          path: ${{ steps.find_ext.outputs.path }}
+
+  # ─── Assemble Windows native gem ─────────────────────────────────────────────
+  assemble-windows-gem:
+    needs: build-windows-ext
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Download extension artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ext-x64-mingw-ucrt-ruby*
+          path: tmp/extensions
+
+      - name: Assemble multi-version gem
+        run: |
+          for ruby_dir in tmp/extensions/ext-x64-mingw-ucrt-ruby*/; do
+            ruby_version=$(basename "$ruby_dir" | sed 's/ext-x64-mingw-ucrt-ruby//')
+            mkdir -p "lib/mathematical/${ruby_version}"
+            cp "$ruby_dir"/* "lib/mathematical/${ruby_version}/"
+            echo "Placed extension for Ruby ${ruby_version}"
+          done
+
+      - name: Build platform gem
+        run: |
+          ruby -e '
+            spec = Gem::Specification.load("mathematical.gemspec")
+            spec.platform = Gem::Platform.new("x64-mingw-ucrt")
+            spec.extensions.clear
+            spec.files.reject! { |f| f.start_with?("ext/") }
+            Dir.glob("lib/mathematical/*/mathematical.*").each { |f| spec.files << f }
+            Dir.glob("fonts/**/*").each { |f| spec.files << f }
+            File.write("mathematical-native.gemspec", spec.to_ruby)
+          '
+          gem build mathematical-native.gemspec
+          mkdir -p pkg
+          mv *.gem pkg/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gem-x64-mingw-ucrt
+          path: pkg/*.gem
+
+  # ─── Test native gems on real platforms ──────────────────────────────────────
+  test-native:
+    needs: [source-gem, native-linux, assemble-macos-gem, assemble-windows-gem]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux GNU
+          - platform: x86_64-linux-gnu
+            runner: ubuntu-latest
+            ruby: "3.3"
+            install_deps: |
+              sudo apt-get update -qq
+              sudo apt-get install -y libglib2.0-0 libcairo2 libpango-1.0-0 libgdk-pixbuf-2.0-0 libxml2
+          # macOS ARM
+          - platform: arm64-darwin
+            runner: macos-latest
+            ruby: "3.3"
+            install_deps: ""
+          # macOS Intel
+          - platform: x86_64-darwin
+            runner: macos-13
+            ruby: "3.3"
+            install_deps: ""
+          # Windows
+          - platform: x64-mingw-ucrt
+            runner: windows-latest
+            ruby: "3.3"
+            install_deps: ""
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Install runtime dependencies
+        if: matrix.install_deps != ''
+        run: ${{ matrix.install_deps }}
+
+      - name: Download native gem
+        uses: actions/download-artifact@v4
+        with:
+          name: gem-${{ matrix.platform }}
+          path: pkg/
+
+      - name: Install native gem
+        run: gem install pkg/*.gem --no-document
+
+      - name: Run basic smoke test
+        run: |
+          ruby -e '
+            require "mathematical"
+            m = Mathematical.new(format: :mathml)
+            result = m.parse("$x^2$")
+            raise "Parse failed" unless result[:data].include?("math")
+            puts "Native gem works!"
+          '
+
+  # ─── Release to RubyGems via OIDC ────────────────────────────────────────────
+  release:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    needs: [test-native]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: rubygems/configure-rubygems-credentials@main
+        with:
+          role-to-assume: rg_oidc_akr_91j9s75n62gxkyadqymo
+
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Download all gem artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: gem-*
+          path: pkg/
+          merge-multiple: true
+
+      - name: List gems
+        run: ls -la pkg/
+
+      - name: Push to RubyGems
+        run: |
+          for gem in pkg/*.gem; do
+            echo "Pushing $gem..."
+            gem push "$gem"
+          done
+
+      - name: Wait for release to propagate
+        run: |
+          gem install rubygems-await
+          gem_tuple="$(ruby -rbundler/setup -rbundler -e '
+              spec = Bundler.definition.specs.find {|s| s.name == ARGV[0] }
+              raise "No spec for #{ARGV[0]}" unless spec
+              print [spec.name, spec.version, spec.platform].join(":")
+            ' "mathematical")"
+          gem await "${gem_tuple}"

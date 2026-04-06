@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
-require "mathematical/mathematical"
+# Load the precompiled native extension (version-specific) or fall back
+# to the source-compiled extension.
+begin
+  RUBY_VERSION =~ /(\d+\.\d+)/
+  require "mathematical/#{$1}/mathematical"
+rescue LoadError
+  require "mathematical/mathematical"
+end
 
 require "mathematical/configuration"
 require "mathematical/corrections"
@@ -10,6 +17,14 @@ require "mathematical/version"
 require "base64"
 
 class Mathematical
+  # Set up bundled fonts for fontconfig (used by lasem for SVG/PNG rendering).
+  # This allows SVG/PNG rendering without system font installation.
+  FONT_DIR = File.expand_path("../../fonts", __dir__)
+  if File.directory?(FONT_DIR)
+    existing = ENV.fetch("FONTCONFIG_PATH", "")
+    ENV["FONTCONFIG_PATH"] = existing.empty? ? FONT_DIR : "#{FONT_DIR}:#{existing}"
+  end
+
   include Corrections
   include Validator
 
