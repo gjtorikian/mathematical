@@ -116,7 +116,7 @@ cmake_build() {
 # ─── 1. zlib ───────────────────────────────────────────────────────────────────
 if [ ! -f "$PREFIX/lib/libz.a" ]; then
   log "Building zlib $ZLIB_VERSION..."
-  download "https://zlib.net/zlib-${ZLIB_VERSION}.tar.gz" "$BUILD_DIR/zlib.tar.gz"
+  download "https://github.com/madler/zlib/releases/download/v${ZLIB_VERSION}/zlib-${ZLIB_VERSION}.tar.gz" "$BUILD_DIR/zlib.tar.gz"
   tar xf "$BUILD_DIR/zlib.tar.gz" -C "$BUILD_DIR"
   cd "$BUILD_DIR/zlib-${ZLIB_VERSION}"
   ./configure --prefix="$PREFIX" --static
