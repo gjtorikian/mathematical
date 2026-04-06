@@ -28,13 +28,17 @@ jobs:
           version=$(ruby -e 'load "lib/mathematical/version.rb"; puts Mathematical::VERSION')
           echo "version=v${version}" >> "$GITHUB_OUTPUT"
 
-      - name: Create tag
+      - name: Create tag and GitHub Release
         id: tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          version="${{ steps.version.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git tag "${{ steps.version.outputs.version }}"; then
-            git push origin "${{ steps.version.outputs.version }}"
+          if git tag "$version"; then
+            git push origin "$version"
+            gh release create "$version" --generate-notes
             echo "created=true" >> "$GITHUB_OUTPUT"
           else
             echo "Tag already exists"

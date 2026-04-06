@@ -66,33 +66,16 @@ namespace "gem" do
     task platform do
       require "rake_compiler_dock"
 
-      # Determine which package manager and deps to install
-      install_cmd = if platform.include?("musl")
-        <<~SH
-          apk add --no-cache \
-            build-base cmake bison flex pkgconf meson ninja python3 py3-pip \
-            glib-dev glib-static cairo-dev cairo-static \
-            pango-dev gdk-pixbuf-dev libxml2-dev libxml2-static \
-            harfbuzz-dev harfbuzz-static fribidi-dev fribidi-static \
-            fontconfig-dev fontconfig-static freetype-dev freetype-static \
-            pixman-dev pixman-static libffi-dev libpng-dev libpng-static \
-            zlib-dev zlib-static jpeg-dev expat-dev expat-static \
-            pcre2-dev
-        SH
-      else
-        <<~SH
-          apt-get update -qq && apt-get install -y --no-install-recommends \
-            cmake bison flex pkg-config meson ninja-build python3 python3-pip \
-            libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev \
-            libpango1.0-dev libwebp-dev libglib2.0-dev
-        SH
-      end
-
+      # Both GNU and musl RCD containers are Debian-based (musl uses a cross-compiler,
+      # NOT Alpine). Install deps with apt-get, running as root inside the container.
       RakeCompilerDock.sh(<<~SCRIPT, platform: platform, verbose: true)
         set -e
-        #{install_cmd}
-        # On GNU Linux, build static deps from source (Debian lacks .a files)
-        #{"script/build_static_deps" unless platform.include?("musl")}
+        sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends \
+          cmake bison flex pkg-config meson ninja-build python3 python3-pip \
+          libffi-dev libxml2-dev libgdk-pixbuf2.0-dev libcairo2-dev \
+          libpango1.0-dev libwebp-dev libglib2.0-dev
+        # Build static deps from source (Debian lacks .a files for meson-built libs)
+        script/build_static_deps
         gem install bundler --no-document
         bundle install
         bundle exec rake native:#{platform} gem MAKE="nice make -j$(nproc)"

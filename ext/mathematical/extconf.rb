@@ -153,7 +153,14 @@ flag = ENV["CI"] ? "-O0" : "-O2"
 
 # Get link flags — prefer static linking when available
 pkg_config_static_flag = File.directory?(VENDOR_DIR) ? "--static" : ""
-$LDFLAGS << " #{%x(pkg-config #{pkg_config_static_flag} --libs glib-2.0 gdk-pixbuf-2.0 cairo pango pangocairo gio-2.0).chomp}"
+
+# System library link flags go in $libs (not $LDFLAGS) so they appear AFTER
+# -llasem and -lmtex2MML in the link command. This matters because the linker
+# resolves symbols left-to-right: liblasem.a references glib symbols, so
+# -lglib-2.0 must come after -llasem.
+pkg_libs = %x(pkg-config #{pkg_config_static_flag} --libs glib-2.0 gdk-pixbuf-2.0 cairo pango pangocairo gio-2.0).chomp
+$libs = "#{$libs} #{pkg_libs}"
+
 $LDFLAGS << " #{RPATH}" unless RPATH.empty?
 $CFLAGS << " #{flag} #{%x(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango).chomp}"
 
