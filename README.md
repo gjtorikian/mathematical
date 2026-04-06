@@ -14,7 +14,7 @@ Please reach out if you would like to mantain SVG and PNG portions of the librar
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Precompiled native gems are available for Linux, macOS, and Windows. Add this line to your application's Gemfile:
 
     gem 'mathematical'
 
@@ -26,7 +26,21 @@ Or install it yourself as:
 
     $ gem install mathematical
 
-**Note:** you'll probably need to run [`script/bootstrap`](script/bootstrap) to fetch all the necessary dependencies.
+### Platform-specific notes
+
+**Linux** (x86_64 and ARM, glibc and musl): Fully self-contained — no additional dependencies needed.
+
+**macOS**: Install runtime libraries via Homebrew:
+
+    $ brew install glib gdk-pixbuf cairo pango libxml2
+
+**Windows**: Install runtime libraries via MSYS2 (UCRT64):
+
+    $ pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-cairo mingw-w64-ucrt-x86_64-pango mingw-w64-ucrt-x86_64-gdk-pixbuf2 mingw-w64-ucrt-x86_64-libxml2
+
+### Building from source
+
+If no precompiled gem is available for your platform, it will be compiled from source. You'll need cmake, pkg-config, bison, flex, and the development headers for glib, cairo, pango, gdk-pixbuf, and libxml2.
 
 ## Usage
 
@@ -112,27 +126,23 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 **Note**: This library makes a few assumptions about the strings that you pass in. It assumes that `$..$` is inline math and `$$..$$` is display math.
 
-## Building
+## Building from source
 
-Before building this gem, you must install the following libraries:
+To build from source, install the development dependencies for your platform:
 
-* Ruby 2.1 or higher (you'll need Ruby header files, so a `*-dev` version is also required)
-* GNU make
-* glib-2.0
-* gdk-pixbuf-2.0
-* xml2
-* cairo
-* pango
-* [Dependencies for mtex2MML](https://github.com/gjtorikian/mtex2MML#building)
+**Linux (Debian/Ubuntu):**
 
-After cloning the repo, you can fetch dependencies and run the library by typing:
+    $ sudo apt-get install cmake bison flex pkg-config libglib2.0-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev libxml2-dev
+
+**macOS:**
+
+    $ brew install glib gdk-pixbuf cairo pango cmake pkg-config
+
+Then:
 
 ```
-script/bootstrap
 bundle exec rake compile
 ```
-
-If there were no errors, you're done! Otherwise, make sure to follow the dependency instructions.
 
 ### Fonts and special notices for Mac OS X
 
