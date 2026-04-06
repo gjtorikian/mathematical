@@ -32,7 +32,7 @@ NATIVE_PLATFORMS = %w[
 ALL_PLATFORMS = CROSS_PLATFORMS + NATIVE_PLATFORMS
 
 # Ruby versions to target for precompiled gems
-CROSS_RUBIES = %w[3.1.0 3.2.0 3.3.0 3.4.0]
+CROSS_RUBIES = %w[3.1.0 3.2.0 3.3.0 3.4.0 4.0.0]
 
 spec = Gem::Specification.load("mathematical.gemspec")
 
@@ -53,7 +53,7 @@ end
 # Set RUBY_CC_VERSION for cross-compilation
 begin
   require "rake_compiler_dock"
-  ENV["RUBY_CC_VERSION"] = RakeCompilerDock.ruby_cc_version("3.1", "3.2", "3.3", "3.4")
+  ENV["RUBY_CC_VERSION"] = RakeCompilerDock.ruby_cc_version("3.1", "3.2", "3.3", "3.4", "4.0")
 rescue LoadError
   ENV["RUBY_CC_VERSION"] = CROSS_RUBIES.join(":")
 end
