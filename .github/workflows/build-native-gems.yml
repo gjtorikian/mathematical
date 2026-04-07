@@ -38,7 +38,7 @@ jobs:
       - name: Build source gem
         run: bundle exec gem build mathematical.gemspec
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gem-source
           path: "*.gem"
@@ -80,7 +80,7 @@ jobs:
         env:
           MAKE: "nice make -j$(nproc)"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gem-${{ matrix.platform }}
           path: pkg/*-${{ matrix.platform }}.gem
@@ -123,7 +123,7 @@ jobs:
           echo "path=$ext_path" >> "$GITHUB_OUTPUT"
           echo "Found: $ext_path"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ext-${{ matrix.platform }}-ruby${{ matrix.ruby }}
           path: ${{ steps.find_ext.outputs.path }}
@@ -177,7 +177,7 @@ jobs:
           mkdir -p pkg
           mv *.gem pkg/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gem-${{ matrix.platform }}
           path: pkg/*.gem
@@ -229,7 +229,7 @@ jobs:
           ext_path=$(find lib -name "mathematical.so" -o -name "mathematical.dll" | head -1)
           echo "path=$ext_path" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ext-x64-mingw-ucrt-ruby${{ matrix.ruby }}
           path: ${{ steps.find_ext.outputs.path }}
@@ -276,7 +276,7 @@ jobs:
           mkdir -p pkg
           mv *.gem pkg/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gem-x64-mingw-ucrt
           path: pkg/*.gem
