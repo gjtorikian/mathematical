@@ -146,7 +146,7 @@ jobs:
           ruby-version: "3.3"
 
       - name: Download extension artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ext-${{ matrix.platform }}-ruby*
           path: tmp/extensions
@@ -247,7 +247,7 @@ jobs:
           ruby-version: "3.3"
 
       - name: Download extension artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ext-x64-mingw-ucrt-ruby*
           path: tmp/extensions
@@ -336,7 +336,7 @@ jobs:
           echo "D:\a\_temp\msys64\ucrt64\bin" >> "$GITHUB_PATH"
 
       - name: Download native gem
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: gem-${{ matrix.platform }}
           path: pkg/
@@ -374,7 +374,7 @@ jobs:
           ruby-version: "3.3"
 
       - name: Download all gem artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: gem-*
           path: pkg/
