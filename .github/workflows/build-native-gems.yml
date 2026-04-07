@@ -393,9 +393,5 @@ jobs:
       - name: Wait for release to propagate
         run: |
           gem install rubygems-await
-          gem_tuple="$(ruby -rbundler/setup -rbundler -e '
-              spec = Bundler.definition.specs.find {|s| s.name == ARGV[0] }
-              raise "No spec for #{ARGV[0]}" unless spec
-              print [spec.name, spec.version, spec.platform].join(":")
-            ' "mathematical")"
-          gem await "${gem_tuple}"
+          version="$(ruby -e 'load "lib/mathematical/version.rb"; print Mathematical::VERSION')"
+          gem await "mathematical:${version}"
