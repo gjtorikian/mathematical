@@ -76,6 +76,30 @@ MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, "build")
 MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, "src"))
 MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), "lib"))
 
+# Friendly hint if the user cloned without `--recurse-submodules`. An
+# uninitialized submodule shows up as an empty directory (or a dir with only
+# a stray `.git` file).
+{ "mtex2MML" => MTEX2MML_DIR, "lasem" => LASEM_DIR }.each do |name, dir|
+  next if name == "mtex2MML" && using_system_mtex2mml?
+  next if name == "lasem" && using_system_lasem?
+
+  entries = File.directory?(dir) ? (Dir.entries(dir) - [".", "..", ".git"]) : []
+  next unless entries.empty?
+
+  $stderr.puts <<~MSG
+
+    [ERROR]: ext/mathematical/#{name} is empty — this is a git submodule.
+    Run the following from the repo root and try again:
+
+        git submodule update --init --recursive
+
+    (Or pass --use-system-#{name == "mtex2MML" ? "mtex2MML" : "lasem"}
+    if you have it installed system-wide.)
+
+  MSG
+  exit 1
+end
+
 if OS == :macos
   # Homebrew paths must come before X11 so we get newer versions of libs like cairo
   homebrew_prefix = %x(brew --prefix 2>/dev/null).chomp
