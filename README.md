@@ -128,7 +128,15 @@ Check out [SUPPORTED.md on the mtex2MML website](https://github.com/gjtorikian/m
 
 ## Building from source
 
-To build from source, install the development dependencies for your platform:
+This repo uses git submodules for `mtex2MML` and `lasem`. Clone with:
+
+    $ git clone --recurse-submodules https://github.com/gjtorikian/mathematical.git
+
+If you already cloned without `--recurse-submodules`, run this from the repo root:
+
+    $ git submodule update --init --recursive
+
+Then install the development dependencies for your platform:
 
 **Linux (Debian/Ubuntu):**
 
