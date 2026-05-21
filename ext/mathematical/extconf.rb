@@ -167,6 +167,16 @@ $LIBS << " #{pkg_libs}"
 $LDFLAGS << " #{RPATH}" unless RPATH.empty?
 $CFLAGS << " #{flag} #{%x(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango).chomp}"
 
+# On macOS, don't link libruby into the bundle. The bundle is loaded by an
+# already-running Ruby process, so Ruby symbols resolve dynamically at load
+# time. Linking libruby explicitly stamps the build host's libruby path
+# (e.g. /Users/runner/hostedtoolcache/...) into the bundle's load commands,
+# which can break the precompiled gem on other machines. See issue #146.
+if OS == :macos
+  $LIBRUBYARG = $LIBRUBYARG_SHARED = $LIBRUBYARG_STATIC = ""
+  $LDFLAGS << " -Wl,-undefined,dynamic_lookup"
+end
+
 # fPIC is needed for linking static libs into the shared extension
 $CFLAGS << " -fPIC" unless OS == :windows
 
