@@ -76,6 +76,30 @@ MTEX2MML_BUILD_DIR = File.join(MTEX2MML_DIR, "build")
 MTEX2MML_SRC_DIR = File.expand_path(File.join(MTEX2MML_DIR, "src"))
 MTEX2MML_LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), "lib"))
 
+# Friendly hint if the user cloned without `--recurse-submodules`. An
+# uninitialized submodule shows up as an empty directory (or a dir with only
+# a stray `.git` file).
+{ "mtex2MML" => MTEX2MML_DIR, "lasem" => LASEM_DIR }.each do |name, dir|
+  next if name == "mtex2MML" && using_system_mtex2mml?
+  next if name == "lasem" && using_system_lasem?
+
+  entries = File.directory?(dir) ? (Dir.entries(dir) - [".", "..", ".git"]) : []
+  next unless entries.empty?
+
+  $stderr.puts <<~MSG
+
+    [ERROR]: ext/mathematical/#{name} is empty — this is a git submodule.
+    Run the following from the repo root and try again:
+
+        git submodule update --init --recursive
+
+    (Or pass --use-system-#{name == "mtex2MML" ? "mtex2MML" : "lasem"}
+    if you have it installed system-wide.)
+
+  MSG
+  exit 1
+end
+
 if OS == :macos
   # Homebrew paths must come before X11 so we get newer versions of libs like cairo
   homebrew_prefix = %x(brew --prefix 2>/dev/null).chomp
@@ -166,6 +190,16 @@ $LIBS << " #{pkg_libs}"
 
 $LDFLAGS << " #{RPATH}" unless RPATH.empty?
 $CFLAGS << " #{flag} #{%x(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo pango).chomp}"
+
+# On macOS, don't link libruby into the bundle. The bundle is loaded by an
+# already-running Ruby process, so Ruby symbols resolve dynamically at load
+# time. Linking libruby explicitly stamps the build host's libruby path
+# (e.g. /Users/runner/hostedtoolcache/...) into the bundle's load commands,
+# which can break the precompiled gem on other machines. See issue #146.
+if OS == :macos
+  $LIBRUBYARG = $LIBRUBYARG_SHARED = $LIBRUBYARG_STATIC = ""
+  $LDFLAGS << " -Wl,-undefined,dynamic_lookup"
+end
 
 # fPIC is needed for linking static libs into the shared extension
 $CFLAGS << " -fPIC" unless OS == :windows
