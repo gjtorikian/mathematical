@@ -9,7 +9,7 @@ class Mathematical
     end
 
     def test_it_works_for_a_single_numbered_equation
-      string = <<~STRING
+      string = <<~'STRING'
         $$
         \begin{equation}
          f(x)=(x+a)(x+b)
