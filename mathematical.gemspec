@@ -25,10 +25,4 @@ Gem::Specification.new do |spec|
   spec.extensions    = ["ext/mathematical/extconf.rb"]
 
   spec.add_dependency("ruby-enum", ">= 0.4", "< 2.0")
-
-  spec.add_development_dependency("benchmark")
-  spec.add_development_dependency("math-to-itex", "~> 0.3")
-  spec.add_development_dependency("minitest", "~> 5.6")
-  spec.add_development_dependency("nokogiri", "~> 1.10")
-  spec.add_development_dependency("rake-compiler", "~> 1.2")
 end
