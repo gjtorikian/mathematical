@@ -297,9 +297,10 @@ jobs:
           - platform: x86_64-linux-gnu
             runner: ubuntu-latest
             ruby: "3.3"
-            install_deps: |
-              sudo apt-get update -qq
-              sudo apt-get install -y libglib2.0-0 libcairo2 libpango-1.0-0 libgdk-pixbuf-2.0-0 libxml2
+            # The Linux gem links glib, cairo, pango, gdk-pixbuf and libxml2
+            # statically (script/build_static_deps), so a stock runner is the
+            # right test environment. Ubuntu 26.04 also renamed libxml2.
+            install_deps: ""
           # macOS ARM
           - platform: arm64-darwin
             runner: macos-latest
