@@ -21,18 +21,18 @@ CROSS_PLATFORMS = [
   "x86_64-linux-musl",
   "aarch64-linux-gnu",
   "aarch64-linux-musl",
-]
+].freeze
 
 NATIVE_PLATFORMS = [
   "arm64-darwin",
   "x86_64-darwin",
   "x64-mingw-ucrt",
-]
+].freeze
 
 ALL_PLATFORMS = CROSS_PLATFORMS + NATIVE_PLATFORMS
 
 # Ruby versions to target for precompiled gems
-CROSS_RUBIES = ["3.1.0", "3.2.0", "3.3.0", "3.4.0", "4.0.0"]
+CROSS_RUBIES = ["3.1.0", "3.2.0", "3.3.0", "3.4.0", "4.0.0"].freeze
 
 spec = Gem::Specification.load("mathematical.gemspec")
 

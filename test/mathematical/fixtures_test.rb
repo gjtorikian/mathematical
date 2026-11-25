@@ -45,10 +45,10 @@ class Mathematical
             f.read
           end
 
-          assert_equal expected, actual, <<-eos
+          assert_equal expected, actual, <<-EOS
   #{File.basename(expected_file)}'s contents don't match command output:
   #{diff}
-          eos
+          EOS
         end
       end
     end

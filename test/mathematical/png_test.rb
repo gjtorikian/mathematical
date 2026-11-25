@@ -12,7 +12,7 @@ class Mathematical
 
     def test_it_creates_a_png
       skip("png tests are currently unsupported")
-      string = ""'
+      string = '
     $$
 \begin{pmatrix}
      1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
@@ -21,7 +21,7 @@ class Mathematical
      1 & a_m & a_m^2 & \cdots & a_m^n
      \end{pmatrix}
 $$
-'""
+'
       render = Mathematical.new({ format: :png })
       data_hash = render.render(string)
       header = data_hash[:data].unpack("H*").first.slice(0, 18)

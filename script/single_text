@@ -7,7 +7,7 @@ require "mathematical"
 
 svg = Mathematical.new.render('$f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$')[:data]
 
-text = """
+text = "
 <html>
 
 <body>
@@ -17,7 +17,7 @@ text = """
 </body>
 
 </html>
-"""
+"
 
 File.open("test.html", "w") { |file| file.write(text) }
 

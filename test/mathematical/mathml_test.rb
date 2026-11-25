@@ -6,7 +6,7 @@ require "test_helper"
 class Mathematical
   class MathMLTest < Minitest::Test
     def test_it_returns_mathml
-      string = ""'
+      string = '
     $$
 \begin{pmatrix}
      1 & a_1 & a_1^2 & \cdots & a_1^n \\\\
@@ -15,7 +15,7 @@ class Mathematical
      1 & a_m & a_m^2 & \cdots & a_m^n
      \end{pmatrix}
 $$
-'""
+'
       render = Mathematical.new({ format: :mathml })
       mathml = render.render(string)[:data]
 
