@@ -27,13 +27,13 @@ class Mathematical
     def test_it_works_for_many_equations
       inputs = []
       (1..1000).each do |i|
-        string = """
+        string = "
   $$
   \\begin{equation}
    f(#{i})=(x+a)(x+b)
   \\end{equation}
   $$
-  """
+  "
         inputs << string
       end
 
@@ -49,13 +49,13 @@ class Mathematical
       skip("png tests are currently unsupported")
       inputs = []
       (1..2).each do |i|
-        string = """
+        string = "
   $$
   \\begin{equation}
    f(#{i})=(x+a)(x+b)
   \\end{equation}
   $$
-  """
+  "
         inputs << string
       end
 

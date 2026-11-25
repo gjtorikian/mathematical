@@ -30,7 +30,7 @@ ensure
 end
 
 def write_base64svg_to_test_file(converted)
-  text = """
+  text = "
   <html>
 
   <body>
@@ -40,13 +40,13 @@ def write_base64svg_to_test_file(converted)
   </body>
 
   </html>
-"""
+"
 
   File.open("test.html", "w") { |f| f.write(text) }
 end
 
 def write_svg_to_test_file(converted)
-  text = """
+  text = "
   <html>
 
   <body>
@@ -56,7 +56,7 @@ def write_svg_to_test_file(converted)
   </body>
 
   </html>
-"""
+"
 
   File.open("test.html", "w") { |f| f.write(text) }
 end
@@ -67,7 +67,7 @@ def write_sample(source, name = nil)
   MathToItex(source).convert do |eq, _type|
     svg_content = Mathematical.new(base64: false).render(eq)
     # remove \ and $, remove whitespace, keep alphanums, remove extraneous - and trailing -
-    filename = name || eq.gsub(/[\$\\]*/, "").gsub(/\s+/, "-").gsub(/[^a-zA-Z\d]/, "-").gsub(/-{2,}/, "-").gsub(/-$/, "")
+    filename = name || eq.gsub(/[$\\]*/, "").gsub(/\s+/, "-").gsub(/[^a-zA-Z\d]/, "-").gsub(/-{2,}/, "-").gsub(/-$/, "")
     File.open("samples/fixtures/#{filename}.svg", "w") { |file| file.write(svg_content[:data]) }
   end
 end

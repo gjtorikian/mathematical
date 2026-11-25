@@ -35,7 +35,7 @@ class Mathematical
     maxsize: 0,
     format: :svg,
     delimiter: [:DOLLAR, :DOUBLE],
-  }
+  }.freeze
 
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 
