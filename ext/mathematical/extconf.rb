@@ -166,8 +166,8 @@ end
 
 puts "*** Library work completed ***"
 
-LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR]
-HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR]
+LIB_DIRS = [MTEX2MML_LIB_DIR, LASEM_LIB_DIR].freeze
+HEADER_DIRS = [MTEX2MML_SRC_DIR, LASEM_SRC_DIR].freeze
 
 dir_config("mathematical", HEADER_DIRS, LIB_DIRS)
 

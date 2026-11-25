@@ -140,7 +140,7 @@ Then install the development dependencies for your platform:
 
 **Linux (Debian/Ubuntu):**
 
-    $ sudo apt-get install cmake bison flex pkg-config libglib2.0-dev libgdk-pixbuf2.0-dev libcairo2-dev libpango1.0-dev libxml2-dev
+    $ sudo apt-get install cmake bison flex pkg-config libglib2.0-dev libgdk-pixbuf-2.0-dev libcairo2-dev libpango1.0-dev libxml2-dev
 
 **macOS:**
 
