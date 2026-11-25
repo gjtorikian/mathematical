@@ -24,5 +24,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.extensions    = ["ext/mathematical/extconf.rb"]
 
+  spec.add_dependency("base64")
   spec.add_dependency("ruby-enum", ">= 0.4", "< 2.0")
 end
